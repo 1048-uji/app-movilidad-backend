@@ -12,7 +12,14 @@ describe('UsersService', () => {
     service = module.get<UsersService>(UsersService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  it('registra un usuario con correo y contraseña válidos', async () => {
+    const usuario = {
+      mail: 'al386161@uji.es',
+      password: 'Tp386161',
+    };
+
+    const userRegistered = await service.registerUser(usuario.mail, usuario.password);
+
+    expect(userRegistered).toEqual(usuario);
   });
 });
