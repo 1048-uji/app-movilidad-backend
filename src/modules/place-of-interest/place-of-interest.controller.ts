@@ -1,6 +1,6 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { PlaceOfInterestService } from './place-of-interest.service';
-import { PlaceOfInterest } from '../../entities/place-of-interest.entity';
+import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
 
 @Controller('place-of-interest')
 export class PlaceOfInterestController {
@@ -14,15 +14,10 @@ export class PlaceOfInterestController {
     const newPlaceOfInterest: PlaceOfInterest = {
       name: toponym,
       coord: coordinates,
-      fav: 'false',
+      fav: false,
     };
 
     return this.poiService.addPlaceOfInterest(newPlaceOfInterest);
-  }
-
-  @Get()
-  async getAllPlacesOfInterest(): Promise<PlaceOfInterest[]> {
-    return this.poiService.getAllPlacesOfInterest();
   }
 
   // Método ficticio para obtener las coordenadas del topónimo (simulación de una llamada a la API de geocoding)
