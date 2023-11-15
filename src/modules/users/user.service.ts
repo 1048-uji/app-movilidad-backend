@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../../entities/user.entity';
+import { HttpException } from '@nestjs/common/exceptions';
+import { HttpStatus } from '@nestjs/common/enums';
 
 @Injectable()
 export class UserService {
