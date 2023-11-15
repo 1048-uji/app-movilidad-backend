@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { User } from 'src/entities/user.entity';
+import { User } from '../../entities/user.entity';
 
 describe('UsersController', () => {
   let controller: UserController;
@@ -39,7 +39,7 @@ describe('UsersController', () => {
     expect(usuariosRegistrados).toHaveLength(1);
     expect(usuariosRegistrados[0]).toEqual(user);
   });
-  
+
 // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await usService.clearDatabase();
