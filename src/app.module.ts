@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './modules/users/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PlaceOfInterestModule } from './modules/place-of-interest/place-of-interest.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -15,7 +16,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     synchronize: true,
   }),
     UsersModule, 
-    AuthModule],
+    AuthModule,
+    PlaceOfInterestModule],
   controllers: [],
   providers: [],
 })
