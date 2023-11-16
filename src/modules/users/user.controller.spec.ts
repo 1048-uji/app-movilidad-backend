@@ -151,6 +151,35 @@ describe('UsersController', () => {
     }
     
   });
+  it('debería eliminar la cuenta de un usuario autenticado', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
+
+    // Crear un usuario en la base de datos
+    const user: User = {
+      id: 1,
+      username: 'José Antonio',
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    };
+    await userService.registerUser(user);
+
+    // Autenticar al usuario
+    const authenticatedUser = await userController.login({
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    });
+
+    // Verificar que la autenticación fue exitosa
+    expect(authenticatedUser).toBeDefined();
+
+    // Borrar la cuenta del usuario autenticado
+    await userController.deleteAccount(user);
+
+    // Verificar que la cuenta se borró correctamente
+    const usuariosRegistrados = await userService.getUsers();
+    expect(usuariosRegistrados).toHaveLength(0);
+  });
 
 
 // Limpiar la base de datos después de cada prueba si es necesario

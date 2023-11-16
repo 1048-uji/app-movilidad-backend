@@ -10,4 +10,9 @@ export class UserController {
     async getUsers(): Promise<User[]>{
         return this.userService.getUsers();
     }
+
+    @Delete('/user')
+    async deleteAccount(user: User): Promise<User>{
+        return this.userService.deleteAccount(user);
+    }
 }

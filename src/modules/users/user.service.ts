@@ -1,3 +1,4 @@
+
 import { Injectable } from '@nestjs/common';
 import { User } from '../../entities/user.entity';
 import { HttpException } from '@nestjs/common/exceptions';
@@ -15,6 +16,10 @@ export class UserService {
         .createQueryBuilder('user')
         .select(['user.id', 'user.email',])
         .getMany();
+    }
+
+    async deleteAccount(user: User): Promise<User>{
+        return null;
     }
 
 
