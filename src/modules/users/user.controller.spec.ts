@@ -8,6 +8,7 @@ import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import * as bcrypt from 'bcrypt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { HttpStatus } from '@nestjs/common';
 
 describe('UsersController (Inicio de Sesión)', () => {
   let userController: UserController;
@@ -33,7 +34,7 @@ describe('UsersController (Inicio de Sesión)', () => {
     authService = module.get<AuthService>(AuthService);
   });
 
-  it('debería iniciar sesión con un usuario correcto y cargar datos de la base de datos', async () => {
+  it('debería iniciar sesión con un usuario correcto', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
 
@@ -61,6 +62,35 @@ describe('UsersController (Inicio de Sesión)', () => {
     // Verificar que el usuario en el token coincide con el usuario registrado
     expect(decodedUser.email).toBe(user.email);
   });
+
+  it('debería lanzar InvalidPasswordException para un usuario con contraseña incorrecta', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
+
+    // Crear un usuario en la base de datos
+    const user: User = {
+      id: 1,
+      username: 'José Antonio',
+      email: 'al386161@uji.es',
+      password: await bcrypt.hash('Tp386161', 10), // Hashear la contraseña antes de almacenarla
+    };
+    await userService.registerUser(user);
+
+    // Realizar la solicitud al endpoint de inicio de sesión con una contraseña incorrecta
+    try {
+      await userController.login({
+        email: 'al386161@uji.es',
+        password: 'tp386161', // Contraseña incorrecta
+      });
+    } catch (error) {
+      // Verificar que la respuesta sea un error 500 y contenga el mensaje esperado
+      expect(error.status).toBe(HttpStatus.UNAUTHORIZED);
+      expect(error.message).toBe('InvalidPasswordException');
+    }
+
+    // Verificar que se lanzó la excepción InvalidPasswordException
+  });
+
 
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
