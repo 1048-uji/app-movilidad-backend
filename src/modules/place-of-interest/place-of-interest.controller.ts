@@ -6,12 +6,13 @@ import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
 export class PlaceOfInterestController {
   constructor(private poiService: PlaceOfInterestService) {}
 
-  @Post()
+  @Post('/place-of-interest')
   async addPlaceOfInterest(toponym: string): Promise<PlaceOfInterest> {
     // Implementar la lógica para agregar un lugar de interés
     const coordinates = await this.fetchCoordinates(toponym); // Función para obtener las coordenadas del topónimo
 
     const newPlaceOfInterest: PlaceOfInterest = {
+      id: 0,
       name: toponym,
       coord: coordinates,
       fav: false,

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PlaceOfInterestModule } from './modules/place-of-interest/place-of-interest.controller';
+import { PlaceOfInterestModule } from './modules/place-of-interest/place-of-interest.module';
 import { PlaceOfInterestService} from './modules/place-of-interest/place-of-interest.service';
 import { PlaceOfInterestController } from './modules/place-of-interest/place-of-interest.controller';
 
