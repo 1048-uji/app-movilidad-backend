@@ -11,7 +11,7 @@ export class UserController {
         return this.userService.login(login);
     }
     @Post('/logout')
-    async logout(tokenLogout: { token: String }){
-        return this.userService.logout(tokenLogout);
+    async logout(user: User){
+        return this.userService.logout(user);
     }
 }

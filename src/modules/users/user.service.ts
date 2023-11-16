@@ -13,7 +13,7 @@ export class UserService {
         return null;
     }
 
-    async logout({ token: String }){
+    async logout(user: User){
         return null;
     }
 
