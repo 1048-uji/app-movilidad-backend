@@ -7,7 +7,7 @@ import { HttpStatus } from '@nestjs/common/enums';
 export class PlaceOfInterestService {
   private placesOfInterest: PlaceOfInterest[] = [];
 
-  async addPlaceOfInterest(place: PlaceOfInterest): Promise<PlaceOfInterest> {
+  async addPlaceOfInterest(toponym: String): Promise<PlaceOfInterest> {
     return null;
   }
 
