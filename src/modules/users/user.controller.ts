@@ -1,7 +1,7 @@
 import { Controller, Post, Get } from '@nestjs/common';
 import { UserService } from './user.service'
 import { User } from '../../entities/user.entity';
-import { PlaceOfInterest } from 'src/entities/placeOfInterest';
+import { PlaceOfInterest } from 'src/entities/placeOfInterest.entity';
  
 @Controller('users')
 export class UserController {
@@ -9,15 +9,5 @@ export class UserController {
     @Post('/user')
     async registerUser(user: User){
         return this.userService.registerUser(user);
-    }
-
-    @Post('/places-of-interest')
-    async addPlaceOfInterest(user: User, place: PlaceOfInterest) {
-        return this.userService.addPlaceOfInterest(user, place);
-    }
-
-    @Get('/places-of-interest')
-    async getPlacesOfInterest(user: User) {
-        return this.userService.getPlacesOfInterest(user);
     }
 }

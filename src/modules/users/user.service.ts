@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../../entities/user.entity';
-import { PlaceOfInterest } from 'src/entities/placeOfInterest';
+import { PlaceOfInterest } from 'src/entities/placeOfInterest.entity';
 
 @Injectable()
 export class UserService {
@@ -8,7 +8,9 @@ export class UserService {
 
     async addPlaceOfInterest(user: User, place: PlaceOfInterest) {}
 
-    async getPlacesOfInterest(user: User) {}
+    async getPlacesOfInterest(user: User): Promise<PlaceOfInterest[]> {
+        return null;
+    }
 
     async clearDatabase() {}
 }
