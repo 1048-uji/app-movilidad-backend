@@ -4,12 +4,12 @@ import { PlaceOfInterest } from 'src/entities/placeOfInterest.entity';
 
 @Injectable()
 export class UserService {
-    async registerUser(user: User) {}
+    async registerUser(user: User): Promise<User>{
+        return null
+    }
 
-    async addPlaceOfInterest(user: User, place: PlaceOfInterest) {}
-
-    async getPlacesOfInterest(user: User): Promise<PlaceOfInterest[]> {
-        return null;
+    async getUsers(): Promise<User[]>{
+        return null
     }
 
     async clearDatabase() {}
