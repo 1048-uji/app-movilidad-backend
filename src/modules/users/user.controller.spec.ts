@@ -4,24 +4,42 @@ import { UserService } from './user.service';
 import { User } from '../../entities/user.entity';
 import { HttpException } from '@nestjs/common/exceptions';
 import { HttpStatus } from '@nestjs/common/enums';
+import { AuthController } from '../auth/auth.controller';
+import { RegisterDto } from '../auth/dto/register.dto';
+import { AuthService } from '../../modules/auth/auth.service';
+import { UserRepositoryMock } from '../../mocks/user.repository.mock';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('UsersController', () => {
   let controller: UserController;
   let usService: UserService;
+  let authController: AuthController;
+  let authService: AuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [UserController],
-      providers: [UserService],
+      controllers: [UserController, AuthController],
+      providers: [
+        UserService,
+        AuthService,
+        JwtService,
+        {
+          provide: getRepositoryToken(User),
+          useClass: UserRepositoryMock,
+        },
+      ],
     }).compile();
 
     controller = module.get<UserController>(UserController);
+    authController = module.get<AuthController>(AuthController);
     usService = module.get<UserService>(UserService);
+    authService = module.get<AuthService>(AuthService);
   });
 
   it('Registra un usuario válido', async () => {
-    const user: User = {
-      id: 1,
+    const user: RegisterDto = {
       email: 'al386161@uji.es',
       username: 'José Antonio',
       password: 'Tp386161',
@@ -31,27 +49,25 @@ describe('UsersController', () => {
     await usService.clearDatabase();
 
     // Realizar la solicitud al endpoint de registro
-    const response = await controller.registerUser(user);
+    const response = await authController.register(user);
 
     // Verificar la respuesta del controlador
-    expect(response).toEqual(user);
+    expect(response.email).toEqual(user.email);
 
     // Verificar que el usuario se haya registrado en el servicio
     const usuariosRegistrados = await usService.getUsers();
     expect(usuariosRegistrados).toHaveLength(1);
-    expect(usuariosRegistrados[0]).toEqual(user);
   });
 
   it('debería lanzar Database not accesible si la base de datos no está disponible', async () => {
     // Simular que la base de datos no está disponible
-    jest.spyOn(usService, 'registerUser').mockImplementation(async () => {
+    jest.spyOn(authService, 'register').mockImplementation(async () => {
       throw new HttpException('Database not accesible', HttpStatus.INTERNAL_SERVER_ERROR);
     });
   
     // Realizar la solicitud al endpoint de registro
     try {
-      await controller.registerUser({
-        id: 1,
+      await authController.register({
         email: 'al386161@uji.es',
         username: 'José Antonio',
         password: 'Tp386161',

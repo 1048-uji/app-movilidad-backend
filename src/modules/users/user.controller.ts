@@ -5,11 +5,7 @@ import { User } from '../../entities/user.entity';
 @Controller('user')
 export class UserController {
     constructor(private userService: UserService) {}
-    @Post('/user')
-    async registerUser(user: User): Promise<User>{
-        return this.userService.registerUser(user);
-    }
-
+    
     @Get('/users')
     async getUsers(): Promise<User[]>{
         return this.userService.getUsers();
