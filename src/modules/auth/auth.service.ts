@@ -11,7 +11,7 @@ import { RegisterDto } from './dto/register.dto';
 export class AuthService {
     constructor(
         @InjectRepository(User) private readonly userRepository: Repository<User>,
-        private jwtAuthSerivce: JwtService
+        private jwtService: JwtService
     ) {}
 
     async login(loginObject: LoginDto): Promise<{ token: string }> {
@@ -23,7 +23,7 @@ export class AuthService {
         if (!isMatch) {
             throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
         }
-        const token = await this.jwtAuthSerivce.signAsync({ id: user.id, email: user.email });
+        const token = await this.jwtService.signAsync({ id: user.id, email: user.email });
         return { token: token };
     }
 

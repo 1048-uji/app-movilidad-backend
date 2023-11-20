@@ -17,6 +17,7 @@ export class UserService {
         .getMany();
     }
 
+
     async clearDatabase(){
         return this.userRepository.clear();
     }
