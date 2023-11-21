@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from '../../entities/user.entity';
+<<<<<<< HEAD
 import { AuthController } from '../auth/auth.controller';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { AuthService } from '../../modules/auth/auth.service';
@@ -126,10 +127,32 @@ describe('UsersController', () => {
   it('debería lanzar InvalidPasswordException para un usuario con contraseña incorrecta', async () => {
     // Limpiar la base de datos antes de la prueba
     await usService.clearDatabase();
+=======
+import { HttpStatus, NotFoundException } from '@nestjs/common';
+
+describe('UsersController (Eliminar Cuenta - Valido)', () => {
+  let userController: UserController;
+  let userService: UserService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [UserController],
+      providers: [UserService],
+    }).compile();
+
+    userController = module.get<UserController>(UserController);
+    userService = module.get<UserService>(UserService);
+  });
+
+  it('debería eliminar la cuenta de un usuario autenticado', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
+>>>>>>> 1c8ea3be4cdf1a8afb61dc24e2581e2bfa9fa655
 
     // Crear un usuario en la base de datos
     const user: User = {
       id: 1,
+<<<<<<< HEAD
       username: 'José Antonio Login Fail',
       email: 'al386161@uji.es',
       password: await bcrypt.hash('Tp386161', 10), // Hashear la contraseña antes de almacenarla
@@ -156,11 +179,17 @@ describe('UsersController', () => {
 
     // Crear un usuario en la base de datos
     const user: RegisterDto = {
+=======
+>>>>>>> 1c8ea3be4cdf1a8afb61dc24e2581e2bfa9fa655
       username: 'José Antonio',
       email: 'al386161@uji.es',
       password: 'Tp386161',
     };
+<<<<<<< HEAD
     await authService.register(user);
+=======
+    await userService.registerUser(user);
+>>>>>>> 1c8ea3be4cdf1a8afb61dc24e2581e2bfa9fa655
 
     // Autenticar al usuario
     const authenticatedUser = await userController.login({
@@ -215,9 +244,15 @@ describe('UsersController', () => {
     }
   });
 
+<<<<<<< HEAD
 
 // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await usService.clearDatabase();
+=======
+  // Limpiar la base de datos después de cada prueba si es necesario
+  afterEach(async () => {
+    await userService.clearDatabase();
+>>>>>>> 1c8ea3be4cdf1a8afb61dc24e2581e2bfa9fa655
   });
 });
