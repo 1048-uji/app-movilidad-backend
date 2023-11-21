@@ -1,5 +1,6 @@
 import { RegisterDto } from 'modules/auth/dto/register.dto';
 import { User } from '../entities/user.entity';
+import { PlaceOfInterest } from 'entities/placeOfInterest.entity';
 
 export class UserRepositoryMock {
   private  users: User[] = [];
@@ -14,8 +15,8 @@ export class UserRepositoryMock {
         id: this.users.length + 1,
         email: registerObject.email,
         username: registerObject.username,
-        password: registerObject.password, // Recuerda que deberías hashear la contraseña en un escenario real
-        // Otros campos según tu entidad User
+        password: registerObject.password,
+        placesOfInterest: [],
     };
     this.users.push(newUser);
     return newUser;
@@ -65,7 +66,7 @@ export class UserRepositoryMock {
     // Devuelve el usuario encontrado o null si no hay ninguno
     return user || null;
   }
-  async delete(user: User): Promise<void> {
+  async remove(user: User): Promise<void> {
     const index = this.users.findIndex(user => user.id === user.id);
   if (index !== -1) {
     this.users.splice(index, 1);

@@ -1,13 +1,29 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards, Request, Body } from '@nestjs/common/decorators';
 import { PlaceOfInterestService } from './place-of-interest.service';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { ValidationPipe } from '@nestjs/common';
+import { PlaceOfinterestDto } from './dto/placeOfInterest.dto';
 
 @Controller('place-of-interest')
 export class PlaceOfInterestController {
   constructor(private poiService: PlaceOfInterestService) {}
 
   @Post('/place-of-interest')
-  async addPlaceOfInterestCoords(coords: string): Promise<PlaceOfInterest> {
-    return this.poiService.addPlaceOfInterestCoords(coords);
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('strategy_jwt_1'))
+  async addPlaceOfInterestCoords(
+      @Request() req: any,
+      @Body(
+          new ValidationPipe({
+              transform: true,
+              transformOptions: { enableImplicitConversion: true },
+              forbidNonWhitelisted: true
+          })
+      )
+      placeOfInterstData: PlaceOfinterestDto
+  ): Promise<PlaceOfInterest> {
+      return this.poiService.addPlaceOfInterestCoords(placeOfInterstData, req.user);
   }
 }

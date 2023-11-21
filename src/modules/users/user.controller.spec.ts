@@ -128,11 +128,10 @@ describe('UsersController', () => {
     await usService.clearDatabase();
 
     // Crear un usuario en la base de datos
-    const user: User = {
-      id: 1,
+    const user: RegisterDto = {
       username: 'José Antonio Login Fail',
       email: 'al386161@uji.es',
-      password: await bcrypt.hash('Tp386161', 10), // Hashear la contraseña antes de almacenarla
+      password:'Tp386161',
     };
     await authService.register(user);
 
