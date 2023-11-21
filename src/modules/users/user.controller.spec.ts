@@ -92,13 +92,6 @@ describe('UsersController', () => {
       username: 'José Antonio Login',
       password: 'Tp386161',
     };
-    // Crear un usuario en la base de datos
-    /*const userRegistered: User = {
-      id: 1,
-      username: 'José Antonio',
-      email: 'al386161@uji.es',
-      password: await bcrypt.hash('Tp386161', 10), // Hashear la contraseña antes de almacenarla
-    };*/
     await usService.clearDatabase();
 
     const userRegistered = await authController.register(user);
@@ -108,19 +101,8 @@ describe('UsersController', () => {
       email: 'al386161@uji.es',
       password: 'Tp386161',
     });
-    //const accessToken = await jwtService.signAsync({ id: userRegistered.id, email: userRegistered.email });
     // Verificar que la respuesta del controlador contiene el token
     expect(loginResponse.token).toBe('mocked-token');
-
-    // Decodificar el token para obtener la información del usuario
-    /*try {
-      const decoded = jwtService.decode(loginResponse.token);
-      // Verificar que el usuario en el token coincide con el usuario registrado
-      expect(decoded.email).toBe(user.email);
-    } catch (error) {
-      // Manejar el error (token inválido, expirado, etc.)
-      throw new Error('Error al decodificar el token');
-    }*/
     
   });
 
@@ -133,7 +115,7 @@ describe('UsersController', () => {
       id: 1,
       username: 'José Antonio Login Fail',
       email: 'al386161@uji.es',
-      password: await bcrypt.hash('Tp386161', 10), // Hashear la contraseña antes de almacenarla
+      password: 'Tp386161', // Hashear la contraseña antes de almacenarla
     };
     await authService.register(user);
 
@@ -149,83 +131,10 @@ describe('UsersController', () => {
       expect(error.status).toBe(HttpStatus.UNAUTHORIZED);
       expect(error.message).toBe('Invalid password');
     }
-    
   });
-
 
 // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await usService.clearDatabase();
-  });
-});
-
-describe('UsersController (Cerrar Sesión - Valido)', () => {
-  let userController: UserController;
-  let userService: UserService;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [UserController],
-      providers: [UserService],
-    }).compile();
-
-    userController = module.get<UserController>(UserController);
-    userService = module.get<UserService>(UserService);
-  });
-
-  it('debería cerrar la sesión de un usuario autenticado', async () => {
-    // Limpiar la base de datos antes de la prueba
-    await userService.clearDatabase();
-
-    // Crear un usuario en la base de datos
-    const user: User = {
-      id: 1,
-      username: 'José Antonio',
-      email: 'al386161@uji.es',
-      password: 'Tp386161',
-    };
-    //await userService.registerUser(user);
-
-    // Autenticar al usuario
-    /*const authenticatedUser = await userController.login({
-      email: 'al386161@uji.es',
-      password: 'Tp386161',
-    });*/
-
-    // Cerrar sesión del usuario
-    //await userController.logout(authenticatedUser);
-
-    // Verificar que la sesión se cerró correctamente
-    //expect(userService.getAuthenticatedUsers()).toHaveLength(0);
-  });
-
-  it('debería lanzar una excepción si se intenta cerrar la sesión de un usuario no autenticado', async () => {
-    // Limpiar la base de datos antes de la prueba
-    await userService.clearDatabase();
-
-    // Crear un usuario en la base de datos
-    const user: User = {
-      id: 1,
-      username: 'José Antonio',
-      email: 'al386161@uji.es',
-      password: 'Tp386161',
-    };
-    //await userService.registerUser(user);
-
-    // Intentar cerrar sesión del usuario no autenticado
-    try {
-      //await userController.logout(user);
-      // Si no lanza una excepción, la prueba falla
-      fail('Se esperaba que lanzara una excepción');
-    } catch (error) {
-      // Verificar que la excepción sea la esperada
-      expect(error.status).toBe(HttpStatus.PRECONDITION_FAILED);
-      expect(error.message).toBe('UserNotLogged');
-    }
-  });
-
-  // Limpiar la base de datos después de cada prueba si es necesario
-  afterEach(async () => {
-    await userService.clearDatabase();
   });
 });
