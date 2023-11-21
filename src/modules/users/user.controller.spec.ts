@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from '../../entities/user.entity';
-<<<<<<< HEAD
 import { AuthController } from '../auth/auth.controller';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { AuthService } from '../../modules/auth/auth.service';
@@ -127,32 +126,10 @@ describe('UsersController', () => {
   it('debería lanzar InvalidPasswordException para un usuario con contraseña incorrecta', async () => {
     // Limpiar la base de datos antes de la prueba
     await usService.clearDatabase();
-=======
-import { HttpStatus, NotFoundException } from '@nestjs/common';
-
-describe('UsersController (Eliminar Cuenta - Valido)', () => {
-  let userController: UserController;
-  let userService: UserService;
-
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [UserController],
-      providers: [UserService],
-    }).compile();
-
-    userController = module.get<UserController>(UserController);
-    userService = module.get<UserService>(UserService);
-  });
-
-  it('debería eliminar la cuenta de un usuario autenticado', async () => {
-    // Limpiar la base de datos antes de la prueba
-    await userService.clearDatabase();
->>>>>>> 1c8ea3be4cdf1a8afb61dc24e2581e2bfa9fa655
 
     // Crear un usuario en la base de datos
     const user: User = {
       id: 1,
-<<<<<<< HEAD
       username: 'José Antonio Login Fail',
       email: 'al386161@uji.es',
       password: await bcrypt.hash('Tp386161', 10), // Hashear la contraseña antes de almacenarla
@@ -179,62 +156,52 @@ describe('UsersController (Eliminar Cuenta - Valido)', () => {
 
     // Crear un usuario en la base de datos
     const user: RegisterDto = {
-=======
->>>>>>> 1c8ea3be4cdf1a8afb61dc24e2581e2bfa9fa655
-      username: 'José Antonio',
+      username: 'José Antonio Delete',
       email: 'al386161@uji.es',
       password: 'Tp386161',
     };
-<<<<<<< HEAD
-    await authService.register(user);
-=======
-    await userService.registerUser(user);
->>>>>>> 1c8ea3be4cdf1a8afb61dc24e2581e2bfa9fa655
+    const registered = await authService.register(user);
 
     // Autenticar al usuario
-    const authenticatedUser = await userController.login({
+    const authenticatedUser = await authController.login({
       email: 'al386161@uji.es',
       password: 'Tp386161',
     });
-
-    // Verificar que la autenticación fue exitosa
-    expect(authenticatedUser).toBeDefined();
+    const request = {
+      user: registered,
+    };
 
     // Borrar la cuenta del usuario autenticado
-    await userController.deleteAccount(user);
+    await controller.deleteAccount(request, registered.id);
 
     // Verificar que la cuenta se borró correctamente
-    const usuariosRegistrados = await userService.getUsers();
+    const usuariosRegistrados = await usService.getUsers();
     expect(usuariosRegistrados).toHaveLength(0);
   });
 
-  it('debería lanzar una excepción si se intenta borrar la cuenta de un usuario con un correo no existente', async () => {
+  it('debería lanzar una excepción si se intenta borrar la cuenta de otro usuario', async () => {
     // Limpiar la base de datos antes de la prueba
-    await userService.clearDatabase();
+    await usService.clearDatabase();
 
     // Crear un usuario en la base de datos
-    const user: User = {
-      id: 1,
+    const user: RegisterDto = {
       username: 'José Antonio',
       email: 'al386161@uji.es',
       password: 'Tp386161',
     };
-    await userService.registerUser(user);
+    const registered = await authService.register(user);
 
     // Autenticar al usuario
-    const authenticatedUser = await userController.login({
+    const authenticatedUser = await authController.login({
       email: 'al386161@uji.es',
       password: 'Tp386161',
     });
-    const deleteUser: User = {
-      id: 1,
-      username: 'José Antonio',
-      email: 'al386162@uji.es',
-      password: 'Tp386161',
+    const request = {
+      user: registered,
     };
     // Intentar borrar la cuenta de un usuario con un correo no existente
     try {
-      await userController.deleteAccount(deleteUser);
+      await controller.deleteAccount(request, 10);
       // Si no lanza una excepción, la prueba falla
       fail('Se esperaba que lanzara una excepción');
     } catch (error) {
@@ -244,15 +211,9 @@ describe('UsersController (Eliminar Cuenta - Valido)', () => {
     }
   });
 
-<<<<<<< HEAD
 
 // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await usService.clearDatabase();
-=======
-  // Limpiar la base de datos después de cada prueba si es necesario
-  afterEach(async () => {
-    await userService.clearDatabase();
->>>>>>> 1c8ea3be4cdf1a8afb61dc24e2581e2bfa9fa655
   });
 });

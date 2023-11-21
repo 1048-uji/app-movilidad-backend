@@ -1,6 +1,8 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Param, ParseIntPipe, Request, Post, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
 import { UserService } from './user.service'
 import { User } from '../../entities/user.entity';
+import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
  
 @Controller('user')
 export class UserController {
@@ -11,8 +13,15 @@ export class UserController {
         return this.userService.getUsers();
     }
 
-    @Delete('/user')
-    async deleteAccount(user: User): Promise<User>{
-        return this.userService.deleteAccount(user);
+    @Delete(':id')
+    @ApiParam({ name: 'id', type: Number })
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async deleteAccount(@Request() req: any,
+    @Param('id', ParseIntPipe) id: number): Promise<String> {
+    const user = req.user;
+    if (user.id !== id) {
+        throw new HttpException('InvalidUserException', HttpStatus.UNAUTHORIZED);
     }
+    return this.userService.deleteAccount(id);
+}
 }

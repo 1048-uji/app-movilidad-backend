@@ -58,6 +58,19 @@ export class UserRepositoryMock {
     //console.log(users)
     return this.users[0];
   }
+
+  async findOneById(idToFind: number): Promise<User | null> {
+    console.log('ID a encontrar: ', idToFind);
+    const user = this.users.find(user => user.id === idToFind);
+    // Devuelve el usuario encontrado o null si no hay ninguno
+    return user || null;
+  }
+  async delete(user: User): Promise<void> {
+    const index = this.users.findIndex(user => user.id === user.id);
+  if (index !== -1) {
+    this.users.splice(index, 1);
+  }
+  }
   async clear(): Promise<void> {
 
     this.users = [];

@@ -18,8 +18,15 @@ export class UserService {
         .getMany();
     }
 
-    async deleteAccount(user: User): Promise<User>{
-        return null;
+    async deleteAccount(id: number): Promise<String>{
+        const userExist = await this.userRepository.findOneBy({ id: id });
+        
+        if (!userExist) {
+            throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+        }
+
+        await this.userRepository.delete(userExist);
+        return 'Usuario eliminado';
     }
 
 
