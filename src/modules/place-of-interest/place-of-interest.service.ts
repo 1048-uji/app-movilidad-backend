@@ -20,7 +20,7 @@ export class PlaceOfInterestService {
     const API_KEY = '5b3ce3597851110001cf62482f02da5ed6794ccc8c6774ab019ffc8d';
     
     try {
-      const response = await axios.get('https://api.openrouteservice.org/geocode/search?api_key=${API_KEY}&text=${encodeURIComponent(toponym)')
+      const response = await axios.get('https://api.openrouteservice.org/geocode/search?api_key='+API_KEY+'&text='+toponym)
 
       // Verificar si la solicitud fue exitosa y obtener las coordenadas
       if (response.status === 200 && response.data && response.data.features && response.data.features.length > 0) {
@@ -47,10 +47,10 @@ export class PlaceOfInterestService {
       return this.poiRepository.save(poi);
 
       } else {
-        throw new Error('No se encontraron coordenadas para el lugar especificado.');
+        throw new HttpException('No se encontraron coordenadas para el lugar especificado.', HttpStatus.NOT_FOUND);
       }
     } catch (error) {
-      throw new Error('Exception');
+      throw new HttpException('API Failed', HttpStatus.SERVICE_UNAVAILABLE);
     }
   }
 

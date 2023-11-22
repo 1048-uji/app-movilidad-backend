@@ -3,8 +3,10 @@ import { PlaceOfInterestController } from './place-of-interest.controller';
 import { PlaceOfInterestService } from './place-of-interest.service';
 import { HttpException } from '@nestjs/common/exceptions';
 import { HttpStatus } from '@nestjs/common/enums';
-import { User } from 'src/entities/user.entity';
-import { PlaceOfInterest } from 'src/entities/placeOfInterest.entity';
+import { User } from '../../entities/user.entity';
+import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { PlaceOfInterestRepositoryMock } from '../../mocks/placeOfInterest.repository.mock';
 
 describe('PuntosInteresController', () => {
   let controller: PlaceOfInterestController;
@@ -13,7 +15,11 @@ describe('PuntosInteresController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PlaceOfInterestController],
-      providers: [PlaceOfInterestService],
+      providers: [PlaceOfInterestService,
+        {
+          provide: getRepositoryToken(PlaceOfInterest),
+          useClass: PlaceOfInterestRepositoryMock,
+        }],
     }).compile();
 
     controller = module.get<PlaceOfInterestController>(PlaceOfInterestController);
@@ -72,8 +78,7 @@ describe('PuntosInteresController', () => {
       await controller.addPlaceOfInteresToponym(request, toponym);
     } catch (error) {
       // Verificar que se haya lanzado un error con el mensaje esperado
-      expect(error instanceof HttpException).toBe(true);
-      expect(error.getResponse()).toBe('Exception');
+      expect(error.status).toBe(HttpStatus.SERVICE_UNAVAILABLE);
     }
   });
 });
