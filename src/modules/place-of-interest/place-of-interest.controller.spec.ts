@@ -3,6 +3,8 @@ import { PlaceOfInterestController } from './place-of-interest.controller';
 import { PlaceOfInterestService } from './place-of-interest.service';
 import { HttpException } from '@nestjs/common/exceptions';
 import { HttpStatus } from '@nestjs/common/enums';
+import { User } from 'src/entities/user.entity';
+import { PlaceOfInterest } from 'src/entities/placeOfInterest.entity';
 
 describe('PuntosInteresController', () => {
   let controller: PlaceOfInterestController;
@@ -19,64 +21,59 @@ describe('PuntosInteresController', () => {
   });
 
   it('Crea un nuevo punto de interés con un topónimo válido', async () => {
-    const topónimo = 'Castellón';
-    const coordenadas = '-0.0576800, 39.9929000';
+    // Limpiar la base de datos antes de la prueba
+    await piService.clearDatabase();
 
-    // Simular que la API de geocoding está disponible y devuelve las coordenadas
-    jest.spyOn(piService, 'getCoordinatesFromAPI').mockResolvedValue(coordenadas);
+    // Toponimo para el nuevo lugar de interes
+    const toponym = 'Castellón';
+    
+    const user: User = {
+      id: 0,
+      email: "test@gmail.com",
+      username: 'Antonio',
+      password: "$2b$10$jH4RqkQWYGzOXNhZgVTK",
+      placesOfInterest: []
+    }
 
-    // Simular que la base de datos está disponible
-    jest.spyOn(piService, 'savePointOfInterest').mockImplementation(async () => {
-      return {
-        id: 0,
-        name: topónimo,
-        coord: coordenadas,
-        fav: false,
-      };
-    });
+    const request = {
+      user: user
+    };
 
-    // Realizar la solicitud para añadir un nuevo punto de interés
-    await controller.addPlaceOfInterest(topónimo);
+    // Añadir un lugar de interés
+    await controller.addPlaceOfInteresToponym(request, toponym);
 
-    // Verificar que se haya llamado a la función para obtener coordenadas con el topónimo correcto
-    expect(piService.getCoordinatesFromAPI).toHaveBeenCalledWith(topónimo);
-
-    // Verificar que se haya llamado a la función para guardar el punto de interés con los datos correctos
-    expect(piService.savePointOfInterest).toHaveBeenCalledWith({
-      name: topónimo,
-      coord: coordenadas,
-      fav: false,
-    });
-
-    // Verificar que el punto de interés se ha guardado en el servidor
-    const puntosInteres = await piService.getAllPointsOfInterest();
-    expect(puntosInteres).toHaveLength(1);
-    expect(puntosInteres[0]).toEqual({
-      name: topónimo,
-      coord: coordenadas,
-      fav: false,
-    });
+    // Verificar que el lugar de interés se ha añadido correctamente
+    const placesOfInterest: PlaceOfInterest[] = await piService.getPlacesOfInterest();
+    expect(placesOfInterest).toHaveLength(1);
   });
 
-  it('debería lanzar un error si la API de geocoding no está disponible', async () => {
-    const topónimo = 'Castellón';
+  it('debería lanzar una excepción si se intenta añadir un lugar de interés con un topónimo incorrecto', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await piService.clearDatabase();
 
-    // Simular que la API de geocoding no está disponible
-    jest.spyOn(piService, 'getCoordinatesFromAPI').mockRejectedValue(new Error('GeocodingNotWorkingException'));
+    // Toponimo para el nuevo lugar de interes
+    const toponym = '';
+
+    const user: User = {
+      id: 0,
+      email: "test@gmail.com",
+      username: 'Antonio',
+      password: "$2b$10$jH4RqkQWYGzOXNhZgVTK",
+      placesOfInterest: []
+    }
+
+    const request = {
+      user: user
+    };
 
     // Realizar la solicitud para añadir un nuevo punto de interés
     try {
-      await controller.addPlaceOfInterest(topónimo);
+      // Añadir un lugar de interés incorrecto
+      await controller.addPlaceOfInteresToponym(request, toponym);
     } catch (error) {
       // Verificar que se haya lanzado un error con el mensaje esperado
       expect(error instanceof HttpException).toBe(true);
-      expect(error.getStatus()).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
-      expect(error.getResponse()).toBe('GeocodingNotWorkingException');
+      expect(error.getResponse()).toBe('Exception');
     }
-  });
-
-  afterEach(async () => {
-    // Limpiar la base de datos después de cada prueba
-    await piService.clearPointsOfInterest();
   });
 });
