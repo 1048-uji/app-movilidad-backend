@@ -8,8 +8,8 @@ export class RegisterDto {
 
     @ApiProperty()
     @IsString()
-    @MinLength(8)
-    @MaxLength(32)
+    @MinLength(4)
+    @MaxLength(16)
     password: string;
 
     @ApiProperty()

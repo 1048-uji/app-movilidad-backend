@@ -10,7 +10,7 @@ export class User {
     email: string;
     @Column()
     username: string;
-    @Column({length: 50})
+    @Column()
     password: string;
     @OneToMany(() => PlaceOfInterest, placeOfInterest => placeOfInterest.user)
     placesOfInterest: PlaceOfInterest[];

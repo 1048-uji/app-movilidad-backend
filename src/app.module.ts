@@ -3,6 +3,8 @@ import { UsersModule } from './modules/users/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlaceOfInterestModule } from './modules/place-of-interest/place-of-interest.module';
+import { PlaceOfInterest } from 'entities/placeOfInterest.entity';
+import { User } from 'entities/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -12,7 +14,7 @@ import { PlaceOfInterestModule } from './modules/place-of-interest/place-of-inte
     username: 'root',
     password: 'EFA4E3ehDbc-3BAb5DFFHHbf6feH5HH5',
     database: 'railway',
-    entities: [__dirname + '/**/*.entity[.ts,.js]'],
+    entities: [User, PlaceOfInterest],
     synchronize: true,
   }),
     UsersModule, 
