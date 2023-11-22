@@ -110,7 +110,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     await placesController.addPlaceOfInteresToponym(request, toponym);
 
     // Verificar que el lugar de interés se ha añadido correctamente
-    const placesOfInterest: PlaceOfInterest[] = await piService.getPlacesOfInterest();
+    const placesOfInterest: PlaceOfInterest[] = await placesService.getPlacesOfInterest();
     expect(placesOfInterest).toHaveLength(1);
   });
 
