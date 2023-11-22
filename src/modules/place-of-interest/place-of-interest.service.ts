@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
+import { User } from 'src/entities/user.entity';
+import { HttpException } from '@nestjs/common/exceptions';
+import { HttpStatus } from '@nestjs/common/enums';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PlaceOfInterestService {
-  private placesOfInterest: PlaceOfInterest[] = [];
+
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>
+) {}
   
-  async addPlaceOfInterest(place: PlaceOfInterest): Promise<PlaceOfInterest> {
-    if (this.checkPlace(place)) {
-      return null;
-    }
-  }
-
   async getPlacesOfInterest(): Promise<PlaceOfInterest[]> {
-    return null;
-  }
+    return this.poiRepository.find();
+}
 
-  private async checkPlace(place: PlaceOfInterest): Promise<Boolean> {
-    return null;
-  }
-
-  async clearPointsOfInterest() {}
+    async clearDatabase(){
+        return this.userRepository.clear();
+    }
 }
