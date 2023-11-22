@@ -1,43 +1,52 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PlaceOfInterestController } from './place-of-interest.controller';
 import { PlaceOfInterestService } from './place-of-interest.service';
-<<<<<<< HEAD
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
 import { HttpStatus } from '@nestjs/common';
 import { PlaceOfinterestDto } from './dto/placeOfInterest.dto';
 import { User } from '../../entities/user.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PlaceOfInterestRepositoryMock } from '../../mocks/placeOfInterest.repository.mock';
+import { UserService } from '../users/user.service';
+import { AuthController } from '../auth/auth.controller';
+import { RegisterDto } from 'modules/auth/dto/register.dto';
+import { UserRepositoryMock } from '../../mocks/user.repository.mock';
+import { AuthService } from '../auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => {
   let placesController: PlaceOfInterestController;
   let placesService: PlaceOfInterestService;
-=======
-import { User } from '../../entities/user.entity';
-import { PlaceOfInterest } from 'src/entities/placeOfInterest.entity';
-import { UserController } from '../users/user.controller';
-import { UserService } from '../users/user.service';
-
-describe('UsersController', () => {
-  let piController: PlaceOfInterestController;
-  let piService: PlaceOfInterestService;
-  let usService: UserService;
-  let usController: UserController;
->>>>>>> 1c2106e (AcceptanceTests<HU07>: Invalid, Database not accesible complete)
+  let userService: UserService;
+  let authController: AuthController;
+  let authService: AuthService;
+  let jwtService: JwtService;
+  const jwtServiceMock = {
+    signAsync: jest.fn(() => 'mocked-token'),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [PlaceOfInterestController],
-<<<<<<< HEAD
+      controllers: [PlaceOfInterestController, AuthController],
       providers: [PlaceOfInterestService,
-        {
-          provide: getRepositoryToken(PlaceOfInterest),
-          useClass: PlaceOfInterestRepositoryMock,
-        }],
+                  UserService,
+                  AuthService,
+                  {
+                    provide: getRepositoryToken(PlaceOfInterest),
+                    useClass: PlaceOfInterestRepositoryMock,
+                  },
+                  {
+                    provide: getRepositoryToken(User),
+                    useClass: UserRepositoryMock,
+                  },
+                  { provide: JwtService, useValue: jwtServiceMock },],
     }).compile();
 
     placesController = module.get<PlaceOfInterestController>(PlaceOfInterestController);
     placesService = module.get<PlaceOfInterestService>(PlaceOfInterestService);
+    userService = module.get<UserService>(UserService);
+    authController = module.get<AuthController>(AuthController);
+    authService = module.get<AuthService>(AuthService);
   });
 
   it('debería dar de alta un lugar de interés válido', async () => {
@@ -157,99 +166,70 @@ describe('UsersController', () => {
     }
   });
 
+  it('debería devolver la lista de lugares de interés del usuario autentificado', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
+    await placesService.clearDatabase();
+  
+    // Crear un usuario autentificado
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'Tp386161',
+    };
+    
+    const registered = await authController.register(user);
+  
+    // Añadir lugares de interés para el usuario
+    const poi: PlaceOfinterestDto = {
+      name: 'UJI',
+      lon: '-0.0576800',
+      lat: '39.9929000',
+      fav: true,
+      userId: 0,
+    }
+    const request = {
+      user: registered
+    };
+    
+    // Realizar la solicitud para añadir un nuevo lugar de interés
+
+    await placesController.addPlaceOfInterestCoords(request, poi);
+
+    // Consultar la lista de lugares de interés del usuario
+    const response = await placesController.getPlacesOfInterestOfUser(request);
+  
+    // Verificar que la respuesta contenga los lugares de interés esperados
+    expect(response).toHaveLength(1);
+    expect(response[0].lat).toEqual(poi.lat);
+    expect(response[0].lon).toEqual(poi.lon);
+    });
+  
+    //Escenario 2
+    it('debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
+
+      await userService.clearDatabase();
+      await placesService.clearDatabase();
+      // Crear un usuario autentificado
+      const user: RegisterDto = {
+        email: 'al386161@uji.es',
+        username: 'José Antonio',
+        password: 'Tp386161',
+      };
+      const registered = await authController.register(user);
+    
+      // Intentar consultar la lista de lugares de interés
+      try {
+        jest.spyOn(placesService, 'getPlacesOfInterestOfUser').mockRejectedValue(new Error('DataBaseInaccessibleException'));
+        await placesController.getPlacesOfInterestOfUser({user: registered});
+      } catch (error) {
+        // Verificar que la excepción lanzada sea DataBaseInaccessibleException
+        expect(error.message).toBe('DataBaseInaccessibleException');
+      }
+    });
+
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await placesService.clearDatabase();
   });
 });
-=======
-      providers: [PlaceOfInterestService],
-    }).compile();
-
-    piController = module.get<PlaceOfInterestController>(PlaceOfInterestController);
-    piService = module.get<PlaceOfInterestService>(PlaceOfInterestService);
-
-    const module2: TestingModule = await Test.createTestingModule({
-        controllers: [UserController],
-        providers: [UserService],
-      }).compile();
-
-      usController = module2.get<UserController>(UserController);
-      usService = module2.get<UserService>(UserService);
-  });
-
-  //Escenario 1
-  it('debería devolver la lista de lugares de interés del usuario autentificado', async () => {
-  // Limpiar la base de datos antes de la prueba
-  await usService.clearDatabase();
-
-  // Crear un usuario autentificado
-  const user: User = {
-    id: 1,
-    email: 'al386161@uji.es',
-    username: 'José Antonio',
-    password: 'Tp386161',
-  };
-  
-  await usService.registerUser(user);
-
-  // Añadir lugares de interés para el usuario
-  const place1: PlaceOfInterest = {
-    id: 0,
-    name: 'Castellón',
-    coord: '-0.0576800,39.9929000',
-    fav: false,
-  }
-
-  const place2: PlaceOfInterest = {
-    id: 1,
-    name: 'Benicasim',
-    coord: '0.0633400,40.0528000',
-    fav: false,
-  }
-
-  // Simular que la base de datos está disponible
-  jest.spyOn(piService, 'addPlaceOfInterest').mockImplementation(async () => {
-    return {
-        id: 3,
-        name: 'Valencia',
-        coord: ' -0.3773900, 39.4697500',
-        fav: false,
-    };
-  });
-
-  // Consultar la lista de lugares de interés del usuario
-  const response = await piService.getPlacesOfInterest();
-
-  // Verificar que la respuesta contenga los lugares de interés esperados
-  expect(response).toHaveLength(2);
-  expect(response[0]).toEqual([place1]);
-  expect(response[0]).toEqual([place2]);
-  });
-
-  //Escenario 2
-  it('debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
-  // Crear un usuario autentificado
-  const user: User = {
-    id: 1,
-    email: 'al386161@uji.es',
-    username: 'José Antonio',
-    password: 'Tp386161',
-  };
-  await usService.registerUser(user);
-
-  // Intentar consultar la lista de lugares de interés
-  try {
-    jest.spyOn(piService, 'getPlacesOfInterest').mockRejectedValue(new Error('DataBaseInaccessibleException'));
-  } catch (error) {
-    // Verificar que la excepción lanzada sea DataBaseInaccessibleException
-    expect(error.getResponse()).toBe('DataBaseInaccessibleException');
-  }
-  });
-
-  afterEach(async () => {
-    // Limpiar la base de datos después de cada prueba
-    await piService.clearPointsOfInterest();
-  });
-});
->>>>>>> 1c2106e (AcceptanceTests<HU07>: Invalid, Database not accesible complete)

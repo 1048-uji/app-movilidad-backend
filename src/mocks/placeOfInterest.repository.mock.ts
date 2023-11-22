@@ -26,12 +26,16 @@ export class PlaceOfInterestRepositoryMock {
         //console.log(users)
         return this.placeOfInterests[0];
       }
-      async find(): Promise<PlaceOfInterest[]> {
-        //const users = await this.users.find(user => user.email === emailToFind)
-        // Devuelve el usuario encontrado o null si no hay ninguno
-        //console.log(users)
-        return this.placeOfInterests;
-      }
+    async find(): Promise<PlaceOfInterest[]> {
+      //const users = await this.users.find(user => user.email === emailToFind)
+      // Devuelve el usuario encontrado o null si no hay ninguno
+      //console.log(users)
+      return this.placeOfInterests;
+    }
+    async findBy(id: number): Promise<PlaceOfInterest[]>{
+      //const places = await this.placeOfInterests.find(placeOfInterest => placeOfInterest.userId === id);
+      return this.placeOfInterests;
+    }
 
       createQueryBuilder(alias?: string): any {
         return {

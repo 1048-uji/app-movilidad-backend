@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
-<<<<<<< HEAD
 import { HttpException } from '@nestjs/common/exceptions';
 import { HttpStatus } from '@nestjs/common/enums';
 import { User } from '../../entities/user.entity';
@@ -78,35 +77,18 @@ export class PlaceOfInterestService {
       }
     } catch (error) {
       throw new HttpException('API Failed', HttpStatus.SERVICE_UNAVAILABLE);
-=======
-
-@Injectable()
-export class PlaceOfInterestService {
-  private placesOfInterest: PlaceOfInterest[] = [];
-  
-  async addPlaceOfInterest(place: PlaceOfInterest): Promise<PlaceOfInterest> {
-    if (this.checkPlace(place)) {
-      return null;
     }
   }
 
   async getPlacesOfInterest(): Promise<PlaceOfInterest[]> {
-<<<<<<< HEAD
     return this.poiRepository.find();
+  }
+
+  async getPlacesOfInterestOfUser(id: number): Promise<PlaceOfInterest[]> {
+    return this.poiRepository.findBy({userId: id});
   }
 
   async clearDatabase(){
     this.poiRepository.clear();
   }
-=======
-    return null;
-  }
-
-  private async checkPlace(place: PlaceOfInterest): Promise<Boolean> {
-    return null;
-  }
-
-    async clearDatabase(){
-        return this.userRepository.clear();
-    }
 }

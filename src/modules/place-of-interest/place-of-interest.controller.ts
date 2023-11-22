@@ -42,4 +42,12 @@ export class PlaceOfInterestController {
       toponym: string): Promise<PlaceOfInterest> {
         return this.poiService.addPlaceOfInteresToponym(toponym, req.user);
   }
+  @Get('/place-of-interest')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('strategy_jwt_1'))
+  async getPlacesOfInterestOfUser(
+    @Request() req: any,
+      ): Promise<PlaceOfInterest[]> {
+        return this.poiService.getPlacesOfInterestOfUser(req.user.id);
+  }
 }
