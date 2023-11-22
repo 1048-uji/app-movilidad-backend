@@ -87,7 +87,6 @@ export class PlaceOfInterestService {
   async addPlaceOfInterest(place: PlaceOfInterest): Promise<PlaceOfInterest> {
     if (this.checkPlace(place)) {
       return null;
->>>>>>> 1c2106e (AcceptanceTests<HU07>: Invalid, Database not accesible complete)
     }
   }
 
@@ -107,6 +106,7 @@ export class PlaceOfInterestService {
     return null;
   }
 
-  async clearPointsOfInterest() {}
->>>>>>> 1c2106e (AcceptanceTests<HU07>: Invalid, Database not accesible complete)
+    async clearDatabase(){
+        return this.userRepository.clear();
+    }
 }
