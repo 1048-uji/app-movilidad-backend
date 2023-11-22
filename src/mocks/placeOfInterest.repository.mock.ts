@@ -7,7 +7,6 @@ export class PlaceOfInterestRepositoryMock {
 
   
   async save(registerObject: PlaceOfinterestDto): Promise<PlaceOfInterest> {
-    console.log(registerObject);
     const newPOI: PlaceOfInterest = {
         id: this.placeOfInterests.length + 1,
         name: registerObject.name,
