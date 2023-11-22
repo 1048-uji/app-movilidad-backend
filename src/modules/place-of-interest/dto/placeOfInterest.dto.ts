@@ -3,12 +3,16 @@ import { IsBoolean, IsEmail, IsNumber, IsOptional, IsString, IsStrongPassword } 
 
 export class PlaceOfinterestDto {
 
+    @ApiProperty()
     @IsString()
     name: string;
+    @ApiProperty()
     @IsString()
     lon: string;
+    @ApiProperty()
     @IsString()
     lat: string;
+    @ApiProperty()
     @IsBoolean()
     fav: boolean;
     userId: number;

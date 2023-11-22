@@ -1,12 +1,13 @@
 import { Controller, Get, Post, UseGuards, Request, Body } from '@nestjs/common/decorators';
 import { PlaceOfInterestService } from './place-of-interest.service';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ValidationPipe } from '@nestjs/common';
 import { PlaceOfinterestDto } from './dto/placeOfInterest.dto';
 
 @Controller('place-of-interest')
+@ApiTags('Place-of-interest')
 export class PlaceOfInterestController {
   constructor(private poiService: PlaceOfInterestService) {}
 
