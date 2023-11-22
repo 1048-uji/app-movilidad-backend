@@ -87,6 +87,61 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
       expect(error.status).toBe(HttpStatus.SERVICE_UNAVAILABLE);
     }
   });
+  it('Crea un nuevo punto de interés con un topónimo válido', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await placesService.clearDatabase();
+
+    // Toponimo para el nuevo lugar de interes
+    const toponym = 'Castellón';
+    
+    const user: User = {
+      id: 0,
+      email: "test@gmail.com",
+      username: 'Antonio',
+      password: "$2b$10$jH4RqkQWYGzOXNhZgVTK",
+      placesOfInterest: []
+    }
+
+    const request = {
+      user: user
+    };
+
+    // Añadir un lugar de interés
+    await placesController.addPlaceOfInteresToponym(request, toponym);
+
+    // Verificar que el lugar de interés se ha añadido correctamente
+    const placesOfInterest: PlaceOfInterest[] = await piService.getPlacesOfInterest();
+    expect(placesOfInterest).toHaveLength(1);
+  });
+
+  it('debería lanzar una excepción si se intenta añadir un lugar de interés con un topónimo incorrecto', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await placesService.clearDatabase();
+
+    // Toponimo para el nuevo lugar de interes
+    const toponym = '';
+
+    const user: User = {
+      id: 0,
+      email: "test@gmail.com",
+      username: 'Antonio',
+      password: "$2b$10$jH4RqkQWYGzOXNhZgVTK",
+      placesOfInterest: []
+    }
+
+    const request = {
+      user: user
+    };
+
+    // Realizar la solicitud para añadir un nuevo punto de interés
+    try {
+      // Añadir un lugar de interés incorrecto
+      await placesController.addPlaceOfInteresToponym(request, toponym);
+    } catch (error) {
+      // Verificar que se haya lanzado un error con el mensaje esperado
+      expect(error.status).toBe(HttpStatus.SERVICE_UNAVAILABLE);
+    }
+  });
 
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
