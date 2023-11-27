@@ -13,6 +13,8 @@ export class PlaceOfInterest {
     lon: string;
     @Column()
     lat: string;
+    @Column()
+    address: string;
     @Column({default: false})
     fav: boolean;
     @Column({nullable: true})

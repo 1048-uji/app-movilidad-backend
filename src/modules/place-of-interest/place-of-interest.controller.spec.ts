@@ -5,14 +5,15 @@ import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
 import { HttpStatus } from '@nestjs/common';
 import { PlaceOfinterestDto } from './dto/placeOfInterest.dto';
 import { User } from '../../entities/user.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { PlaceOfInterestRepositoryMock } from '../../mocks/placeOfInterest.repository.mock';
 import { UserService } from '../users/user.service';
 import { AuthController } from '../auth/auth.controller';
 import { RegisterDto } from 'modules/auth/dto/register.dto';
 import { UserRepositoryMock } from '../../mocks/user.repository.mock';
 import { AuthService } from '../auth/auth.service';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import { jwtConstants } from '../auth/strategy/jwt.constant';
 
 describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => {
   let placesController: PlaceOfInterestController;
@@ -21,25 +22,30 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
   let authController: AuthController;
   let authService: AuthService;
   let jwtService: JwtService;
-  const jwtServiceMock = {
-    signAsync: jest.fn(() => 'mocked-token'),
-  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        TypeOrmModule.forRoot({
+          type: 'mysql',
+          host:'monorail.proxy.rlwy.net',
+          port: 20755,
+          username: 'root',
+          password: 'F1fhHDe3aeDF1G5464D4af1662bce4g5',
+          database: 'railway',
+          entities: [User,PlaceOfInterest],
+          synchronize: true,
+        }),
+        TypeOrmModule.forFeature([User, PlaceOfInterest]),
+        JwtModule.register({
+          secret: jwtConstants.secret,
+          signOptions: { expiresIn: '30d' },
+        }),
+      ],
       controllers: [PlaceOfInterestController, AuthController],
       providers: [PlaceOfInterestService,
                   UserService,
-                  AuthService,
-                  {
-                    provide: getRepositoryToken(PlaceOfInterest),
-                    useClass: PlaceOfInterestRepositoryMock,
-                  },
-                  {
-                    provide: getRepositoryToken(User),
-                    useClass: UserRepositoryMock,
-                  },
-                  { provide: JwtService, useValue: jwtServiceMock },],
+                  AuthService,],
     }).compile();
 
     placesController = module.get<PlaceOfInterestController>(PlaceOfInterestController);
@@ -220,7 +226,6 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     
       // Intentar consultar la lista de lugares de interés
       try {
-        jest.spyOn(placesService, 'getPlacesOfInterestOfUser').mockRejectedValue(new Error('DataBaseInaccessibleException'));
         await placesController.getPlacesOfInterestOfUser({user: registered});
       } catch (error) {
         // Verificar que la excepción lanzada sea DataBaseInaccessibleException

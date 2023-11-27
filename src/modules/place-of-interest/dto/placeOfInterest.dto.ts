@@ -8,10 +8,13 @@ export class PlaceOfinterestDto {
     name: string;
     @ApiProperty()
     @IsString()
-    lon: string;
+    lon?: string;
     @ApiProperty()
     @IsString()
-    lat: string;
+    lat?: string;
+    @ApiProperty()
+    @IsString()
+    address?: string;
     @ApiProperty()
     @IsBoolean()
     fav: boolean;

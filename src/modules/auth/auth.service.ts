@@ -15,7 +15,7 @@ export class AuthService {
     ) {}
 
     async login(loginObject: LoginDto): Promise<{ token: string }> {
-        const user = await this.userRepository.findOneBy({ email: loginObject.email });
+        const user = await this.userRepository.findOne({where: { email: loginObject.email }});
         if (!user) {
             throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
         }
@@ -28,7 +28,7 @@ export class AuthService {
     }
 
     async register(registerObject: RegisterDto): Promise<User> {
-        const email = await this.userRepository.findOne({ where: { email: registerObject.email } });
+        const email = await this.userRepository.findOneBy({ email: registerObject.email } );
         if (email) {
             throw new HttpException('User already exists', HttpStatus.CONFLICT);
         }

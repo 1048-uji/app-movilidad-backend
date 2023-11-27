@@ -18,14 +18,13 @@ export class PlaceOfInterestService {
 
   async addPlaceOfInterestCoords(placeOfInterestdata: PlaceOfinterestDto, user: User): Promise<PlaceOfInterest> {
     try {
-      const geocodingResponse = await axios.get('https://api.openrouteservice.org/geocode/reverse?api_key='+this.apiKey+'&point.lon='+placeOfInterestdata.lon+'&point.lat='+placeOfInterestdata.lat
-        /*this.baseUrlOR+"geocode/reverse", {
+      const geocodingResponse = await axios.get(this.baseUrlOR+"geocode/reverse", {
         params: {
           api_key: this.apiKey,
           'point.lon': placeOfInterestdata.lon,
           'point.lat': placeOfInterestdata.lat,
         },
-      }*/);
+      });
       const poiExist = await this.poiRepository.findOneBy({
         lat: placeOfInterestdata.lat,
         lon: placeOfInterestdata.lon,
@@ -34,47 +33,50 @@ export class PlaceOfInterestService {
           throw new HttpException('Place of Interest already exists', HttpStatus.CONFLICT);
       }
       placeOfInterestdata.userId = user.id;
+      placeOfInterestdata.address = geocodingResponse.data.features[0].properties.label;
       return this.poiRepository.save(placeOfInterestdata);
     } catch (error) {
       //console.log(error)
       throw new HttpException('APIFailed', HttpStatus.SERVICE_UNAVAILABLE);
     }
-
-    
   }
   async addPlaceOfInteresToponym(toponym: string, user: User): Promise<PlaceOfInterest> {
-    const API_KEY = '5b3ce3597851110001cf62482f02da5ed6794ccc8c6774ab019ffc8d';
-    
-    try {
-      const response = await axios.get('https://api.openrouteservice.org/geocode/search?api_key='+API_KEY+'&text='+toponym)
-
-      // Verificar si la solicitud fue exitosa y obtener las coordenadas
-      if (response.status === 200 && response.data && response.data.features && response.data.features.length > 0) {
-        const coordinates = response.data.features[0].geometry.coordinates;
-        const longitude = coordinates[0].toString(); // Longitud
-        const latitude = coordinates[1].toString(); // Latitud
-        
-        const poiExist = await this.poiRepository.findOneBy({
-          lat: latitude,
-          lon: longitude,
+      try {
+        //const response = await axios.get('https://api.openrouteservice.org/geocode/search?api_key='+API_KEY+'&text='+toponym)
+        const geocodingResponse = await axios.get(this.baseUrlOR+'geocode/search', {
+          params: {
+              api_key: this.apiKey,
+              text: toponym,
+          },
         });
+        // Verificar si la solicitud fue exitosa y obtener las coordenadas
+        if (geocodingResponse.status === 200 && geocodingResponse.data && geocodingResponse.data.features && geocodingResponse.data.features.length > 0) {
+          const coordinates = geocodingResponse.data.features[0].geometry.coordinates;
+          const longitude = coordinates[0].toString(); // Longitud
+          const latitude = coordinates[1].toString(); // Latitud
+          
+          const poiExist = await this.poiRepository.findOneBy({
+            lat: latitude,
+            lon: longitude,
+          });
 
-      if (poiExist) {
-        throw new HttpException('Place of Interest already exists', HttpStatus.CONFLICT);
-      }
-      
-      const poi:  PlaceOfinterestDto = {
-        name: toponym,
-        lon: longitude,
-        lat: latitude,
-        fav: false,
-        userId: user.id
-      }
-      return this.poiRepository.save(poi);
+        if (poiExist) {
+          throw new HttpException('Place of Interest already exists', HttpStatus.CONFLICT);
+        }
+        
+        const poi:  PlaceOfinterestDto = {
+          name: toponym,
+          lon: longitude,
+          lat: latitude,
+          address: toponym,
+          fav: false,
+          userId: user.id
+        }
+        return this.poiRepository.save(poi);
 
-      } else {
-        throw new HttpException('No se encontraron coordenadas para el lugar especificado.', HttpStatus.NOT_FOUND);
-      }
+        } else {
+          throw new HttpException('No se encontraron coordenadas para el lugar especificado.', HttpStatus.NOT_FOUND);
+        }
     } catch (error) {
       throw new HttpException('API Failed', HttpStatus.SERVICE_UNAVAILABLE);
     }

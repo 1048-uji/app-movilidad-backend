@@ -30,6 +30,6 @@ export class UserService {
 
 
     async clearDatabase(){
-        return this.userRepository.clear();
+        await this.userRepository.delete({});
     }
 }

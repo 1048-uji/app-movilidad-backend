@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UsersModule } from './modules/users/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,7 +8,8 @@ import { PlaceOfInterest } from 'entities/placeOfInterest.entity';
 import { User } from 'entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
+  imports: [ConfigModule.forRoot(),
+    TypeOrmModule.forRoot({
     type: 'mysql',
     host:'roundhouse.proxy.rlwy.net',
     port: 26383,

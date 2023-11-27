@@ -13,6 +13,6 @@ export class User {
     @Column()
     password: string;
     @OneToMany(() => PlaceOfInterest, placeOfInterest => placeOfInterest.user)
-    placesOfInterest: PlaceOfInterest[];
+    placesOfInterest?: PlaceOfInterest[];
 
 }
