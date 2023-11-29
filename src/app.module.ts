@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlaceOfInterestModule } from './modules/place-of-interest/place-of-interest.module';
 import { PlaceOfInterest } from 'entities/placeOfInterest.entity';
 import { User } from 'entities/user.entity';
+import { VehicleModule } from './modules/vehicle/vehicle.module';
 
 @Module({
   imports: [ConfigModule.forRoot(),
@@ -21,7 +22,8 @@ import { User } from 'entities/user.entity';
   }),
     UsersModule, 
     AuthModule,
-    PlaceOfInterestModule],
+    PlaceOfInterestModule,
+    VehicleModule],
   controllers: [],
   providers: [],
 })
