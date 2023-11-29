@@ -1,4 +1,4 @@
-import { RegisterDto } from 'modules/auth/dto/register.dto';
+/*import { RegisterDto } from 'modules/auth/dto/register.dto';
 import { User } from '../entities/user.entity';
 import { PlaceOfInterest } from 'entities/placeOfInterest.entity';
 
@@ -77,4 +77,4 @@ export class UserRepositoryMock {
     this.users = [];
 
   }
-}
+}*/
