@@ -1,4 +1,4 @@
-import { User } from '../entities/user.entity';
+/*import { User } from '../entities/user.entity';
 import { PlaceOfInterest } from 'entities/placeOfInterest.entity';
 import { PlaceOfinterestDto } from 'modules/place-of-interest/dto/placeOfInterest.dto';
 
@@ -72,4 +72,4 @@ export class PlaceOfInterestRepositoryMock {
     this.placeOfInterests = [];
 
   }
-}
+}*/

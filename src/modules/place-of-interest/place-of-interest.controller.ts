@@ -1,9 +1,9 @@
-import { Controller, Get, Post, UseGuards, Request, Body, Param } from '@nestjs/common/decorators';
+import { Controller, Get, Post, UseGuards, Request, Body, Param, Delete } from '@nestjs/common/decorators';
 import { PlaceOfInterestService } from './place-of-interest.service';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { ValidationPipe } from '@nestjs/common';
+import { ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { PlaceOfinterestDto } from './dto/placeOfInterest.dto';
 
 @Controller('place-of-interest')
@@ -45,4 +45,11 @@ export class PlaceOfInterestController {
       ): Promise<PlaceOfInterest[]> {
         return this.poiService.getPlacesOfInterestOfUser(req.user.id);
   }
+    @Delete(':id')
+    @ApiParam({ name: 'id', type: Number })
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async deletePlaceOfInterest(@Request() req: any,
+    @Param('id', ParseIntPipe) id: number): Promise<String> {
+        return this.poiService.deletePlaceOfInterest(id, req.user);
+    }
 }

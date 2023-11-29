@@ -89,6 +89,20 @@ export class PlaceOfInterestService {
   async getPlacesOfInterestOfUser(id: number): Promise<PlaceOfInterest[]> {
     return this.poiRepository.findBy({userId: id});
   }
+  async deletePlaceOfInterest(id: number, user: User): Promise<String>{
+    const placeOfInterest = await this.poiRepository.findOneBy({id: id});
+
+    if (!placeOfInterest) {
+        throw new HttpException('PlaceOfInterestNotExist', HttpStatus.NOT_FOUND);
+    }
+
+    if (placeOfInterest.user.id !== user.id){
+      throw new HttpException('PlaceOfInterestNotYours', HttpStatus.UNAUTHORIZED);
+    }
+
+    await this.poiRepository.remove(placeOfInterest);
+    return 'Place of Interest eliminado';
+}
 
   async clearDatabase(){
     this.poiRepository.clear();
