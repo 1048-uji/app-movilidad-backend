@@ -232,6 +232,84 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
         expect(error.message).toBe('DataBaseInaccessibleException');
       }
     });
+    it('debería borrar un lugar de interés guardado y guardar el cambio en el servidor', async () => {
+      // Limpiar la base de datos antes de la prueba
+      await userService.clearDatabase();
+      await placesService.clearDatabase();
+    
+      // Crear un usuario autentificado
+      const user: RegisterDto = {
+        email: 'al386161@uji.es',
+        username: 'José Antonio',
+        password: 'Tp386161',
+      };
+      const registered = await authController.register(user);
+    
+      // Añadir lugares de interés para el usuario
+      const placeOfInterest1: PlaceOfinterestDto = {
+        name: 'Castellón',
+        lon: '-0.0576800',
+        lat: '39.9929000',
+        fav: true,
+        userId: registered.id,
+      };
+      const placeOfInterest2: PlaceOfinterestDto = {
+        name: 'Benicasim',
+        lon: '0.0633400',
+        lat: '40.0528000',
+        fav: true,
+        userId: registered.id,
+      };
+    
+      const request = {
+        user: registered,
+      };
+    
+      // Realizar la solicitud para añadir nuevos lugares de interés
+      const poi1 = await placesController.addPlaceOfInterestCoords(request, placeOfInterest1);
+      const poi2 = await placesController.addPlaceOfInterestCoords(request, placeOfInterest2);
+    
+      // Consultar la lista de lugares de interés del usuario para verificar que se han añadido correctamente
+      let placesOfInterest = await placesController.getPlacesOfInterestOfUser(request);
+      expect(placesOfInterest).toHaveLength(2);
+    
+      // Realizar la solicitud para borrar un lugar de interés
+      await placesController.deletePlaceOfInterest(request, poi1.id);
+    
+      // Consultar la lista de lugares de interés del usuario después de borrar uno
+      placesOfInterest = await placesController.getPlacesOfInterestOfUser(request);
+    
+      // Verificar que solo queda un lugar de interés después de borrar uno
+      expect(placesOfInterest).toHaveLength(1);
+      expect(placesOfInterest[0]).toBe(poi2);
+    });
+    it('debería lanzar la excepción NullPointerException al intentar borrar un lugar de interés inexistente', async () => {
+      // Limpiar la base de datos antes de la prueba
+      await userService.clearDatabase();
+      await placesService.clearDatabase();
+    
+      // Crear un usuario autentificado
+      const user: RegisterDto = {
+        email: 'al386161@uji.es',
+        username: 'José Antonio',
+        password: 'Tp386161',
+      };
+      const registered = await authController.register(user);
+    
+      const request = {
+        user: registered,
+      };
+    
+      // Intentar borrar un lugar de interés que no existe
+      try {
+        await placesController.deletePlaceOfInterest(request, 1);
+        // Si no lanza una excepción, la prueba falla
+        fail('Se esperaba que lanzara la excepción NullPointerException');
+      } catch (error) {
+        // Verificar que la excepción sea la esperada
+        expect(error.message).toBe('PlaceOfInterestNotExist');
+      }
+    });
 
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
