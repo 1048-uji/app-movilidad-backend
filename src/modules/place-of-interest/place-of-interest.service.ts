@@ -96,7 +96,7 @@ export class PlaceOfInterestService {
         throw new HttpException('PlaceOfInterestNotExist', HttpStatus.NOT_FOUND);
     }
 
-    if (placeOfInterest.user.id !== user.id){
+    if (placeOfInterest.userId !== user.id){
       throw new HttpException('PlaceOfInterestNotYours', HttpStatus.UNAUTHORIZED);
     }
 
