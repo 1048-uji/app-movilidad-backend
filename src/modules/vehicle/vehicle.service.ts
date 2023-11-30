@@ -23,7 +23,23 @@ export class VehicleService {
         return this.vehicleRepository.save(vehicle);
     }
 
+    async deleteVehicle(id: number, user: User): Promise<String>{
+        const vehicle = await this.vehicleRepository.findOneBy({id: id});
+
+        if (!vehicle) {
+            throw new HttpException('VehicleNotExist', HttpStatus.NOT_FOUND);
+        }
+
+        if (vehicle.userId !== user.id){
+          throw new HttpException('VehicleNotYours', HttpStatus.UNAUTHORIZED);
+        }
+
+        await this.vehicleRepository.remove(vehicle);
+        return 'Vehicle eliminado';
+    }
+
     async clearDatabase(){
         this.vehicleRepository.clear();
       }
+
 }

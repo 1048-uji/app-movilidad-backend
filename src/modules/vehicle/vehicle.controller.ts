@@ -1,6 +1,6 @@
-import { Body, Controller, Post, Request, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Param, ParseIntPipe, Post, Request, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Vehicle } from '../../entities/vehicle.entity';
 import { VehicleService } from './vehicle.service';
 import { VehicleDto } from './dto/vehicle.dto';
@@ -27,4 +27,11 @@ export class VehicleController {
       return this.vehicleService.addVehicle(vehicleData, req.user);
   }
 
+  @Delete(':id')
+    @ApiParam({ name: 'id', type: Number })
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async deletePlaceOfInterest(@Request() req: any,
+    @Param('id', ParseIntPipe) id: number): Promise<String> {
+        return this.vehicleService.deleteVehicle(id, req.user);
+    }
 }

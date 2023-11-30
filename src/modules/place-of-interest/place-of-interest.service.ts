@@ -54,7 +54,7 @@ export class PlaceOfInterestService {
           const coordinates = geocodingResponse.data.features[0].geometry.coordinates;
           const longitude = coordinates[0].toString(); // Longitud
           const latitude = coordinates[1].toString(); // Latitud
-          
+
           const poiExist = await this.poiRepository.findOneBy({
             lat: latitude,
             lon: longitude,
