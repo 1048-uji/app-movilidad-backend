@@ -10,12 +10,12 @@ import { User } from 'entities/user.entity';
 @Module({
   imports: [ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-    type: 'mysql',
-    host:'roundhouse.proxy.rlwy.net',
-    port: 26383,
-    username: 'root',
-    password: 'EFA4E3ehDbc-3BAb5DFFHHbf6feH5HH5',
-    database: 'railway',
+    type: 'postgres',
+    host:'ep-lively-snowflake-84656411.eu-central-1.aws.neon.fl0.io',
+    port: 5432,
+    username: 'fl0user',
+    password: 'Z8yxw9EVKJkf',
+    database: 'database',
     entities: [User, PlaceOfInterest],
     synchronize: true,
   }),
