@@ -5,6 +5,7 @@ FROM node:14
 WORKDIR /src/main
 
 # Copia el archivo package.json e package-lock.json a la raíz de la aplicación
+RUN npm install -g @nestjs/cli
 COPY package*.json ./
 
 # Instala las dependencias
