@@ -120,6 +120,71 @@ describe('VehicleController (Registro de Vehículos)', () => {
     }
   });
 
+  it('debería devolver la lista de vehiculos del usuario autentificado', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
+    await vehicleService.clearDatabase();
+  
+    // Crear un usuario autentificado
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'Tp386161',
+    };
+    
+    const registered = await authController.register(user);
+  
+    // Añadir vehiculo para el usuario
+    const vehicleDto: VehicleDto = {
+      registration: '1234ABC',
+      name: 'coche',
+      carbType: 'gasolina',
+      model: 'X',
+      consum: 1.5,
+      brand: 'Una',
+      fav: false,
+    };
+
+    const request = {
+      user: registered
+    };
+    
+    // Realizar la solicitud para añadir un nuevo vehiculo
+
+    await vehicleController.addVehicle(request, vehicleDto);
+
+    // Consultar la lista de vehiculos del usuario
+    const response = await vehicleController.getVehicleOfUser(request);
+  
+    // Verificar que la respuesta contenga los lugares de interés esperados
+    expect(response).toHaveLength(1);
+    expect(response[0].name).toEqual(vehicleDto.name);
+    expect(response[0].registration).toEqual(vehicleDto.registration);
+    });
+  
+    //Escenario 2
+    it('debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
+
+      await userService.clearDatabase();
+      await vehicleService.clearDatabase();
+      // Crear un usuario autentificado
+      const user: RegisterDto = {
+        email: 'al386161@uji.es',
+        username: 'José Antonio',
+        password: 'Tp386161',
+      };
+      const registered = await authController.register(user);
+    
+      // Intentar consultar la lista de vehiculos
+      try {
+        jest.spyOn(vehicleService, 'getVehiclesOfUser').mockRejectedValue(new Error('DataBaseInaccessibleException'));
+        await vehicleController.getVehicleOfUser({user: registered});
+      } catch (error) {
+        // Verificar que la excepción lanzada sea DataBaseInaccessibleException
+        expect(error.message).toBe('DataBaseInaccessibleException');
+      }
+    });
+
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await userService.clearDatabase();

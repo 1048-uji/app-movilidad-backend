@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, ParseIntPipe, Post, Request, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Param, ParseIntPipe, Post, Request, UseGuards, ValidationPipe, Get } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Vehicle } from '../../entities/vehicle.entity';
@@ -33,5 +33,14 @@ export class VehicleController {
     async deletePlaceOfInterest(@Request() req: any,
     @Param('id', ParseIntPipe) id: number): Promise<String> {
         return this.vehicleService.deleteVehicle(id, req.user);
+    }
+
+    @Get('/vehicle')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async getVehicleOfUser(
+      @Request() req: any,
+        ): Promise<Vehicle[]> {
+          return this.vehicleService.getVehiclesOfUser(req.user.id);
     }
 }

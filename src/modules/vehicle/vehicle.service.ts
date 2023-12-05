@@ -38,6 +38,10 @@ export class VehicleService {
         return 'Vehicle eliminado';
     }
 
+    async getVehiclesOfUser(id: number): Promise<Vehicle[]> {
+        return this.vehicleRepository.findBy({userId: id});
+      }
+
     async clearDatabase(){
         this.vehicleRepository.clear();
       }
