@@ -1,7 +1,7 @@
 # Usa una imagen de Node.js como base
 FROM node:18
 
-# Establece el directorio de trabajo en /workspace
+# Establece el directorio de trabajo en 
 WORKDIR /src/main
 
 # Copia el archivo package.json e package-lock.json a la raíz de la aplicación
