@@ -120,6 +120,68 @@ describe('VehicleController (Registro de Vehículos)', () => {
     }
   });
 
+  it('debería eliminar el vehiculo de un usuario autenticado', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
+    await vehicleService.clearDatabase();
+
+    // Crear un usuario en la base de datos
+    const user: RegisterDto = {
+      username: 'José Antonio',
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    };
+    const registered = await authService.register(user);
+
+    // Autenticar al usuario
+    const authenticatedUser = await authController.login({
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    });
+    const request = {
+      user: registered,
+    };
+
+    // Borrar la cuenta del usuario autenticado
+    await controller.deleteAccount(request, registered.id);
+
+    // Verificar que la cuenta se borró correctamente
+    const usuariosRegistrados = await usService.getUsers();
+    expect(usuariosRegistrados).toHaveLength(0);
+  });
+
+  it('debería lanzar una excepción si se intenta borrar la cuenta de otro usuario', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await usService.clearDatabase();
+
+    // Crear un usuario en la base de datos
+    const user: RegisterDto = {
+      username: 'José Antonio',
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    };
+    const registered = await authService.register(user);
+
+    // Autenticar al usuario
+    const authenticatedUser = await authController.login({
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    });
+    const request = {
+      user: registered,
+    };
+    // Intentar borrar la cuenta de un usuario con un correo no existente
+    try {
+      await controller.deleteAccount(request, 10);
+      // Si no lanza una excepción, la prueba falla
+      fail('Se esperaba que lanzara una excepción');
+    } catch (error) {
+      // Verificar que la excepción sea la esperada
+      expect(error.status).toBe(HttpStatus.UNAUTHORIZED);
+      expect(error.message).toBe('InvalidUserException');
+    }
+  });
+
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await userService.clearDatabase();
