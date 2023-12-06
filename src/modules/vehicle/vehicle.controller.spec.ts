@@ -11,6 +11,7 @@ import { AuthService } from '../auth/auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/strategy/jwt.constant';
 import { Vehicle } from '../../entities/vehicle.entity';
+import { HttpStatus } from '@nestjs/common';
 
 describe('VehicleController (Registro de Vehículos)', () => {
   let vehicleController: VehicleController;
@@ -142,17 +143,32 @@ describe('VehicleController (Registro de Vehículos)', () => {
       user: registered,
     };
 
-    // Borrar la cuenta del usuario autenticado
-    await controller.deleteAccount(request, registered.id);
+    // Datos para el nuevo vehículo
+    const vehicleDto: VehicleDto = {
+      registration: '1234ABC',
+      name: 'coche',
+      carbType: 'gasolina',
+      model: 'X',
+      consum: 1.5,
+      brand: 'Una',
+      fav: false,
+    };
 
-    // Verificar que la cuenta se borró correctamente
-    const usuariosRegistrados = await usService.getUsers();
-    expect(usuariosRegistrados).toHaveLength(0);
+    // Registrar el vehículo
+    const vehicle = await vehicleController.addVehicle(request, vehicleDto);
+
+    // Borrar el vehiculo del usuario autenticado
+    await vehicleController.deleteVehicle(request, vehicle.id);
+
+    // Verificar que el vehiculo se borró correctamente
+    const vehicleRegistrados = await vehicleService.getVehiclesOfUser(registered.id);
+    expect(vehicleRegistrados).toHaveLength(0);
   });
 
-  it('debería lanzar una excepción si se intenta borrar la cuenta de otro usuario', async () => {
+  it('debería lanzar una excepción si se intenta borrar un vehiculo que no existe', async () => {
     // Limpiar la base de datos antes de la prueba
-    await usService.clearDatabase();
+    await userService.clearDatabase();
+    await vehicleService.clearDatabase();
 
     // Crear un usuario en la base de datos
     const user: RegisterDto = {
@@ -170,15 +186,30 @@ describe('VehicleController (Registro de Vehículos)', () => {
     const request = {
       user: registered,
     };
-    // Intentar borrar la cuenta de un usuario con un correo no existente
+
+    // Datos para el nuevo vehículo
+    const vehicleDto: VehicleDto = {
+      registration: '1234ABC',
+      name: 'coche',
+      carbType: 'gasolina',
+      model: 'X',
+      consum: 1.5,
+      brand: 'Una',
+      fav: false,
+    };
+
+    // Registrar el vehículo
+    const vehicle = await vehicleController.addVehicle(request, vehicleDto);
+
+    // Intentar borrar un vehiculo de un usuario que no existe
     try {
-      await controller.deleteAccount(request, 10);
+      await vehicleController.deleteVehicle(request, 10);
       // Si no lanza una excepción, la prueba falla
       fail('Se esperaba que lanzara una excepción');
     } catch (error) {
       // Verificar que la excepción sea la esperada
-      expect(error.status).toBe(HttpStatus.UNAUTHORIZED);
-      expect(error.message).toBe('InvalidUserException');
+      expect(error.status).toBe(HttpStatus.NOT_FOUND);
+      expect(error.message).toBe('VehicleNotExist');
     }
   });
 
