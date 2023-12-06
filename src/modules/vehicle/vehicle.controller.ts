@@ -30,7 +30,7 @@ export class VehicleController {
   @Delete(':id')
     @ApiParam({ name: 'id', type: Number })
     @UseGuards(AuthGuard('strategy_jwt_1'))
-    async deletePlaceOfInterest(@Request() req: any,
+    async deleteVehicle(@Request() req: any,
     @Param('id', ParseIntPipe) id: number): Promise<String> {
         return this.vehicleService.deleteVehicle(id, req.user);
     }
