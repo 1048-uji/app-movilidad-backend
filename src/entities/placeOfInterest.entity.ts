@@ -19,7 +19,7 @@ export class PlaceOfInterest {
     fav: boolean;
     @Column({nullable: true})
     userId?: number;
-    @ManyToOne(() => User, user => user.placesOfInterest)
+    @ManyToOne(() => User, user => user.placesOfInterest, { onDelete: 'CASCADE' })
     user: User;
 
 }

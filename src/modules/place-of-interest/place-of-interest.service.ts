@@ -54,7 +54,7 @@ export class PlaceOfInterestService {
           const coordinates = geocodingResponse.data.features[0].geometry.coordinates;
           const longitude = coordinates[0].toString(); // Longitud
           const latitude = coordinates[1].toString(); // Latitud
-          
+
           const poiExist = await this.poiRepository.findOneBy({
             lat: latitude,
             lon: longitude,
@@ -89,6 +89,20 @@ export class PlaceOfInterestService {
   async getPlacesOfInterestOfUser(id: number): Promise<PlaceOfInterest[]> {
     return this.poiRepository.findBy({userId: id});
   }
+  async deletePlaceOfInterest(id: number, user: User): Promise<String>{
+    const placeOfInterest = await this.poiRepository.findOneBy({id: id});
+
+    if (!placeOfInterest) {
+        throw new HttpException('PlaceOfInterestNotExist', HttpStatus.NOT_FOUND);
+    }
+
+    if (placeOfInterest.userId !== user.id){
+      throw new HttpException('PlaceOfInterestNotYours', HttpStatus.UNAUTHORIZED);
+    }
+
+    await this.poiRepository.remove(placeOfInterest);
+    return 'Place of Interest eliminado';
+}
 
   async clearDatabase(){
     this.poiRepository.clear();

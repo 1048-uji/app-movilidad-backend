@@ -19,10 +19,10 @@ export class UserController {
     @UseGuards(AuthGuard('strategy_jwt_1'))
     async deleteAccount(@Request() req: any,
     @Param('id', ParseIntPipe) id: number): Promise<String> {
-    const user = req.user;
-    if (user.id !== id) {
-        throw new HttpException('InvalidUserException', HttpStatus.UNAUTHORIZED);
+        const user = req.user;
+        if (user.id !== id) {
+            throw new HttpException('InvalidUserException', HttpStatus.UNAUTHORIZED);
+        }
+        return this.userService.deleteAccount(id);
     }
-    return this.userService.deleteAccount(id);
-}
 }

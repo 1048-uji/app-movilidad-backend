@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { PlaceOfInterest } from './placeOfInterest.entity';
+import { Vehicle } from './vehicle.entity';
 
 @Entity()
 export class User {
@@ -14,5 +15,8 @@ export class User {
     password: string;
     @OneToMany(() => PlaceOfInterest, placeOfInterest => placeOfInterest.user)
     placesOfInterest?: PlaceOfInterest[];
+    @OneToMany(() => Vehicle, vehicle => vehicle.user)
+    vehicle?: Vehicle[];
+
 
 }
