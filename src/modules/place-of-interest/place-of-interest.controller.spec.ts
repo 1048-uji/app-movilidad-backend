@@ -12,6 +12,7 @@ import { RegisterDto } from 'modules/auth/dto/register.dto';
 import { AuthService } from '../auth/auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/strategy/jwt.constant';
+import { Vehicle } from '../../entities/vehicle.entity';
 
 describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => {
   let placesController: PlaceOfInterestController;
@@ -25,14 +26,15 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
-          type: 'mysql',
-          host:'monorail.proxy.rlwy.net',
-          port: 20755,
-          username: 'root',
-          password: 'F1fhHDe3aeDF1G5464D4af1662bce4g5',
-          database: 'railway',
-          entities: [User,PlaceOfInterest],
+          type: 'postgres',
+          host:'ep-lively-snowflake-84656411.eu-central-1.aws.neon.fl0.io',
+          port: 5432,
+          username: 'fl0user',
+          password: 'Z8yxw9EVKJkf',
+          database: 'database',
+          entities: [User, PlaceOfInterest, Vehicle],
           synchronize: true,
+          ssl: {rejectUnauthorized: false},
         }),
         TypeOrmModule.forFeature([User, PlaceOfInterest]),
         JwtModule.register({

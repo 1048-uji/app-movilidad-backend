@@ -8,9 +8,9 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../../entities/user.entity';
-import { jwtConstants } from '../auth/strategy/jwt.constant';
+import { jwtConstants } from '../auth/strategy/jwt.constant';import { JwtAuthGuard } from '../auth/strategy/jwt-auth.guard';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
-import { JwtAuthGuard } from '../auth/strategy/jwt-auth.guard';
+import { Vehicle } from '../../entities/vehicle.entity';
 
 describe('UsersController', () => {
   let controller: UserController;
@@ -25,14 +25,15 @@ describe('UsersController', () => {
       const module: TestingModule = await Test.createTestingModule({
         imports: [
           TypeOrmModule.forRoot({
-            type: 'mysql',
-            host:'monorail.proxy.rlwy.net',
-            port: 20755,
-            username: 'root',
-            password: 'F1fhHDe3aeDF1G5464D4af1662bce4g5',
-            database: 'railway',
-            entities: [User,PlaceOfInterest],
+            type: 'postgres',
+            host:'ep-lively-snowflake-84656411.eu-central-1.aws.neon.fl0.io',
+            port: 5432,
+            username: 'fl0user',
+            password: 'Z8yxw9EVKJkf',
+            database: 'database',
+            entities: [User, PlaceOfInterest, Vehicle],
             synchronize: true,
+            ssl: {rejectUnauthorized: false},
           }),
           TypeOrmModule.forFeature([User]),
           JwtModule.register({

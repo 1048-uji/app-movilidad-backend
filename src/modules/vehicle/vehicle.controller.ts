@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, UseGuards, ValidationPipe, Delete, Param, ParseIntPipe, HttpException, HttpStatus, Get } from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards, ValidationPipe, Delete, Param, ParseIntPipe, HttpException, HttpStatus, Get, Put } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags, ApiParam } from '@nestjs/swagger';
 import { Vehicle } from '../../entities/vehicle.entity';
@@ -42,6 +42,23 @@ export class VehicleController {
       @Request() req: any,
         ): Promise<Vehicle[]> {
           return this.vehicleService.getVehiclesOfUser(req.user.id);
+    }
+
+    @Put()
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async updateVehicle(
+        @Body(
+            new ValidationPipe({
+                transform: true,
+                transformOptions: { enableImplicitConversion: true },
+                forbidNonWhitelisted: true
+            })
+        )
+        vehicleData: VehicleDto,
+        @Request() req: any
+    ): Promise<Vehicle> {
+        return this.vehicleService.updateVehicle(vehicleData, req.user);
     }
 
 }

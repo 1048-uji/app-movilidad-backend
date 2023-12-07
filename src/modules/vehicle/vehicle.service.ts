@@ -41,6 +41,17 @@ export class VehicleService {
     async getVehiclesOfUser(id: number): Promise<Vehicle[]> {
         return this.vehicleRepository.findBy({userId: id});
       }
+
+      async updateVehicle(vehicleData: VehicleDto, user: any): Promise<Vehicle> {
+        const vehicle = await this.vehicleRepository.findOneBy({ id: vehicleData.id });
+        if (!vehicle) {
+            throw new HttpException('Vehicle does not exist', HttpStatus.NOT_FOUND);
+        }
+        if (vehicle.userId != user.id) {
+            throw new HttpException('You are not the owner of this vehicle', HttpStatus.UNAUTHORIZED);
+        }
+        return this.vehicleRepository.save(vehicleData);
+    }
     
     async clearDatabase(){
         this.vehicleRepository.clear();
