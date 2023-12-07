@@ -11,6 +11,7 @@ import { AuthService } from '../auth/auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/strategy/jwt.constant';
 import { Vehicle } from '../../entities/vehicle.entity';
+import { HttpStatus } from '@nestjs/common';
 
 describe('VehicleController (Registro de Vehículos)', () => {
   let vehicleController: VehicleController;
@@ -119,6 +120,163 @@ describe('VehicleController (Registro de Vehículos)', () => {
       expect(error.message).toBe('DataBaseInaccessibleException');
     }
   });
+
+  it('debería eliminar el vehiculo de un usuario autenticado', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
+    await vehicleService.clearDatabase();
+
+    // Crear un usuario en la base de datos
+    const user: RegisterDto = {
+      username: 'José Antonio',
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    };
+    const registered = await authService.register(user);
+
+    // Autenticar al usuario
+    const authenticatedUser = await authController.login({
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    });
+    const request = {
+      user: registered,
+    };
+
+    // Datos para el nuevo vehículo
+    const vehicleDto: VehicleDto = {
+      registration: '1234ABC',
+      name: 'coche',
+      carbType: 'gasolina',
+      model: 'X',
+      consum: 1.5,
+      brand: 'Una',
+      fav: false,
+    };
+
+    // Registrar el vehículo
+    const vehicle = await vehicleController.addVehicle(request, vehicleDto);
+
+    // Borrar el vehiculo del usuario autenticado
+    await vehicleController.deleteVehicle(request, vehicle.id);
+
+    // Verificar que el vehiculo se borró correctamente
+    const vehicleRegistrados = await vehicleService.getVehiclesOfUser(registered.id);
+    expect(vehicleRegistrados).toHaveLength(0);
+  });
+
+  it('debería lanzar una excepción si se intenta borrar un vehiculo que no existe', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
+    await vehicleService.clearDatabase();
+
+    // Crear un usuario en la base de datos
+    const user: RegisterDto = {
+      username: 'José Antonio',
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    };
+    const registered = await authService.register(user);
+
+    // Autenticar al usuario
+    const authenticatedUser = await authController.login({
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    });
+    const request = {
+      user: registered,
+    };
+
+    // Datos para el nuevo vehículo
+    const vehicleDto: VehicleDto = {
+      registration: '1234ABC',
+      name: 'coche',
+      carbType: 'gasolina',
+      model: 'X',
+      consum: 1.5,
+      brand: 'Una',
+      fav: false,
+    };
+
+    // Registrar el vehículo
+    const vehicle = await vehicleController.addVehicle(request, vehicleDto);
+
+    // Intentar borrar un vehiculo de un usuario que no existe
+    try {
+      await vehicleController.deleteVehicle(request, 10);
+      // Si no lanza una excepción, la prueba falla
+      fail('Se esperaba que lanzara una excepción');
+    } catch (error) {
+      // Verificar que la excepción sea la esperada
+      expect(error.status).toBe(HttpStatus.NOT_FOUND);
+      expect(error.message).toBe('VehicleNotExist');
+    }
+  });
+
+  it('debería devolver la lista de vehiculos del usuario autentificado', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
+    await vehicleService.clearDatabase();
+  
+    // Crear un usuario autentificado
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'Tp386161',
+    };
+    
+    const registered = await authController.register(user);
+  
+    // Añadir vehiculo para el usuario
+    const vehicleDto: VehicleDto = {
+      registration: '1234ABC',
+      name: 'coche',
+      carbType: 'gasolina',
+      model: 'X',
+      consum: 1.5,
+      brand: 'Una',
+      fav: false,
+    };
+
+    const request = {
+      user: registered
+    };
+    
+    // Realizar la solicitud para añadir un nuevo vehiculo
+
+    await vehicleController.addVehicle(request, vehicleDto);
+
+    // Consultar la lista de vehiculos del usuario
+    const response = await vehicleController.getVehicleOfUser(request);
+  
+    // Verificar que la respuesta contenga los lugares de interés esperados
+    expect(response).toHaveLength(1);
+    expect(response[0].name).toEqual(vehicleDto.name);
+    expect(response[0].registration).toEqual(vehicleDto.registration);
+    });
+  
+    //Escenario 2
+    it('debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
+
+      await userService.clearDatabase();
+      await vehicleService.clearDatabase();
+      // Crear un usuario autentificado
+      const user: RegisterDto = {
+        email: 'al386161@uji.es',
+        username: 'José Antonio',
+        password: 'Tp386161',
+      };
+      const registered = await authController.register(user);
+    
+      // Intentar consultar la lista de vehiculos
+      try {
+        jest.spyOn(vehicleService, 'getVehiclesOfUser').mockRejectedValue(new Error('DataBaseInaccessibleException'));
+        await vehicleController.getVehicleOfUser({user: registered});
+      } catch (error) {
+        // Verificar que la excepción lanzada sea DataBaseInaccessibleException
+        expect(error.message).toBe('DataBaseInaccessibleException');
+      }
+    });
 
   it('debería devolver la lista de vehiculos del usuario autentificado', async () => {
     // Limpiar la base de datos antes de la prueba

@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Param, ParseIntPipe, Post, Request, UseGuards, ValidationPipe, Get } from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards, ValidationPipe, Delete, Param, ParseIntPipe, HttpException, HttpStatus, Get } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiParam } from '@nestjs/swagger';
 import { Vehicle } from '../../entities/vehicle.entity';
 import { VehicleService } from './vehicle.service';
 import { VehicleDto } from './dto/vehicle.dto';
@@ -43,4 +43,5 @@ export class VehicleController {
         ): Promise<Vehicle[]> {
           return this.vehicleService.getVehiclesOfUser(req.user.id);
     }
+
 }
