@@ -522,6 +522,94 @@ describe('VehicleController (Registro de Vehículos)', () => {
         expect(error.message).toBe('Vehicle does not exist');
       }
     });
+    it('debería añadir a favoritos un vehículo existente', async () => {
+      // Limpiar la base de datos antes de la prueba
+      await vehicleService.clearDatabase();
+      await userService.clearDatabase();
+    
+      // Crear un usuario autenticado
+      const user: RegisterDto = {
+        email: 'al386161@uji.es',
+        username: 'José Antonio',
+        password: 'Tp386161',
+      };
+      const registered = await authController.register(user);
+    
+      // Añadir vehículos para el usuario
+      const vehicle: VehicleDto = 
+        {
+          name: 'vehículo1',
+          carbType: 'combustible',
+          registration: '1234HSC',
+          model: 'X',
+          consum: 5,
+          brand: 'Una',
+          fav: true,
+        }
+      const request = {
+        user: registered,
+      };
+
+      const vehicleAdded = await vehicleController.addVehicle(request, vehicle);
+      
+    
+      // Actualizar el tipo y consumo del vehículo1
+      const updatedVehicleDto: VehicleDto = {
+        id: vehicleAdded.id,
+        name: 'vehículo1',
+        carbType: 'combustible',
+        registration: '1234HSC',
+        model: 'X',
+        consum: 5,
+        brand: 'Una',
+        fav: false,
+      };
+    
+      // Realizar la solicitud para actualizar el vehículo
+      const updatedVehicle = await vehicleController.updateVehicle(updatedVehicleDto, request);
+    
+      // Obtener el vehículo actualizado
+    
+      // Verificar que el vehículo se actualizó correctamente
+      expect(updatedVehicle.fav).toEqual(updatedVehicleDto.fav);
+    });
+    it('debería lanzar una excepción si se intenta actualizar un vehículo inexistente', async () => {
+      // Limpiar la base de datos antes de la prueba
+      await userService.clearDatabase();
+      await vehicleService.clearDatabase();
+    
+      // Crear un usuario autenticado
+      const user: RegisterDto = {
+        email: 'al386161@uji.es',
+        username: 'José Antonio',
+        password: 'Tp386161',
+      };
+      const registered = await authController.register(user);
+    
+      const request = {
+        user: registered,
+      };
+    
+      // Intentar actualizar un vehículo que no existe
+      try {
+        const updatedVehicleDto: VehicleDto = {
+          name: 'vehículo1',
+          registration: '1234ABC',
+          carbType: 'electrico',
+          model: 'X',
+          consum: 20,
+          brand: 'Una',
+          fav: false,
+        };
+        await vehicleController.updateVehicle(updatedVehicleDto, request);
+        // Si no lanza una excepción, la prueba falla
+        fail('Se esperaba que lanzara una excepción');
+      } catch (error) {
+        // Verificar que la excepción sea la esperada
+        expect(error.status).toBe(HttpStatus.NOT_FOUND);
+        expect(error.message).toBe('Vehicle does not exist');
+      }
+    });
 
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {

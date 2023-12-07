@@ -281,7 +281,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     
       // Verificar que solo queda un lugar de interés después de borrar uno
       expect(placesOfInterest).toHaveLength(1);
-      expect(placesOfInterest[0]).toBe(poi2);
+      expect(placesOfInterest[0]).toEqual(poi2);
     });
     it('debería lanzar la excepción NullPointerException al intentar borrar un lugar de interés inexistente', async () => {
       // Limpiar la base de datos antes de la prueba

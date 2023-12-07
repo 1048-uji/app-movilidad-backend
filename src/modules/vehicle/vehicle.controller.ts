@@ -78,4 +78,21 @@ export class VehicleController {
         return this.vehicleService.updateVehicle(vehicleData, req.user);
     }
 
+    @Put('/deleteFav')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async deleteFavouriteVehicle(
+        @Body(
+            new ValidationPipe({
+                transform: true,
+                transformOptions: { enableImplicitConversion: true },
+                forbidNonWhitelisted: true
+            })
+        )
+        vehicleData: VehicleDto,
+        @Request() req: any
+    ): Promise<Vehicle> {
+        return this.vehicleService.updateVehicle(vehicleData, req.user);
+    }
+
 }
