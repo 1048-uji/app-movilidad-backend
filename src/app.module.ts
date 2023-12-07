@@ -7,6 +7,7 @@ import { PlaceOfInterestModule } from './modules/place-of-interest/place-of-inte
 import { PlaceOfInterest } from 'entities/placeOfInterest.entity';
 import { User } from 'entities/user.entity';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
+import { Vehicle } from 'entities/vehicle.entity';
 
 @Module({
   imports: [ConfigModule.forRoot(),
@@ -17,7 +18,7 @@ import { VehicleModule } from './modules/vehicle/vehicle.module';
     username: 'root',
     password: 'VVpDybcUWbrDFJ89SjvLWy0xn0W0i2PM',
     database: 'appmobilidaddb',
-    entities: [User, PlaceOfInterest],
+    entities: [User, PlaceOfInterest, Vehicle],
     synchronize: true,
     ssl: {rejectUnauthorized: false},
   }),
