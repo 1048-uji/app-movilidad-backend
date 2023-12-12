@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { PlaceOfInterest } from './placeOfInterest.entity';
 import { Vehicle } from './vehicle.entity';
 
@@ -16,7 +16,11 @@ export class User {
     @OneToMany(() => PlaceOfInterest, placeOfInterest => placeOfInterest.user)
     placesOfInterest?: PlaceOfInterest[];
     @OneToMany(() => Vehicle, vehicle => vehicle.user)
-    vehicle?: Vehicle[];
-
+    vehicle?: Vehicle[];    
+    @OneToOne(() => Vehicle, {nullable: true})
+    @JoinColumn()
+    vehicleDefault: Vehicle;
+    @Column({default: 'recommended'})
+    routeDefault?: String
 
 }

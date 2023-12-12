@@ -13,6 +13,7 @@ import { AuthService } from '../auth/auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/strategy/jwt.constant';
 import { Vehicle } from '../../entities/vehicle.entity';
+import { ConfigModule } from '@nestjs/config';
 
 describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => {
   let placesController: PlaceOfInterestController;
@@ -25,12 +26,13 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        ConfigModule.forRoot(),
         TypeOrmModule.forRoot({
           type: 'postgres',
-          host:'ep-lively-snowflake-84656411.eu-central-1.aws.neon.fl0.io',
+          host:'ep-long-leaf-50431422.eu-central-1.aws.neon.fl0.io',
           port: 5432,
           username: 'fl0user',
-          password: 'Z8yxw9EVKJkf',
+          password: 'MNA8bza5YdXg',
           database: 'database',
           entities: [User, PlaceOfInterest, Vehicle],
           synchronize: true,
@@ -57,6 +59,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
 
   it('debería dar de alta un lugar de interés válido', async () => {
     // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
     await placesService.clearDatabase();
 
     // Coordenadas para el nuevo lugar de interés
@@ -67,15 +70,15 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
       fav: true,
       userId: 0,
     }
-    const user: User = {
-      id: 1,
-      email: "test@gmail.com",
-      username: 'Antonio',
-      password: "$2b$10$jH4RqkQWYGzOXNhZgVTK",
-      placesOfInterest: []
-    }
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'Tp386161',
+    };
+    const registered = await authController.register(user);
+
     const request = {
-      user: user
+      user: registered,
     };
 
     // Añadir un lugar de interés
@@ -88,6 +91,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
 
   it('debería lanzar una excepción si se intenta añadir un lugar de interés con coordenadas incorrectas', async () => {
     // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
     await placesService.clearDatabase();
     const poi: PlaceOfinterestDto = {
       name: 'UJI',
@@ -96,15 +100,15 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
       fav: true,
       userId: 0,
     }
-    const user: User = {
-      id: 1,
-      email: "test@gmail.com",
-      username: 'Antonio',
-      password: "$2b$10$jH4RqkQWYGzOXNhZgVTK",
-      placesOfInterest: []
-    }
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'Tp386161',
+    };
+    const registered = await authController.register(user);
+
     const request = {
-      user: user
+      user: registered,
     };
     // Intentar añadir un lugar de interés con coordenadas incorrectas
     try {
@@ -118,21 +122,21 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
   });
   it('Crea un nuevo punto de interés con un topónimo válido', async () => {
     // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
     await placesService.clearDatabase();
 
     // Toponimo para el nuevo lugar de interes
     const toponym = 'Castellón';
     
-    const user: User = {
-      id: 0,
-      email: "test@gmail.com",
-      username: 'Antonio',
-      password: "$2b$10$jH4RqkQWYGzOXNhZgVTK",
-      placesOfInterest: []
-    }
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'Tp386161',
+    };
+    const registered = await authController.register(user);
 
     const request = {
-      user: user
+      user: registered,
     };
 
     // Añadir un lugar de interés
@@ -145,21 +149,21 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
 
   it('debería lanzar una excepción si se intenta añadir un lugar de interés con un topónimo incorrecto', async () => {
     // Limpiar la base de datos antes de la prueba
+    await userService.clearDatabase();
     await placesService.clearDatabase();
 
     // Toponimo para el nuevo lugar de interes
     const toponym = '';
 
-    const user: User = {
-      id: 0,
-      email: "test@gmail.com",
-      username: 'Antonio',
-      password: "$2b$10$jH4RqkQWYGzOXNhZgVTK",
-      placesOfInterest: []
-    }
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'Tp386161',
+    };
+    const registered = await authController.register(user);
 
     const request = {
-      user: user
+      user: registered,
     };
 
     // Realizar la solicitud para añadir un nuevo punto de interés
@@ -313,6 +317,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
 
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
+    await userService.clearDatabase();
     await placesService.clearDatabase();
   });
 });

@@ -11,6 +11,7 @@ import { User } from '../../entities/user.entity';
 import { jwtConstants } from '../auth/strategy/jwt.constant';import { JwtAuthGuard } from '../auth/strategy/jwt-auth.guard';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
 import { Vehicle } from '../../entities/vehicle.entity';
+import { ConfigModule } from '@nestjs/config';
 
 describe('UsersController', () => {
   let controller: UserController;
@@ -24,12 +25,13 @@ describe('UsersController', () => {
   beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
         imports: [
+          ConfigModule.forRoot(),
           TypeOrmModule.forRoot({
             type: 'postgres',
-            host:'ep-lively-snowflake-84656411.eu-central-1.aws.neon.fl0.io',
+            host:'ep-long-leaf-50431422.eu-central-1.aws.neon.fl0.io',
             port: 5432,
             username: 'fl0user',
-            password: 'Z8yxw9EVKJkf',
+            password: 'MNA8bza5YdXg',
             database: 'database',
             entities: [User, PlaceOfInterest, Vehicle],
             synchronize: true,

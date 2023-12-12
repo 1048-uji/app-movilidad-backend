@@ -18,5 +18,5 @@ export class PlaceOfinterestDto {
     @ApiProperty()
     @IsBoolean()
     fav: boolean;
-    userId: number;
+    userId?: number;
 }

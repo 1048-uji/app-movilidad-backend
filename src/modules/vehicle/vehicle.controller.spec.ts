@@ -14,6 +14,7 @@ import { jwtConstants } from '../auth/strategy/jwt.constant';
 import { Vehicle } from '../../entities/vehicle.entity';
 import { HttpStatus } from '@nestjs/common';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
+import { ConfigModule } from '@nestjs/config';
 
 describe('VehicleController (Registro de Vehículos)', () => {
   let vehicleController: VehicleController;
@@ -26,14 +27,15 @@ describe('VehicleController (Registro de Vehículos)', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        ConfigModule.forRoot(),
         TypeOrmModule.forRoot({
           type: 'postgres',
-          host:'ep-lively-snowflake-84656411.eu-central-1.aws.neon.fl0.io',
+          host:'ep-long-leaf-50431422.eu-central-1.aws.neon.fl0.io',
           port: 5432,
           username: 'fl0user',
-          password: 'Z8yxw9EVKJkf',
+          password: 'MNA8bza5YdXg',
           database: 'database',
-          entities: [User, Vehicle, PlaceOfInterest],
+          entities: [User, PlaceOfInterest, Vehicle],
           synchronize: true,
           ssl: {rejectUnauthorized: false},
         }),

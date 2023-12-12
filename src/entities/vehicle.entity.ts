@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { User } from "./user.entity";
 
 
@@ -24,7 +24,7 @@ export class Vehicle {
     fav: boolean;
     @Column({nullable: true})
     userId?: number;
-    @ManyToOne(() => User, user => user.vehicle, { onDelete: 'CASCADE' })
+    @ManyToOne(() => User, user => user.vehicle, { onDelete: 'CASCADE' , onUpdate: 'CASCADE'})
     user: User;
 
 }
