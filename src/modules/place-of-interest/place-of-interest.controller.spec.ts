@@ -14,6 +14,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/strategy/jwt.constant';
 import { Vehicle } from '../../entities/vehicle.entity';
 import { ConfigModule } from '@nestjs/config';
+import { Route } from '../../entities/route.entity';
 
 describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => {
   let placesController: PlaceOfInterestController;
@@ -34,7 +35,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
           username: 'fl0user',
           password: 'MNA8bza5YdXg',
           database: 'database',
-          entities: [User, PlaceOfInterest, Vehicle],
+          entities: [User, PlaceOfInterest, Vehicle, Route],
           synchronize: true,
           ssl: {rejectUnauthorized: false},
         }),

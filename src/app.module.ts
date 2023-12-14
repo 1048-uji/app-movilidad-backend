@@ -8,6 +8,7 @@ import { PlaceOfInterest } from 'entities/placeOfInterest.entity';
 import { User } from 'entities/user.entity';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { Vehicle } from 'entities/vehicle.entity';
+import { RoutesModule } from './modules/routes/routes.module';
 
 @Module({
   imports: [ConfigModule.forRoot(),
@@ -25,7 +26,8 @@ import { Vehicle } from 'entities/vehicle.entity';
     UsersModule, 
     AuthModule,
     PlaceOfInterestModule,
-    VehicleModule],
+    VehicleModule,
+    RoutesModule],
   controllers: [],
   providers: [],
 })

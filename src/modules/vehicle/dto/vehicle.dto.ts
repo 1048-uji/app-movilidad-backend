@@ -27,6 +27,6 @@ export class VehicleDto {
     consum: number;
     @ApiProperty()
     @IsBoolean()
-    fav: boolean;
+    fav?: boolean;
     userId?: number;
 }

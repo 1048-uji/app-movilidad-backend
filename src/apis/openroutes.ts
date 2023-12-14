@@ -1,6 +1,12 @@
 import axios from 'axios';
-import { PlaceOfinterestDto } from 'modules/place-of-interest/dto/placeOfInterest.dto';
+import { PlaceOfinterestDto } from '../modules/place-of-interest/dto/placeOfInterest.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { RouteDto } from '../modules/routes/dto/route.dto';
+import { RouteOptionsDto, Strategy } from '../modules/routes/dto/routeOptions.dto';
+import { RouteStrategy } from '../modules/routes/strategies/interface/route-strategy.interface';
+import { FastRouteStrategy } from '../modules/routes/strategies/fast-route.strategy';
+import { ShortRouteStrategy } from '../modules/routes/strategies/short-route.strategy';
+import { RecommendedRouteStrategy } from '../modules/routes/strategies/recommended-route.strategy';
 
 class OpenRoutesService {
   private static instance: OpenRoutesService;
@@ -66,6 +72,25 @@ class OpenRoutesService {
     } catch (error) {
       throw new HttpException('APIFailed', HttpStatus.SERVICE_UNAVAILABLE);
     }
+  }
+
+  async createRoute(start: PlaceOfinterestDto, end: PlaceOfinterestDto, routeOptions: RouteOptionsDto): Promise<RouteDto>{
+    let route: RouteStrategy
+    switch(routeOptions.strategy) { 
+      case Strategy.FAST: { 
+         route = new FastRouteStrategy() 
+         break; 
+      } 
+      case Strategy.SHORT: { 
+        route = new ShortRouteStrategy()
+         break; 
+      } 
+      case Strategy.RECOMMENDED: { 
+        route = new RecommendedRouteStrategy()
+        break; 
+      }
+    } 
+    return route.createRoute(start, end, routeOptions)
   }
 }
 

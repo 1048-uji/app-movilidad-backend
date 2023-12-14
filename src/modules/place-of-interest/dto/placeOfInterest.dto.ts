@@ -17,6 +17,6 @@ export class PlaceOfinterestDto {
     address?: string;
     @ApiProperty()
     @IsBoolean()
-    fav: boolean;
+    fav?: boolean;
     userId?: number;
 }
