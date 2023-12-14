@@ -7,6 +7,8 @@ export class Route {
 
     @PrimaryGeneratedColumn()
     id: number;
+    @Column()
+    name: string
     @Column({type: 'text'})
     path: string;
     @Column()

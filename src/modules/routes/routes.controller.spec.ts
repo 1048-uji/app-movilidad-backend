@@ -17,6 +17,7 @@ import { RegisterDto } from '../auth/dto/register.dto';
 import { PlaceOfinterestDto } from '../place-of-interest/dto/placeOfInterest.dto';
 import { RouteOptionsDto, Strategy, VehicleType } from './dto/routeOptions.dto';
 import { AuthService } from '../auth/auth.service';
+import { RouteDto } from './dto/route.dto';
 
 describe('RoutesController (Crear Ruta)', () => {
   let placesController: PlaceOfInterestController;
@@ -143,11 +144,86 @@ describe('RoutesController (Crear Ruta)', () => {
       fail('Se esperaba que lanzara la excepción InvalidVehicleException');
     } catch (error) {
       // Verificar que la excepción sea la esperada
-      expect(error.message).toBe('Start point must have either lat and lon or address');
+      expect(error.message).toBe('La direccion de origen debe tener coordenadas o una dirección');
     }
   });
+  it('E01 (Válido): debería guardar la ruta válida', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+    routesService.clearDatabase();
 
-  // ... Otras pruebas ...
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+    const registered = authController.register(user);
+    const request = {
+      user: registered,
+    };
+
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+    const end: PlaceOfinterestDto =
+    { name: 'Valencia',
+      lon: '-0.3773900', 
+      lat: '39.4697500', 
+      fav: false 
+    };
+    const routeOptions: RouteOptionsDto = {
+      vehicleType: VehicleType.DRIVING_CAR,
+      strategy: Strategy.RECOMMENDED
+    };
+    const route = await routesController.createRoute(request, start, end, routeOptions);
+    route.name = 'Castellón-Valencia';
+    const savedRoute = await routesController.saveRoute(request, route);
+
+    expect(savedRoute.start).toBe(route.start);
+    expect(savedRoute.end).toBe(route.end);
+
+  })
+  it('E03 (Inválido): debería saltar una excepción', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+    routesService.clearDatabase();
+
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+    const registered = authController.register(user);
+    const request = {
+    };
+
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+    const end: PlaceOfinterestDto =
+    { name: 'Valencia',
+      lon: '-0.3773900', 
+      lat: '39.4697500', 
+      fav: false 
+    };
+    const routeOptions: RouteOptionsDto = {
+      vehicleType: VehicleType.DRIVING_CAR,
+      strategy: Strategy.RECOMMENDED
+    };
+    try{
+      const route = await routesController.createRoute(request, start, end, routeOptions);
+      route.name = 'Castellón-Valencia';
+      const savedRoute = await routesController.saveRoute(request, route);
+    }catch(error){
+      expect(error.message).toBe('Usuario no autentificado');
+    }
+
+  })
+
 
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {

@@ -8,7 +8,10 @@ export class RouteDto {
     id?: number;
     @ApiProperty()
     @IsString()
-    path: string[];
+    name?: string;
+    @ApiProperty()
+    @IsString()
+    path: string;
     @ApiProperty()
     @IsString()
     distance: string;

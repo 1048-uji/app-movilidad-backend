@@ -12,6 +12,7 @@ import { jwtConstants } from '../auth/strategy/jwt.constant';import { JwtAuthGua
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
 import { Vehicle } from '../../entities/vehicle.entity';
 import { ConfigModule } from '@nestjs/config';
+import { Route } from '../../entities/route.entity';
 
 describe('UsersController', () => {
   let controller: UserController;
@@ -33,7 +34,7 @@ describe('UsersController', () => {
             username: 'fl0user',
             password: 'MNA8bza5YdXg',
             database: 'database',
-            entities: [User, PlaceOfInterest, Vehicle],
+            entities: [User, PlaceOfInterest, Vehicle, Route],
             synchronize: true,
             ssl: {rejectUnauthorized: false},
           }),
