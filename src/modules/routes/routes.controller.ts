@@ -95,4 +95,21 @@ export class RoutesController {
     ): Promise<Route> {
         return this.routesService.updateRoute(routeData, req.user);
     }
+
+    @Put('/deleteFav')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async deleteFavouriteRoute(
+        @Body(
+            new ValidationPipe({
+                transform: true,
+                transformOptions: { enableImplicitConversion: true },
+                forbidNonWhitelisted: true
+            })
+        )
+        routeData: RouteDto,
+        @Request() req: any
+    ): Promise<Route> {
+        return this.routesService.updateRoute(routeData, req.user);
+    }
 }
