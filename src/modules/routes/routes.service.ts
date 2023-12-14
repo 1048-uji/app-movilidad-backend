@@ -44,8 +44,22 @@ export class RoutesService {
         if(user === (null||undefined)){
             throw new HttpException('Usuario no autentificado', HttpStatus.UNAUTHORIZED);
         }
-        console.log('Lista Usuaio: ', await this.routesRepository.find())
         return await this.routesRepository.findBy({userId: user.id});
+    }
+
+    async deleteRoute(id: number, user: User): Promise<String>{
+        const route = await this.routesRepository.findOneBy({id: id});
+
+        if (!route) {
+            throw new HttpException('La ruta no existe', HttpStatus.NOT_FOUND);
+        }
+
+        if (route.userId !== user.id){
+          throw new HttpException('La ruta no es tuya', HttpStatus.UNAUTHORIZED);
+        }
+
+        await this.routesRepository.remove(route);
+        return 'Ruta eliminada';
     }
 
   async clearDatabase(){

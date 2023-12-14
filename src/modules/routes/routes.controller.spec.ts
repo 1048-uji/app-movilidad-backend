@@ -304,11 +304,95 @@ describe('RoutesController (Crear Ruta)', () => {
       expect(error.message).toBe('Usuario no autentificado');
     }
   })
+  it('E01 (válido): debería borrar la ruta', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+    routesService.clearDatabase();
 
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+    const registered = await authController.register(user);
+    const request = {
+      user: registered,
+    };
+
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+    const end: PlaceOfinterestDto =
+    { name: 'Valencia',
+      lon: '-0.3773900', 
+      lat: '39.4697500', 
+      fav: false 
+    };
+    const routeOptions: RouteOptionsDto = {
+      vehicleType: VehicleType.DRIVING_CAR,
+      strategy: Strategy.RECOMMENDED
+    };
+
+    const route = await routesController.createRoute(request, start, end, routeOptions);
+    route.name = 'Castellón-Valencia';
+    const savedRoute = await routesController.saveRoute(request, route);
+
+    const deleted = await routesController.deleteVehicle(request, savedRoute.id);
+
+    expect(deleted).toBe('Ruta eliminada')
+  })
+  it('E02 (Inválido): debería lanzar la excepción de ruta no existe', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+    routesService.clearDatabase();
+
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+    const registered = await authController.register(user);
+    const request = {
+      user: registered,
+    };
+
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+    const end: PlaceOfinterestDto =
+    { name: 'Valencia',
+      lon: '-0.3773900', 
+      lat: '39.4697500', 
+      fav: false 
+    };
+    const routeOptions: RouteOptionsDto = {
+      vehicleType: VehicleType.DRIVING_CAR,
+      strategy: Strategy.RECOMMENDED
+    };
+
+    const route = await routesController.createRoute(request, start, end, routeOptions);
+    route.name = 'Castellón-Valencia';
+    const savedRoute = await routesController.saveRoute(request, route);
+
+    try{
+      const deleted = await routesController.deleteVehicle(request, 7);
+      fail('Se esperaba que lanzara la excepción InvalidVehicleException');
+    }catch(error){
+      expect(error.message).toBe('La ruta no existe')
+    }
+    
+
+    
+  })
 
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await userService.clearDatabase();
     await placesService.clearDatabase();
   });
+  
 });
