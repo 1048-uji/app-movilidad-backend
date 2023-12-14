@@ -1,6 +1,6 @@
 import { Body, Controller, Post, UseGuards, ValidationPipe, Request, Get, Delete, Param, ParseIntPipe, Put } from '@nestjs/common';
 import { RoutesService } from './routes.service';
-import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RouteDto } from './dto/route.dto';
 import { RouteOptionsDto } from './dto/routeOptions.dto';
@@ -8,6 +8,7 @@ import { PlaceOfinterestDto } from '../place-of-interest/dto/placeOfInterest.dto
 import { Route } from '../../entities/route.entity';
 
 @Controller('routes')
+@ApiTags('Routes')
 export class RoutesController {
     constructor(private routesService: RoutesService) {}
 
