@@ -9,6 +9,7 @@ import { User } from 'entities/user.entity';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { Vehicle } from 'entities/vehicle.entity';
 import { RoutesModule } from './modules/routes/routes.module';
+import { Route } from 'entities/route.entity';
 
 @Module({
   imports: [ConfigModule.forRoot(),
@@ -19,7 +20,7 @@ import { RoutesModule } from './modules/routes/routes.module';
     username: 'root',
     password: 'VVpDybcUWbrDFJ89SjvLWy0xn0W0i2PM',
     database: 'appmobilidaddb',
-    entities: [User, PlaceOfInterest, Vehicle],
+    entities: [User, PlaceOfInterest, Vehicle, Route],
     synchronize: true,
     ssl: {rejectUnauthorized: false},
   }),
