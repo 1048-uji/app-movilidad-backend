@@ -5,6 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RouteDto } from './dto/route.dto';
 import { RouteOptionsDto } from './dto/routeOptions.dto';
 import { PlaceOfinterestDto } from '../place-of-interest/dto/placeOfInterest.dto';
+import { Route } from '../../entities/route.entity';
 
 @Controller('routes')
 export class RoutesController {
@@ -60,5 +61,13 @@ export class RoutesController {
         routeData: RouteDto,
     ): Promise<RouteDto> {
         return this.routesService.saveRoute(req.user, routeData);
+    }
+    @Get('/place-of-interest')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async getRoutesOfUser(
+        @Request() req: any,
+        ): Promise<Route[]> {
+            return this.routesService.getRoutesOfUser(req.user);
     }
 }

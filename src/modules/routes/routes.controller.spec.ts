@@ -62,6 +62,9 @@ describe('RoutesController (Crear Ruta)', () => {
     routesController = module.get<RoutesController>(RoutesController);
     routesService = module.get<RoutesService>(RoutesService);
     authService = module.get<AuthService>(AuthService);
+    userService.clearDatabase();
+    placesService.clearDatabase();
+    routesService.clearDatabase();
   });
 
   it('E01 (Válido): debería devolver el trayecto entre dos lugares y guardar el estado en el servidor', async () => {
@@ -221,7 +224,85 @@ describe('RoutesController (Crear Ruta)', () => {
     }catch(error){
       expect(error.message).toBe('Usuario no autentificado');
     }
+  })
+  it('E01 (Válido): debería listar la ruta', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+    routesService.clearDatabase();
 
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+    const registered = await authController.register(user);
+    const request = {
+      user: registered,
+    };
+
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+    const end: PlaceOfinterestDto =
+    { name: 'Valencia',
+      lon: '-0.3773900', 
+      lat: '39.4697500', 
+      fav: false 
+    };
+    const routeOptions: RouteOptionsDto = {
+      vehicleType: VehicleType.DRIVING_CAR,
+      strategy: Strategy.RECOMMENDED
+    };
+    const route = await routesController.createRoute(request, start, end, routeOptions);
+    route.name = 'Castellón-Valencia';
+    const savedRoute = await routesController.saveRoute(request, route);
+    expect(savedRoute.userId).toBe(registered.id)
+    const routes = await routesController.getRoutesOfUser(request);
+
+    expect(routes.length).toBe(1);
+    expect(routes[0].id).toBe(savedRoute.id);
+
+  })
+  it('E03 (inválido): debería lanzar la excepción user not logged', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+    routesService.clearDatabase();
+
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+    const registered = await authController.register(user);
+    const request = {
+    };
+
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+    const end: PlaceOfinterestDto =
+    { name: 'Valencia',
+      lon: '-0.3773900', 
+      lat: '39.4697500', 
+      fav: false 
+    };
+    const routeOptions: RouteOptionsDto = {
+      vehicleType: VehicleType.DRIVING_CAR,
+      strategy: Strategy.RECOMMENDED
+    };
+    try{
+      const route = await routesController.createRoute(request, start, end, routeOptions);
+      route.name = 'Castellón-Valencia';
+      const savedRoute = await routesController.saveRoute(request, route);
+      expect(savedRoute.userId).toBe(registered.id)
+      const routes = await routesController.getRoutesOfUser(request);
+    }catch(error){
+      expect(error.message).toBe('Usuario no autentificado');
+    }
   })
 
 

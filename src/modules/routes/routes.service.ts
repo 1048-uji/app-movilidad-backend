@@ -40,6 +40,13 @@ export class RoutesService {
         routeData.userId = user.id
         return await this.routesRepository.save(routeData);
     }
+    async getRoutesOfUser(user: User): Promise<Route[]>{
+        if(user === (null||undefined)){
+            throw new HttpException('Usuario no autentificado', HttpStatus.UNAUTHORIZED);
+        }
+        console.log('Lista Usuaio: ', await this.routesRepository.find())
+        return await this.routesRepository.findBy({userId: user.id});
+    }
 
   async clearDatabase(){
     this.routesRepository.clear();
