@@ -62,6 +62,17 @@ export class RoutesService {
         return 'Ruta eliminada';
     }
 
+    async updateRoute(routeData: RouteDto, user: any): Promise<Route> {
+        const route = await this.routesRepository.findOneBy({ id: routeData.id });
+        if (!route) {
+            throw new HttpException('La ruta no existe', HttpStatus.NOT_FOUND);
+        }
+        if (route.userId != user.id) {
+            throw new HttpException('No eres el propietario de la ruta', HttpStatus.UNAUTHORIZED);
+        }
+        return this.routesRepository.save(routeData);
+    }
+
   async clearDatabase(){
     this.routesRepository.clear();
   }

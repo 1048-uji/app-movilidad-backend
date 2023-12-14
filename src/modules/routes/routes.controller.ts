@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards, ValidationPipe, Request, Get, Delete, Param, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, ValidationPipe, Request, Get, Delete, Param, ParseIntPipe, Put } from '@nestjs/common';
 import { RoutesService } from './routes.service';
 import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -77,5 +77,22 @@ export class RoutesController {
     async deleteVehicle(@Request() req: any,
     @Param('id', ParseIntPipe) id: number): Promise<String> {
         return this.routesService.deleteRoute(id, req.user);
+    }
+
+    @Put('/addFav')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async addFavouriteRoute(
+        @Body(
+            new ValidationPipe({
+                transform: true,
+                transformOptions: { enableImplicitConversion: true },
+                forbidNonWhitelisted: true
+            })
+        )
+        routeData: RouteDto,
+        @Request() req: any
+    ): Promise<Route> {
+        return this.routesService.updateRoute(routeData, req.user);
     }
 }
