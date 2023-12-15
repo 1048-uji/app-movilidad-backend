@@ -14,7 +14,15 @@ export class PlaceOfInterest {
     @Column()
     lat: string;
     @Column()
-    address: string;
+    address: string;    
+    @Column()
+    region: string;
+    @Column()
+    macroregion: string;
+    @Column()
+    localadmin: string;
+    @Column()
+    country: string;
     @Column({default: false})
     fav: boolean;
     @Column({nullable: true})

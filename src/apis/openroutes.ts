@@ -23,12 +23,12 @@ class OpenRoutesService {
     return OpenRoutesService.instance;
   }
 
-  async getCoordinatesByAddress(toponym: string): Promise<PlaceOfinterestDto> {
+  async getCoordinatesByAddress(placeOfInterstData: PlaceOfinterestDto): Promise<PlaceOfinterestDto> {
     try {
         const geocodingResponse = await axios.get(this.baseUrl+'geocode/search', {
           params: {
               api_key: this.apiKey,
-              text: toponym,
+              text: placeOfInterstData.address,
           },
         });
         if (geocodingResponse.status === 200 && geocodingResponse.data && geocodingResponse.data.features && geocodingResponse.data.features.length > 0) {
@@ -37,10 +37,14 @@ class OpenRoutesService {
           const latitude = coordinates[1].toString(); // Latitud
         
         const poi:  PlaceOfinterestDto = {
-          name: toponym,
+          name: placeOfInterstData.name,
           lon: longitude,
           lat: latitude,
-          address: toponym,
+          address: placeOfInterstData.address,
+          country: geocodingResponse.data.features[0].properties.country,
+          macroregion: geocodingResponse.data.features[0].properties.macroregion,
+          region: geocodingResponse.data.features[0].properties.region,
+          localadmin: geocodingResponse.data.features[0].properties.localadmin,
           fav: false,
         }
         return poi;
@@ -64,6 +68,10 @@ class OpenRoutesService {
       });
       if (geocodingResponse.status === 200 && geocodingResponse.data && geocodingResponse.data.features && geocodingResponse.data.features.length > 0) {
         placeOfInterestdata.address = geocodingResponse.data.features[0].properties.label;
+        placeOfInterestdata.country = geocodingResponse.data.features[0].properties.country;
+        placeOfInterestdata.macroregion = geocodingResponse.data.features[0].properties.macroregion;
+        placeOfInterestdata.region = geocodingResponse.data.features[0].properties.region;
+        placeOfInterestdata.localadmin = geocodingResponse.data.features[0].properties.localadmin;
         return placeOfInterestdata
       } else {
       throw new HttpException('No se encontraron coordenadas para el lugar especificado.', HttpStatus.NOT_FOUND);

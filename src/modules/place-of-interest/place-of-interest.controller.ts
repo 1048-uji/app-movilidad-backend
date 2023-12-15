@@ -11,7 +11,7 @@ import { PlaceOfinterestDto } from './dto/placeOfInterest.dto';
 export class PlaceOfInterestController {
   constructor(private poiService: PlaceOfInterestService) {}
 
-  @Post('/place-of-interest/coords')
+  @Post('/coords')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('strategy_jwt_1'))
   async addPlaceOfInterestCoords(
@@ -28,14 +28,21 @@ export class PlaceOfInterestController {
       return this.poiService.addPlaceOfInterestCoords(placeOfInterstData, req.user);
   }
 
-  @Post('/place-of-interest/:toponym')
+  @Post('/address')
   @ApiParam({ name: 'toponym', type: String })
   @ApiBearerAuth()
   @UseGuards(AuthGuard('strategy_jwt_1'))
-  async addPlaceOfInteresToponym(
+  async addPlaceOfInteresAddress(
     @Request() req: any,
-    @Param('toponym') toponym: string): Promise<PlaceOfInterest> {
-        return this.poiService.addPlaceOfInteresToponym(toponym, req.user);
+    @Body(
+      new ValidationPipe({
+          transform: true,
+          transformOptions: { enableImplicitConversion: true },
+          forbidNonWhitelisted: true
+      })
+  )
+  placeOfInterstData: PlaceOfinterestDto): Promise<PlaceOfInterest> {
+        return this.poiService.addPlaceOfInteresAddress(placeOfInterstData, req.user);
   }
   @Get('/place-of-interest')
   @ApiBearerAuth()

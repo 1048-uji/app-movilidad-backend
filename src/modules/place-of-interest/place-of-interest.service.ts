@@ -30,9 +30,9 @@ export class PlaceOfInterestService {
         poi.userId = user.id;
         return this.poiRepository.save(poi);
   }
-  async addPlaceOfInteresToponym(toponym: string, user: User): Promise<PlaceOfInterest> {
+  async addPlaceOfInteresAddress(placeOfInterstData: PlaceOfinterestDto, user: User): Promise<PlaceOfInterest> {
       
-        const poi = await this.openRoutesApi.getCoordinatesByAddress(toponym);
+        const poi = await this.openRoutesApi.getCoordinatesByAddress(placeOfInterstData);
         const poiExist = await this.poiRepository.findOneBy({
           lat: poi.lat,
           lon: poi.lon,
