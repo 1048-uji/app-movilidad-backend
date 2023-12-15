@@ -29,7 +29,6 @@ export class PlaceOfInterestController {
   }
 
   @Post('/address')
-  @ApiParam({ name: 'toponym', type: String })
   @ApiBearerAuth()
   @UseGuards(AuthGuard('strategy_jwt_1'))
   async addPlaceOfInteresAddress(
