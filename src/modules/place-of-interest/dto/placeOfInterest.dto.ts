@@ -10,29 +10,37 @@ export class PlaceOfinterestDto {
     @ApiProperty()
     @IsString()
     name: string;
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsString()
+    @IsOptional()
     lon?: string;
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsString()
+    @IsOptional()
     lat?: string;
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsString()
+    @IsOptional()
     region?: string;
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsString()
+    @IsOptional()
     macroregion?: string;
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsString()
+    @IsOptional()
     localadmin?: string;
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsString()
+    @IsOptional()
     country?: string;
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsString()
+    @IsOptional()
     address?: string;
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsBoolean()
+    @IsOptional()
     fav?: boolean;
     userId?: number;
 }
