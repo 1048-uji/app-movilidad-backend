@@ -16,6 +16,7 @@ export class UserController {
 
     @Delete(':id')
     @ApiParam({ name: 'id', type: Number })
+    @ApiBearerAuth()
     @UseGuards(AuthGuard('strategy_jwt_1'))
     async deleteAccount(@Request() req: any,
     @Param('id', ParseIntPipe) id: number): Promise<String> {

@@ -51,11 +51,12 @@ export class PlaceOfInterestController {
       ): Promise<PlaceOfInterest[]> {
         return this.poiService.getPlacesOfInterestOfUser(req.user.id);
   }
-    @Delete(':id')
-    @ApiParam({ name: 'id', type: Number })
-    @UseGuards(AuthGuard('strategy_jwt_1'))
-    async deletePlaceOfInterest(@Request() req: any,
-    @Param('id', ParseIntPipe) id: number): Promise<String> {
-        return this.poiService.deletePlaceOfInterest(id, req.user);
-    }
+  @Delete(':id')
+  @ApiParam({ name: 'id', type: Number })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('strategy_jwt_1'))
+  async deletePlaceOfInterest(@Request() req: any,
+  @Param('id', ParseIntPipe) id: number): Promise<String> {
+      return this.poiService.deletePlaceOfInterest(id, req.user);
+  }
 }
