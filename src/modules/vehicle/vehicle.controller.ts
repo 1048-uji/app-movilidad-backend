@@ -103,4 +103,13 @@ export class VehicleController {
         ): Promise<[string, number]> {
           return this.vehicleService.getCarbTypeAndConsum(vehicle);
     }
+
+    @Get('/vehicle')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async getVehicleType(
+      vehicle: Vehicle
+        ): Promise<string> {
+          return this.vehicleService.getVehicleType(vehicle);
+    }
 }
