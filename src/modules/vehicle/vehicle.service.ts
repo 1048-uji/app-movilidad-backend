@@ -53,6 +53,10 @@ export class VehicleService {
         return this.vehicleRepository.save(vehicleData);
     }
     
+    getCarbTypeAndConsum(vehicle: Vehicle): Promise<[string, number]> {
+        return Promise.resolve([vehicle.carbType, vehicle.consum]);
+    }
+
     async clearDatabase(){
         this.vehicleRepository.clear();
       }

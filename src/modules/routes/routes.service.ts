@@ -73,6 +73,10 @@ export class RoutesService {
         return this.routesRepository.save(routeData);
     }
 
+    async getDistance(route: Route): Promise<number> {
+        return parseFloat(route.distance);
+    }
+
   async clearDatabase(){
     this.routesRepository.clear();
   }
