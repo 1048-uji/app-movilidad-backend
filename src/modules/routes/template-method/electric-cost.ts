@@ -2,7 +2,7 @@ import { Vehicle } from "entities/vehicle.entity";
 import { AbstractCost } from "./abstract-cost";
 import { HttpException, HttpStatus } from "@nestjs/common";
 import axios from "axios";
-class ElectricCost extends AbstractCost {
+export class ElectricCost extends AbstractCost {
     async getPrice(type: string, consum: number, distance: number): Promise<number> {
         if (type != "electric") {
             throw new HttpException('InvalidTypeVehicleException', HttpStatus.UNAUTHORIZED);

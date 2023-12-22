@@ -18,6 +18,10 @@ import { PlaceOfinterestDto } from '../place-of-interest/dto/placeOfInterest.dto
 import { RouteOptionsDto, Strategy, VehicleType } from './dto/routeOptions.dto';
 import { AuthService } from '../auth/auth.service';
 import { RouteDto } from './dto/route.dto';
+import { VehicleService } from 'modules/vehicle/vehicle.service';
+import { VehicleController } from 'modules/vehicle/vehicle.controller';
+import { VehicleDto } from '../vehicle/dto/vehicle.dto';
+import { ElectricCost } from './template-method/electric-cost'
 
 describe('RoutesController (Crear Ruta)', () => {
   let placesController: PlaceOfInterestController;
@@ -28,6 +32,8 @@ describe('RoutesController (Crear Ruta)', () => {
   let routesService: RoutesService;
   let jwtService: JwtService;
   let authService: AuthService;
+  let vehicleService: VehicleService;
+  let vehicleController: VehicleController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -62,9 +68,12 @@ describe('RoutesController (Crear Ruta)', () => {
     routesController = module.get<RoutesController>(RoutesController);
     routesService = module.get<RoutesService>(RoutesService);
     authService = module.get<AuthService>(AuthService);
+    vehicleController = module.get<VehicleController>(VehicleController);
+    vehicleService = module.get<VehicleService>(VehicleService);
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
+    vehicleService.clearDatabase();
   });
 
   it('E01 (Válido): debería devolver el trayecto entre dos lugares y guardar el estado en el servidor', async () => {
@@ -494,6 +503,7 @@ describe('RoutesController (Crear Ruta)', () => {
       lat: '39.4697500', 
       fav: false 
     };
+
     const routeOptions: RouteOptionsDto = {
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
@@ -553,10 +563,147 @@ describe('RoutesController (Crear Ruta)', () => {
     }
   })
 
+  it('E01 (válido): debería calcular el coste asociado a una ruta para un vehículo eléctrico', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+    routesService.clearDatabase();
+    vehicleService.clearDatabase();
+    
+    //Creamos al usuario y lo registramos
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+
+    const registered = await authController.register(user);
+
+    const request = {
+      user: registered,
+    };
+
+    //Creamos un vehiculo eléctrico y lo guardamos al usuario anterior
+    const vehicleDto: VehicleDto = {
+      registration: '1234ABC',
+      name: 'coche',
+      carbType: 'electric',
+      model: 'X',
+      consum: 15,
+      brand: 'Una',
+      fav: false,
+    };
+
+    await vehicleController.addVehicle(request, vehicleDto);
+
+    const response = await vehicleController.getVehicleOfUser(request);
+
+    const vehicle = response[0];
+
+    //Creamos una ruta y la guardamos al usuario
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+    const end: PlaceOfinterestDto =
+    { name: 'Valencia',
+      lon: '-0.3773900', 
+      lat: '39.4697500', 
+      fav: false 
+    };
+    const routeOptions: RouteOptionsDto = {
+      vehicleType: VehicleType.DRIVING_CAR,
+      strategy: Strategy.RECOMMENDED
+    };
+
+    const route = await routesController.createRoute(request, start, end, routeOptions);
+    route.name = 'Castellón-Valencia';
+    await routesController.saveRoute(request, route);
+    const routes = await routesController.getRoutesOfUser(request);
+    
+    //Creamos la clase que se encarga de hacer el cálculo del coste electrico
+    const costeElectrico = new ElectricCost();
+    const precio = costeElectrico.calcularCoste(vehicle, routes[0]);
+
+    //Comprobar resultado
+    expect(precio).toBeLessThan(20); //No se cuanto poner de minimo ni de maximo 
+    expect(precio).toBeGreaterThanOrEqual(0.1);
+  })
+  
+  it('E02 (inválido): debería saltar que el tipo de coche es incorrecto', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+    routesService.clearDatabase();
+    vehicleService.clearDatabase();
+    
+    //Creamos al usuario y lo registramos
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+
+    const registered = await authController.register(user);
+
+    const request = {
+      user: registered,
+    };
+
+    //Creamos un vehiculo eléctrico y lo guardamos al usuario anterior
+    const vehicleDto: VehicleDto = {
+      registration: '1234ABC',
+      name: 'coche',
+      carbType: 'gasolina',
+      model: 'X',
+      consum: 15,
+      brand: 'Una',
+      fav: false,
+    };
+
+    await vehicleController.addVehicle(request, vehicleDto);
+
+    const response = await vehicleController.getVehicleOfUser(request);
+
+    const vehicle = response[0];
+
+    //Creamos una ruta y la guardamos al usuario
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+    const end: PlaceOfinterestDto =
+    { name: 'Valencia',
+      lon: '-0.3773900', 
+      lat: '39.4697500', 
+      fav: false 
+    };
+    const routeOptions: RouteOptionsDto = {
+      vehicleType: VehicleType.DRIVING_CAR,
+      strategy: Strategy.RECOMMENDED
+    };
+
+    const route = await routesController.createRoute(request, start, end, routeOptions);
+    route.name = 'Castellón-Valencia';
+    await routesController.saveRoute(request, route);
+    const routes = await routesController.getRoutesOfUser(request);
+    
+    //Creamos la clase que se encarga de hacer el cálculo del coste electrico
+    const costeElectrico = new ElectricCost();
+    try {
+      const precio = costeElectrico.calcularCoste(vehicle, routes[0]);
+      fail('Se esperaba que lanzara la excepción InvalidVehicleException');
+    } catch (error) {
+      expect(error.message).toBe('InvalidVehicleException');
+    }
+  })
+  
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await userService.clearDatabase();
     await placesService.clearDatabase();
+    await vehicleService.clearDatabase();
+    await routesService.clearDatabase();
   });
 
   
