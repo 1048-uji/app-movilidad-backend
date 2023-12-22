@@ -15,7 +15,7 @@ import { Route } from 'entities/route.entity';
   imports: [ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
     type: 'postgres',
-    host:'dpg-clnkjt8apebc739qh7e0-a',
+    host:'dpg-clnkjt8apebc739qh7e0-a.frankfurt-postgres.render.com',
     port: 5432,
     username: 'root',
     password: 'VVpDybcUWbrDFJ89SjvLWy0xn0W0i2PM',

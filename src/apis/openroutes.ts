@@ -7,6 +7,7 @@ import { RouteStrategy } from '../modules/routes/strategies/interface/route-stra
 import { FastRouteStrategy } from '../modules/routes/strategies/fast-route.strategy';
 import { ShortRouteStrategy } from '../modules/routes/strategies/short-route.strategy';
 import { RecommendedRouteStrategy } from '../modules/routes/strategies/recommended-route.strategy';
+import { response } from 'express';
 
 class OpenRoutesService {
   private static instance: OpenRoutesService;
@@ -25,10 +26,7 @@ class OpenRoutesService {
 
   async getCoordinatesByAddress(placeOfInterstData: PlaceOfinterestDto): Promise<PlaceOfinterestDto> {
     try {
-        const geocodingResponse = await axios.get(this.baseUrl+'geocode/search', {
-          headers: {
-            'Accept-Language': 'name=Spanish, iso6391=es, iso6393=spa'
-          },
+        const geocodingResponse = await axios.get(this.baseUrl+'geocode/search?lang=es-Es', {
           params: {
               api_key: this.apiKey,
               text: placeOfInterstData.address,
@@ -62,10 +60,7 @@ class OpenRoutesService {
 
   async getAddressByCoordinates(placeOfInterestdata: PlaceOfinterestDto): Promise<PlaceOfinterestDto> {
     try {
-      const geocodingResponse = await axios.get(this.baseUrl+"geocode/reverse", {
-        headers: {
-          'Accept-Language': 'name=Spanish, iso6391=es, iso6393=spa'
-        },
+      const geocodingResponse = await axios.get(this.baseUrl+"geocode/reverse?lang=es-Es", {
         params: {
           api_key: this.apiKey,
           'point.lon': placeOfInterestdata.lon,
