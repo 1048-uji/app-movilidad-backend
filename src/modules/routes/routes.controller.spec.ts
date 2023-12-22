@@ -18,10 +18,11 @@ import { PlaceOfinterestDto } from '../place-of-interest/dto/placeOfInterest.dto
 import { RouteOptionsDto, Strategy, VehicleType } from './dto/routeOptions.dto';
 import { AuthService } from '../auth/auth.service';
 import { RouteDto } from './dto/route.dto';
-import { VehicleService } from 'modules/vehicle/vehicle.service';
-import { VehicleController } from 'modules/vehicle/vehicle.controller';
+import { VehicleService } from '../vehicle/vehicle.service';
+import { VehicleController } from '../vehicle/vehicle.controller';
 import { VehicleDto } from '../vehicle/dto/vehicle.dto';
-import { ElectricCost } from './template-method/electric-cost'
+import { ElectricCost } from './template-method/electric-cost';
+import { HttpException, HttpStatus } from "@nestjs/common";
 
 describe('RoutesController (Crear Ruta)', () => {
   let placesController: PlaceOfInterestController;
@@ -56,9 +57,9 @@ describe('RoutesController (Crear Ruta)', () => {
           signOptions: { expiresIn: '30d' },
         }),
       ],
-      controllers: [RoutesController, AuthController, PlaceOfInterestController],
+      controllers: [RoutesController, AuthController, PlaceOfInterestController, VehicleController],
       providers: [PlaceOfInterestService,
-                  UserService, RoutesService, AuthService],
+                  UserService, RoutesService, AuthService, VehicleService],
     }).compile();
 
     placesController = module.get<PlaceOfInterestController>(PlaceOfInterestController);
@@ -73,7 +74,6 @@ describe('RoutesController (Crear Ruta)', () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
-    vehicleService.clearDatabase();
   });
 
   it('E01 (Válido): debería devolver el trayecto entre dos lugares y guardar el estado en el servidor', async () => {
@@ -567,7 +567,6 @@ describe('RoutesController (Crear Ruta)', () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
-    vehicleService.clearDatabase();
     
     //Creamos al usuario y lo registramos
     const user: RegisterDto = {
@@ -623,18 +622,17 @@ describe('RoutesController (Crear Ruta)', () => {
     
     //Creamos la clase que se encarga de hacer el cálculo del coste electrico
     const costeElectrico = new ElectricCost();
-    const precio = costeElectrico.calcularCoste(vehicle, routes[0]);
+    const precio = await costeElectrico.calcularCoste(vehicle, routes[0]);
 
     //Comprobar resultado
-    expect(precio).toBeLessThan(20); //No se cuanto poner de minimo ni de maximo 
-    expect(precio).toBeGreaterThanOrEqual(0.1);
+    expect(precio).toBeLessThan(10);
+    expect(precio).toBeGreaterThanOrEqual(1);
   })
   
   it('E02 (inválido): debería saltar que el tipo de coche es incorrecto', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
-    vehicleService.clearDatabase();
     
     //Creamos al usuario y lo registramos
     const user: RegisterDto = {
@@ -691,10 +689,11 @@ describe('RoutesController (Crear Ruta)', () => {
     //Creamos la clase que se encarga de hacer el cálculo del coste electrico
     const costeElectrico = new ElectricCost();
     try {
-      const precio = costeElectrico.calcularCoste(vehicle, routes[0]);
-      fail('Se esperaba que lanzara la excepción InvalidVehicleException');
+      const precio = await costeElectrico.calcularCoste(vehicle, routes[0]);
+      fail('Se esperaba que lanzara la excepción InvalidTypeVehicleException');
     } catch (error) {
-      expect(error.message).toBe('InvalidVehicleException');
+      expect(error.message).toBe('InvalidTypeVehicleException');
+      expect(error.getStatus()).toBe(HttpStatus.UNAUTHORIZED);
     }
   })
   
@@ -702,9 +701,6 @@ describe('RoutesController (Crear Ruta)', () => {
   afterEach(async () => {
     await userService.clearDatabase();
     await placesService.clearDatabase();
-    await vehicleService.clearDatabase();
     await routesService.clearDatabase();
   });
-
-  
 });

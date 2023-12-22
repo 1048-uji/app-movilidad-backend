@@ -2,7 +2,7 @@ import { Route } from "entities/route.entity";
 import { Vehicle } from "entities/vehicle.entity";
 import { RoutesService } from "../routes.service";
 import { Repository } from 'typeorm';
-import { VehicleService } from "modules/vehicle/vehicle.service";
+import { VehicleService } from "../../vehicle/vehicle.service";
 
 export abstract class AbstractCost {
     private readonly routesRepository: Repository<Route>;
@@ -19,7 +19,7 @@ export abstract class AbstractCost {
         const distance = await this.getDistance(route);
         const list = await this.getConsum(vehicle);
         const type = list[0];
-        const consum = parseFloat(list[1]);
+        const consum = list[1];
         const precio = await this.getPrice(type, consum, distance);
         return precio;
     }
@@ -28,11 +28,11 @@ export abstract class AbstractCost {
         return await this.routeService.getDistance(route);
     }
 
-    async getConsum(vehicle: Vehicle): Promise<string> {
+    async getConsum(vehicle: Vehicle): Promise<[string, number]> {
         if (vehicle == null) {
-            return Promise.resolve("walk");
+            return Promise.resolve(['walk',210]);
         } else {
-            return await this.vehicleService.getVehicleType(vehicle);
+            return await this.vehicleService.getCarbTypeAndConsum(vehicle);
         }
     }
 
