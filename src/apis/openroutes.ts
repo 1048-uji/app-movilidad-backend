@@ -26,6 +26,9 @@ class OpenRoutesService {
   async getCoordinatesByAddress(placeOfInterstData: PlaceOfinterestDto): Promise<PlaceOfinterestDto> {
     try {
         const geocodingResponse = await axios.get(this.baseUrl+'geocode/search', {
+          headers: {
+            'Accept-Language': 'name=Spanish, iso6391=es, iso6393=spa'
+          },
           params: {
               api_key: this.apiKey,
               text: placeOfInterstData.address,
@@ -60,6 +63,9 @@ class OpenRoutesService {
   async getAddressByCoordinates(placeOfInterestdata: PlaceOfinterestDto): Promise<PlaceOfinterestDto> {
     try {
       const geocodingResponse = await axios.get(this.baseUrl+"geocode/reverse", {
+        headers: {
+          'Accept-Language': 'name=Spanish, iso6391=es, iso6393=spa'
+        },
         params: {
           api_key: this.apiKey,
           'point.lon': placeOfInterestdata.lon,
