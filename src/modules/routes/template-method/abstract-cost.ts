@@ -28,11 +28,11 @@ export abstract class AbstractCost {
         return await this.routeService.getDistance(route);
     }
 
-    async getConsum(vehicle: Vehicle): Promise<string> {
+    async getConsum(vehicle: Vehicle): Promise<[string, number]> {
         if (vehicle == null) {
-            return Promise.resolve("walk");
+            return Promise.resolve(['walk',210]);
         } else {
-            return await this.vehicleService.getVehicleType(vehicle);
+            return await this.vehicleService.getCarbTypeAndConsum(vehicle);
         }
     }
 

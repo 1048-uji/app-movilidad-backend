@@ -625,8 +625,8 @@ describe('RoutesController (Crear Ruta)', () => {
     const precio = await costeElectrico.calcularCoste(vehicle, routes[0]);
 
     //Comprobar resultado
-    expect(precio).toBeLessThan(20); //No se cuanto poner de minimo ni de maximo 
-    expect(precio).toBeGreaterThanOrEqual(0.1);
+    expect(precio).toBeLessThan(10);
+    expect(precio).toBeGreaterThanOrEqual(1);
   })
   
   it('E02 (inválido): debería saltar que el tipo de coche es incorrecto', async () => {
@@ -824,7 +824,8 @@ describe('RoutesController (Crear Ruta)', () => {
       const precio = await costeCombustible.calcularCoste(vehicle, routes[0]);
       fail('Se esperaba que lanzara la excepción InvalidVehicleException');
     } catch (error) {
-      expect(error.message).toBe('InvalidVehicleException');
+      expect(error.message).toBe('InvalidTypeVehicleException');
+      expect(error.getStatus()).toBe(HttpStatus.UNAUTHORIZED);
     }
   })
   
@@ -834,6 +835,4 @@ describe('RoutesController (Crear Ruta)', () => {
     await placesService.clearDatabase();
     await routesService.clearDatabase();
   });
-
-  
 });

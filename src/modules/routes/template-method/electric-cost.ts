@@ -4,17 +4,19 @@ import { HttpException, HttpStatus } from "@nestjs/common";
 import axios from "axios";
 export class ElectricCost extends AbstractCost {
     async getPrice(type: string, consum: number, distance: number): Promise<number> {
-        if (type !== "electric") {
-            throw new HttpException('InvalidTypeVehicleException', HttpStatus.UNAUTHORIZED);
-        } else {
+        if (type === 'electric') {
             try {
                 const baseUrlLuz = 'https://api.preciodelaluz.org/v1/prices/avg?zone=PCB';
                 const response = await axios.get(baseUrlLuz);
                 const price = response.data.price;
-                return (distance / 100) * consum * price;
+                const realPrice = price / 1000;
+                const realDistance = distance / 1000 / 100;
+                return realDistance * consum * realPrice;
             } catch (error) {
                 throw new HttpException('APINotWorkingException', HttpStatus.BAD_GATEWAY);
             }
+        } else {
+            throw new HttpException('InvalidTypeVehicleException', HttpStatus.UNAUTHORIZED);
         }
     }
 }
