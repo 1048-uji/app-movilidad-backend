@@ -4,7 +4,7 @@ import { HttpException, HttpStatus } from "@nestjs/common";
 import axios from "axios";
 export class ElectricCost extends AbstractCost {
     async getPrice(type: string, consum: number, distance: number): Promise<number> {
-        if (type != "electric") {
+        if (type !== "electric") {
             throw new HttpException('InvalidTypeVehicleException', HttpStatus.UNAUTHORIZED);
         } else {
             try {
