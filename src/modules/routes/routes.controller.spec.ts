@@ -19,7 +19,6 @@ import { RouteOptionsDto, Strategy, VehicleType } from './dto/routeOptions.dto';
 import { AuthService } from '../auth/auth.service';
 import { RouteDto } from './dto/route.dto';
 import { CaloriesCost } from './template-method/calories-cost';
-import { it } from 'test';
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { VehicleController } from '../vehicle/vehicle.controller';
 import { VehicleService } from '../vehicle/vehicle.service';
@@ -61,8 +60,7 @@ describe('RoutesController (Crear Ruta)', () => {
         }),
       ],
       controllers: [RoutesController, AuthController, PlaceOfInterestController, VehicleController],
-      providers: [PlaceOfInterestService,
-                  UserService, RoutesService, AuthService, VehicleService],
+      providers: [PlaceOfInterestService, UserService, RoutesService, AuthService, VehicleService],
     }).compile();
 
     placesController = module.get<PlaceOfInterestController>(PlaceOfInterestController);

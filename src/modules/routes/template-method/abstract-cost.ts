@@ -20,7 +20,7 @@ export abstract class AbstractCost {
         const list = await this.getConsum(vehicle);
         const type = list[0];
         const consum = list[1];
-        const precio = await this.getPrice(type, consum, distance);
+        const precio = await this.getPrice(type, consum, distance, route.start);
         return precio;
     }
 
@@ -36,5 +36,5 @@ export abstract class AbstractCost {
         }
     }
 
-    abstract getPrice(type: string, consum: number, distance: number): Promise<number>;
+    abstract getPrice(type: string, consum: number, distance: number, start: string): Promise<number>;
 }

@@ -15,6 +15,7 @@ import { Vehicle } from '../../entities/vehicle.entity';
 import { HttpStatus } from '@nestjs/common';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
 import { ConfigModule } from '@nestjs/config';
+import { Route } from '../../entities/route.entity';
 
 describe('VehicleController (Registro de Vehículos)', () => {
   let vehicleController: VehicleController;
@@ -35,12 +36,11 @@ describe('VehicleController (Registro de Vehículos)', () => {
           username: 'fl0user',
           password: 'MNA8bza5YdXg',
           database: 'database',
-          entities: [User, PlaceOfInterest, Vehicle],
+          entities: [User, PlaceOfInterest, Vehicle, Route],
           synchronize: true,
           ssl: {rejectUnauthorized: false},
         }),
-        TypeOrmModule.forFeature([Vehicle]),
-        TypeOrmModule.forFeature([User]),
+        TypeOrmModule.forFeature([Vehicle, PlaceOfInterest, Vehicle, Route]),
         JwtModule.register({
           secret: jwtConstants.secret,
           signOptions: { expiresIn: '30d' },
@@ -59,7 +59,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
 
   it('debería registrar un vehículo válido', async () => {
     // Limpiar la base de datos antes de la prueba
-    await vehicleService.clearDatabase();
     await userService.clearDatabase();
 
     // Crear un usuario registrado
@@ -93,7 +92,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
 
   it('debería lanzar una excepción si la base de datos no está disponible al intentar registrar un vehículo', async () => {
     // Limpiar la base de datos antes de la prueba
-    await vehicleService.clearDatabase();
     await userService.clearDatabase();
 
     // Crear un usuario registrado
@@ -129,7 +127,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
 
   it('debería eliminar el vehiculo de un usuario autenticado', async () => {
     // Limpiar la base de datos antes de la prueba
-    await vehicleService.clearDatabase();
     await userService.clearDatabase();
 
     // Crear un usuario en la base de datos
@@ -173,7 +170,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
 
   it('debería lanzar una excepción si se intenta borrar un vehiculo que no existe', async () => {
     // Limpiar la base de datos antes de la prueba
-    await vehicleService.clearDatabase();
     await userService.clearDatabase();
 
     // Crear un usuario en la base de datos
@@ -221,7 +217,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
 
   it('debería devolver la lista de vehiculos del usuario autentificado', async () => {
     // Limpiar la base de datos antes de la prueba
-    await vehicleService.clearDatabase();
     await userService.clearDatabase();
   
     // Crear un usuario autentificado
@@ -263,7 +258,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
   
     //Escenario 2
     it('debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
-      await vehicleService.clearDatabase();
       await userService.clearDatabase();
       // Crear un usuario autentificado
       const user: RegisterDto = {
@@ -285,7 +279,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
 
   it('debería devolver la lista de vehiculos del usuario autentificado', async () => {
     // Limpiar la base de datos antes de la prueba
-    await vehicleService.clearDatabase();
     await userService.clearDatabase();
   
     // Crear un usuario autentificado
@@ -327,7 +320,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
   
     //Escenario 2
     it('debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
-      await vehicleService.clearDatabase();
       await userService.clearDatabase();
       // Crear un usuario autentificado
       const user: RegisterDto = {
@@ -348,7 +340,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
     });
     it('debería actualizar el tipo y consumo de un vehículo existente', async () => {
       // Limpiar la base de datos antes de la prueba
-      await vehicleService.clearDatabase();
       await userService.clearDatabase();
     
       // Crear un usuario autenticado
@@ -402,7 +393,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
     it('debería lanzar una excepción si se intenta actualizar un vehículo inexistente', async () => {
       // Limpiar la base de datos antes de la prueba
       await userService.clearDatabase();
-      await vehicleService.clearDatabase();
     
       // Crear un usuario autenticado
       const user: RegisterDto = {
@@ -438,7 +428,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
     });
     it('debería añadir a favoritos un vehículo existente', async () => {
       // Limpiar la base de datos antes de la prueba
-      await vehicleService.clearDatabase();
       await userService.clearDatabase();
     
       // Crear un usuario autenticado
@@ -490,7 +479,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
     it('debería lanzar una excepción si se intenta actualizar un vehículo inexistente', async () => {
       // Limpiar la base de datos antes de la prueba
       await userService.clearDatabase();
-      await vehicleService.clearDatabase();
     
       // Crear un usuario autenticado
       const user: RegisterDto = {
@@ -526,7 +514,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
     });
     it('debería añadir a favoritos un vehículo existente', async () => {
       // Limpiar la base de datos antes de la prueba
-      await vehicleService.clearDatabase();
       await userService.clearDatabase();
     
       // Crear un usuario autenticado
@@ -578,7 +565,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
     it('debería lanzar una excepción si se intenta actualizar un vehículo inexistente', async () => {
       // Limpiar la base de datos antes de la prueba
       await userService.clearDatabase();
-      await vehicleService.clearDatabase();
     
       // Crear un usuario autenticado
       const user: RegisterDto = {
@@ -615,7 +601,6 @@ describe('VehicleController (Registro de Vehículos)', () => {
 
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
-    await vehicleService.clearDatabase();
     await userService.clearDatabase();
   });
 });

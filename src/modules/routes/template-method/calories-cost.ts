@@ -2,7 +2,7 @@ import { AbstractCost } from "./abstract-cost";
 import { HttpException, HttpStatus } from "@nestjs/common";
 
 export class CaloriesCost extends AbstractCost {
-    async getPrice(type: string, consum: number, distance: number): Promise<number> {
+    async getPrice(type: string, consum: number, distance: number, start: string): Promise<number> {
         if (type === 'walk') {
             const realDistance = distance / 1000;
             const velocidadMedia = 5; //km/h

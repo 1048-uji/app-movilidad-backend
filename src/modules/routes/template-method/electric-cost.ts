@@ -3,7 +3,7 @@ import { AbstractCost } from "./abstract-cost";
 import { HttpException, HttpStatus } from "@nestjs/common";
 import axios from "axios";
 export class ElectricCost extends AbstractCost {
-    async getPrice(type: string, consum: number, distance: number): Promise<number> {
+    async getPrice(type: string, consum: number, distance: number, start: string): Promise<number> {
         if (type === 'electric') {
             try {
                 const baseUrlLuz = 'https://api.preciodelaluz.org/v1/prices/avg?zone=PCB';
