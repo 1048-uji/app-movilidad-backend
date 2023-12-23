@@ -53,10 +53,9 @@ export class VehicleService {
         return this.vehicleRepository.save(vehicleData);
     }
     
-    getCarbTypeAndConsum(vehicle: Vehicle): Promise<[string, number]> {
+    async getCarbTypeAndConsum(vehicle: Vehicle): Promise<[string, number]> {
         return Promise.resolve([vehicle.carbType, vehicle.consum]);
     }
-
     getVehicleType(vehicle: Vehicle): Promise<string> {
         return Promise.resolve(vehicle.carbType);
     }
