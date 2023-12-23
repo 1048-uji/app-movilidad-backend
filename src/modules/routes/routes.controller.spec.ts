@@ -18,6 +18,12 @@ import { PlaceOfinterestDto } from '../place-of-interest/dto/placeOfInterest.dto
 import { RouteOptionsDto, Strategy, VehicleType } from './dto/routeOptions.dto';
 import { AuthService } from '../auth/auth.service';
 import { RouteDto } from './dto/route.dto';
+import { CaloriesCost } from './template-method/calories-cost';
+import { it } from 'test';
+import { HttpException, HttpStatus } from "@nestjs/common";
+import { VehicleController } from '../vehicle/vehicle.controller';
+import { VehicleService } from '../vehicle/vehicle.service';
+import { VehicleDto } from '../vehicle/dto/vehicle.dto';
 
 describe('RoutesController (Crear Ruta)', () => {
   let placesController: PlaceOfInterestController;
@@ -28,6 +34,8 @@ describe('RoutesController (Crear Ruta)', () => {
   let routesService: RoutesService;
   let jwtService: JwtService;
   let authService: AuthService;
+  let vehicleService: VehicleService;
+  let vehicleController: VehicleController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -50,9 +58,9 @@ describe('RoutesController (Crear Ruta)', () => {
           signOptions: { expiresIn: '30d' },
         }),
       ],
-      controllers: [RoutesController, AuthController, PlaceOfInterestController],
+      controllers: [RoutesController, AuthController, PlaceOfInterestController, VehicleController],
       providers: [PlaceOfInterestService,
-                  UserService, RoutesService, AuthService],
+                  UserService, RoutesService, AuthService, VehicleService],
     }).compile();
 
     placesController = module.get<PlaceOfInterestController>(PlaceOfInterestController);
@@ -62,6 +70,8 @@ describe('RoutesController (Crear Ruta)', () => {
     routesController = module.get<RoutesController>(RoutesController);
     routesService = module.get<RoutesService>(RoutesService);
     authService = module.get<AuthService>(AuthService);
+    vehicleController = module.get<VehicleController>(VehicleController);
+    vehicleService = module.get<VehicleService>(VehicleService);
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -553,11 +563,121 @@ describe('RoutesController (Crear Ruta)', () => {
     }
   })
 
+  it('E01 (válido): debería calcular el coste medio de calorias quemadas para una ruta', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+    routesService.clearDatabase();
+    
+    //Creamos al usuario y lo registramos
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+
+    const registered = await authController.register(user);
+
+    const request = {
+      user: registered,
+    };
+
+    //Creamos una ruta y la guardamos al usuario
+    const start: PlaceOfinterestDto = 
+      { name: 'Universidad Jaime I',
+        lon: '-0.068889', 
+        lat: '39.994444', 
+        fav: false };
+    const end: PlaceOfinterestDto =
+    { name: 'Estación de tren de Castellón',
+      lon: '-0.05240', 
+      lat: '39.98829', 
+      fav: false 
+    };
+    
+    const routeOptions: RouteOptionsDto = {
+      vehicleType: VehicleType.FOOT_WALK,
+      strategy: Strategy.RECOMMENDED
+    };
+
+    const route = await routesController.createRoute(request, start, end, routeOptions);
+    route.name = 'UJI-Estación';
+    await routesController.saveRoute(request, route);
+    const routes = await routesController.getRoutesOfUser(request);
+
+    //Creamos la clase que se encarga de hacer el cálculo del coste calorico
+    const costeCalorico = new CaloriesCost();
+    const calorias = await costeCalorico.calcularCoste(null, routes[0]);
+
+    //Comprobar resultado
+    expect(calorias).toBeCloseTo(77.32);
+  })
+  
+  it('E02 (inválido): debería saltar que el tipo de vehiculo es incorrecto', async () => {
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+
+    const registered = await authController.register(user);
+
+    const request = {
+      user: registered,
+    };
+
+    //Creamos un vehiculo eléctrico y lo guardamos al usuario anterior
+    const vehicleDto: VehicleDto = {
+      registration: '1234ABC',
+      name: 'coche',
+      carbType: 'gasolina',
+      model: 'X',
+      consum: 15,
+      brand: 'Una',
+      fav: false,
+    };
+
+    await vehicleController.addVehicle(request, vehicleDto);
+
+    const response = await vehicleController.getVehicleOfUser(request);
+
+    const vehicle = response[0];
+
+    const start: PlaceOfinterestDto = 
+      { name: 'Universidad Jaime I',
+        lon: '-0.068889', 
+        lat: '39.994444', 
+        fav: false };
+    const end: PlaceOfinterestDto =
+    { name: 'Estación de tren de Castellón',
+      lon: '-0.05240', 
+      lat: '39.98829', 
+      fav: false 
+    };
+    
+    const routeOptions: RouteOptionsDto = {
+      vehicleType: VehicleType.FOOT_WALK,
+      strategy: Strategy.RECOMMENDED
+    };
+
+    const route = await routesController.createRoute(request, start, end, routeOptions);
+    route.name = 'UJI-Estación';
+    await routesController.saveRoute(request, route);
+    const routes = await routesController.getRoutesOfUser(request);
+
+    //Creamos la clase que se encarga de hacer el cálculo del coste calorico
+    const costeCalorico = new CaloriesCost();
+    try {
+      const calorias = await costeCalorico.calcularCoste(vehicle, routes[0]);
+      fail('Se esperaba que lanzara la excepción InvalidTypeVehicleException');
+    } catch (error) {
+      expect(error.message).toBe('InvalidTypeVehicleException');
+      expect(error.getStatus()).toBe(HttpStatus.UNAUTHORIZED);
+    }
+  })
+  
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await userService.clearDatabase();
     await placesService.clearDatabase();
   });
-
-  
 });
