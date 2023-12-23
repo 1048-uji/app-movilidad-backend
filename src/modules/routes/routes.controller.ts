@@ -63,7 +63,7 @@ export class RoutesController {
     ): Promise<RouteDto> {
         return this.routesService.saveRoute(req.user, routeData);
     }
-    @Get('/place-of-interest')
+    @Get('/route')
     @ApiBearerAuth()
     @UseGuards(AuthGuard('strategy_jwt_1'))
     async getRoutesOfUser(
@@ -113,5 +113,12 @@ export class RoutesController {
         @Request() req: any
     ): Promise<Route> {
         return this.routesService.updateRoute(routeData, req.user);
+    }
+
+    @Get('/route')
+    async getDistance(
+        route: Route,
+        ): Promise<number> {
+            return this.routesService.getDistance(route);
     }
 }

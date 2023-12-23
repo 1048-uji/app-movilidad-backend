@@ -14,7 +14,7 @@ export enum VehicleType {
   CYCLING_ROAD = 'cycling-road',
   CYCLING_MOUNTAIN = 'cycling-mountain',
   CYCLING_ELECTRIC = 'cycling-electric',
-  FOOT_WALK = 'foot-walk',
+  FOOT_WALK = 'foot-walking',
   FOOT_HIKING = 'foot-hiking',
   WHEELCHAIR = 'wheelchair',
 }
