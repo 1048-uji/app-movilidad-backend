@@ -127,7 +127,10 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     await placesService.clearDatabase();
 
     // Toponimo para el nuevo lugar de interes
-    const toponym = 'Castellón';
+    const place: PlaceOfinterestDto = {
+      name: 'Castellón',
+      address: 'Castellón',
+    };
     
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -141,7 +144,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     };
 
     // Añadir un lugar de interés
-    await placesController.addPlaceOfInteresToponym(request, toponym);
+    await placesController.addPlaceOfInteresAddress(request, place);
 
     // Verificar que el lugar de interés se ha añadido correctamente
     const placesOfInterest: PlaceOfInterest[] = await placesService.getPlacesOfInterest();
@@ -154,7 +157,10 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     await placesService.clearDatabase();
 
     // Toponimo para el nuevo lugar de interes
-    const toponym = '';
+    const place: PlaceOfinterestDto = {
+      name: 'Casa',
+      address: '',
+    }
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -170,7 +176,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     // Realizar la solicitud para añadir un nuevo punto de interés
     try {
       // Añadir un lugar de interés incorrecto
-      await placesController.addPlaceOfInteresToponym(request, toponym);
+      await placesController.addPlaceOfInteresAddress(request, place);
     } catch (error) {
       // Verificar que se haya lanzado un error con el mensaje esperado
       expect(error.status).toBe(HttpStatus.SERVICE_UNAVAILABLE);
