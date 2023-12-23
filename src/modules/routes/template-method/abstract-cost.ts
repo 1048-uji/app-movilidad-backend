@@ -19,7 +19,7 @@ export abstract class AbstractCost {
         const distance = await this.getDistance(route);
         const list = await this.getConsum(vehicle);
         const type = list[0];
-        const consum = parseFloat(list[1]);
+        const consum = list[1];
         const precio = await this.getPrice(type, consum, distance, route.start);
         return precio;
     }

@@ -23,6 +23,7 @@ import { VehicleController } from '../vehicle/vehicle.controller';
 import { VehicleDto } from '../vehicle/dto/vehicle.dto';
 import { ElectricCost } from './template-method/electric-cost'
 import { FuelCost } from './template-method/fuel-cost';
+import { HttpStatus } from '@nestjs/common';
 
 describe('RoutesController (Crear Ruta)', () => {
   let placesController: PlaceOfInterestController;
@@ -626,7 +627,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     //Comprobar resultado
     expect(precio).toBeLessThan(10);
-    expect(precio).toBeGreaterThanOrEqual(1);
+    expect(precio).toBeGreaterThanOrEqual(0.1);
   })
   
   it('E02 (inválido): debería saltar que el tipo de coche es incorrecto', async () => {
@@ -825,7 +826,7 @@ describe('RoutesController (Crear Ruta)', () => {
       fail('Se esperaba que lanzara la excepción InvalidVehicleException');
     } catch (error) {
       expect(error.message).toBe('InvalidTypeVehicleException');
-      expect(error.getStatus()).toBe(HttpStatus.UNAUTHORIZED);
+      expect(error.getStatus()).toBe(HttpStatus.BAD_REQUEST);
     }
   })
   

@@ -17,6 +17,7 @@ export class FuelCost extends AbstractCost {
                 if(poi.country != 'España'){
                     throw new HttpException('InvalidCountryException', HttpStatus.BAD_REQUEST);
                 }
+                console.log('Lista Provincias');
                 const responseRegion = await axios.get(this.baseUri+'Listados/Provincias/')
                 const regions: { ID: number; region: string }[] = responseRegion.data.map((region) => ({
                     ID: region.IDPovincia,
@@ -24,13 +25,14 @@ export class FuelCost extends AbstractCost {
                   }));
                 const regionFind = regions.find((region) => region.region === poi.region);
 
-                const responseFuel = await axios.get(this.baseUri+'Listados/Provincias/')
+                console.log('Lista Carburantes');
+                const responseFuel = await axios.get(this.baseUri+'Listados/ProductosPetroliferos/')
                 const fuel: { ID: number; nombre: string }[] = responseFuel.data.map((fuel) => ({
                     ID: fuel.IDProducto,
                     nombre: fuel.NombreProducto,
                   }));
                 const fuelFind = fuel.find((fuel) => fuel.nombre === type);
-
+                  
                 const responseStations = await axios.get(this.baseUri+'EstacionesTerrestres/FiltroProvincia/'+regionFind.ID+'/'+fuelFind.ID, {
                     headers: {
                       'Accept': 'application/json, img/png; charset=utf-8',
