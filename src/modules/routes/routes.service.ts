@@ -7,11 +7,19 @@ import { RouteDto } from './dto/route.dto';
 import { RouteOptionsDto } from './dto/routeOptions.dto';
 import { PlaceOfinterestDto } from '../place-of-interest/dto/placeOfInterest.dto';
 import { User } from '../../entities/user.entity';
+import { AbstractCost } from './template-method/abstract-cost';
+import { CarbType, Vehicle } from '../../entities/vehicle.entity';
+import { availableParallelism } from 'os';
+import { ElectricCost } from './template-method/electric-cost';
+import { CaloriesCost } from './template-method/calories-cost';
+import { FuelCost } from './template-method/fuel-cost';
 
 @Injectable()
 export class RoutesService {
     constructor(
-        @InjectRepository(Route) private readonly routesRepository: Repository<Route>
+        @InjectRepository(Route) private readonly routesRepository: Repository<Route>,
+        @InjectRepository(Vehicle) private readonly vehicleRepository: Repository<Vehicle>
+        , public abstractCost: AbstractCost
     ) {}
     private openRoutesApi = OpenRoutesService.getInstance();
 
@@ -75,6 +83,27 @@ export class RoutesService {
 
     async getDistance(route: Route): Promise<number> {
         return parseFloat(route.distance);
+    }
+
+    async priceOfRoute(idVehicle: number, routeData: RouteDto, user: User): Promise<number> {
+        const vehicle = await this.vehicleRepository.findOneBy({id: idVehicle})
+        if (vehicle.userId != user.id){
+            throw new HttpException('No eres el propietario del vehiculo', HttpStatus.UNAUTHORIZED);
+        }
+        switch(vehicle.carbType) { 
+            case CarbType.Electric: { 
+               this.abstractCost = new ElectricCost() 
+               break; 
+            } 
+            case CarbType.Calories: { 
+              this.abstractCost = new CaloriesCost()
+               break; 
+            } default: { 
+              this.abstractCost = new FuelCost()
+              break; 
+            }
+          } 
+        return await this.abstractCost.getPrice(vehicle.carbType, vehicle.consum, parseFloat(routeData.distance), routeData.start)
     }
 
   async clearDatabase(){

@@ -42,7 +42,7 @@ export class VehicleService {
         return this.vehicleRepository.findBy({userId: id});
       }
 
-      async updateVehicle(vehicleData: VehicleDto, user: any): Promise<Vehicle> {
+    async updateVehicle(vehicleData: VehicleDto, user: any): Promise<Vehicle> {
         const vehicle = await this.vehicleRepository.findOneBy({ id: vehicleData.id });
         if (!vehicle) {
             throw new HttpException('Vehicle does not exist', HttpStatus.NOT_FOUND);

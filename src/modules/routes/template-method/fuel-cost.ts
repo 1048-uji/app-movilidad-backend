@@ -1,4 +1,4 @@
-import { Vehicle } from "entities/vehicle.entity";
+import { CarbType, Vehicle } from "entities/vehicle.entity";
 import { AbstractCost } from "./abstract-cost";
 import { HttpException, HttpStatus } from "@nestjs/common";
 import axios from "axios";
@@ -8,7 +8,7 @@ export class FuelCost extends AbstractCost {
     private openRoutesApi = OpenRoutesService.getInstance();
     private baseUri = 'https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/';
     async getPrice(type: string, consum: number, distance: number, start: string): Promise<number> {
-        if (type === "electric" || type === "walk") {
+        if (type === CarbType.Electric || type === CarbType.Calories) {
             throw new HttpException('InvalidTypeVehicleException', HttpStatus.BAD_REQUEST);
         } else {
             try {
@@ -23,7 +23,7 @@ export class FuelCost extends AbstractCost {
                     ID: region.IDPovincia,
                     region: region.Provincia,
                   }));
-                const regionFind = regions.find((region) => region.region === poi.region);
+                const regionFind = regions.find((region) => region.region.toLowerCase() === poi.region.toLowerCase());
 
                 console.log('Lista Carburantes');
                 const responseFuel = await axios.get(this.baseUri+'Listados/ProductosPetroliferos/')
@@ -31,7 +31,7 @@ export class FuelCost extends AbstractCost {
                     ID: fuel.IDProducto,
                     nombre: fuel.NombreProducto,
                   }));
-                const fuelFind = fuel.find((fuel) => fuel.nombre === type);
+                const fuelFind = fuel.find((fuel) => fuel.nombre.toLowerCase() === type.toLowerCase());
                   
                 const responseStations = await axios.get(this.baseUri+'EstacionesTerrestres/FiltroProvincia/'+regionFind.ID+'/'+fuelFind.ID, {
                     headers: {

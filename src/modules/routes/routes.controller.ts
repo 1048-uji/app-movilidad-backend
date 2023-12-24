@@ -63,7 +63,7 @@ export class RoutesController {
     ): Promise<RouteDto> {
         return this.routesService.saveRoute(req.user, routeData);
     }
-    @Get('/route')
+    @Get('/myroutes')
     @ApiBearerAuth()
     @UseGuards(AuthGuard('strategy_jwt_1'))
     async getRoutesOfUser(
@@ -115,10 +115,20 @@ export class RoutesController {
         return this.routesService.updateRoute(routeData, req.user);
     }
 
-    @Get('/route')
-    async getDistance(
-        route: Route,
-        ): Promise<number> {
-            return this.routesService.getDistance(route);
+    @Get('Price/:id')
+    @ApiParam({ name: 'id', type: Number })
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async priceOfRoute(@Request() req: any,
+    @Param('id', ParseIntPipe) id: number, 
+    @Body(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+            forbidNonWhitelisted: true
+        })
+    )
+    routeData: RouteDto,): Promise<number> {
+        return this.routesService.priceOfRoute(id, routeData, req.user);
     }
 }
