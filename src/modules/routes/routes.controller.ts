@@ -115,12 +115,12 @@ export class RoutesController {
         return this.routesService.updateRoute(routeData, req.user);
     }
 
-    @Get('Price/:id')
-    @ApiParam({ name: 'id', type: Number })
+    @Get('Price/:vehicleId')
+    @ApiParam({ name: 'vehicleId', type: Number })
     @ApiBearerAuth()
     @UseGuards(AuthGuard('strategy_jwt_1'))
     async priceOfRoute(@Request() req: any,
-    @Param('id', ParseIntPipe) id: number, 
+    @Param('id', ParseIntPipe) vehicleId: number, 
     @Body(
         new ValidationPipe({
             transform: true,
@@ -129,6 +129,6 @@ export class RoutesController {
         })
     )
     routeData: RouteDto,): Promise<number> {
-        return this.routesService.priceOfRoute(id, routeData, req.user);
+        return this.routesService.priceOfRoute(vehicleId, routeData, req.user);
     }
 }
