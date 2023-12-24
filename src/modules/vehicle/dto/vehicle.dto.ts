@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsNumber, IsOptional, IsString, IsStrongPassword } from 'class-validator';
+import { IsBoolean, IsEmail, IsEnum, IsNumber, IsOptional, IsString, IsStrongPassword } from 'class-validator';
+import { CarbType } from 'entities/vehicle.entity';
 
 export class VehicleDto {
 
@@ -20,8 +21,8 @@ export class VehicleDto {
     @IsString()
     model?: string;
     @ApiProperty()
-    @IsString()
-    carbType: string;
+    @IsEnum(CarbType)
+    carbType: CarbType;
     @ApiProperty()
     @IsNumber()
     consum: number;
