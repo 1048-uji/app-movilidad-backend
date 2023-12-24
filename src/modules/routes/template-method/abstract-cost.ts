@@ -11,7 +11,7 @@ export abstract class AbstractCost {
     private vehicleService: VehicleService;
 
     constructor() {
-        this.routeService = new RoutesService(this.routesRepository);
+        this.routeService = new RoutesService(this.routesRepository, this.vehicleRepository);
         this.vehicleService = new VehicleService(this.vehicleRepository);
     }
 

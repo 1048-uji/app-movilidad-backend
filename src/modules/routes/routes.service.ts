@@ -19,9 +19,9 @@ export class RoutesService {
     constructor(
         @InjectRepository(Route) private readonly routesRepository: Repository<Route>,
         @InjectRepository(Vehicle) private readonly vehicleRepository: Repository<Vehicle>
-        , public abstractCost: AbstractCost
     ) {}
     private openRoutesApi = OpenRoutesService.getInstance();
+    private abstractCost: AbstractCost
 
     async createRoute(start: PlaceOfinterestDto, end: PlaceOfinterestDto, routeOptions: RouteOptionsDto): Promise<RouteDto> {
         if ((start.lat === (null||undefined) && start.lon === (null||undefined)) && start.address === (null||undefined)){
