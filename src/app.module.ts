@@ -10,6 +10,8 @@ import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { Vehicle } from 'entities/vehicle.entity';
 import { RoutesModule } from './modules/routes/routes.module';
 import { Route } from 'entities/route.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from 'modules/auth/strategy/jwt.constant';
 
 @Module({
   imports: [ConfigModule.forRoot(),
@@ -28,7 +30,8 @@ import { Route } from 'entities/route.entity';
     AuthModule,
     PlaceOfInterestModule,
     VehicleModule,
-    RoutesModule],
+    RoutesModule,
+    ],
   controllers: [],
   providers: [],
 })

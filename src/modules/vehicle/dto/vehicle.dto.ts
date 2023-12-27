@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsEmail, IsEnum, IsNumber, IsOptional, IsString, IsStrongPassword } from 'class-validator';
-import { CarbType } from 'entities/vehicle.entity';
+import { CarbType } from '../../../entities/vehicle.entity';
 
 export class VehicleDto {
 

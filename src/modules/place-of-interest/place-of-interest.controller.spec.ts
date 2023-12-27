@@ -39,7 +39,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
           synchronize: true,
           ssl: {rejectUnauthorized: false},
         }),
-        TypeOrmModule.forFeature([User, PlaceOfInterest]),
+        TypeOrmModule.forFeature([User, PlaceOfInterest, Vehicle]),
         JwtModule.register({
           secret: jwtConstants.secret,
           signOptions: { expiresIn: '30d' },

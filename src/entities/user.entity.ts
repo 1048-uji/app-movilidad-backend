@@ -18,8 +18,8 @@ export class User {
     @OneToMany(() => PlaceOfInterest, placeOfInterest => placeOfInterest.user)
     placesOfInterest?: PlaceOfInterest[];
     @OneToMany(() => Vehicle, vehicle => vehicle.user)
-    vehicle?: Vehicle[];    
-    @OneToOne(() => Vehicle, {nullable: true})
+    vehicles?: Vehicle[];    
+    @OneToOne(() => Vehicle, {nullable: true, eager: true, onDelete: 'CASCADE' , onUpdate: 'CASCADE'})
     @JoinColumn()
     vehicleDefault: Vehicle;
     @Column({default: Strategy.RECOMMENDED})

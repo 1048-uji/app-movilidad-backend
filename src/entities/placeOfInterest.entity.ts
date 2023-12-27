@@ -15,11 +15,11 @@ export class PlaceOfInterest {
     lat: string;
     @Column()
     address: string;    
-    @Column()
+    @Column({nullable: true})
     region: string;
-    @Column()
+    @Column({nullable: true})
     macroregion: string;
-    @Column()
+    @Column({nullable: true})
     localadmin: string;
     @Column()
     country: string;

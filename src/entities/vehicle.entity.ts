@@ -41,7 +41,7 @@ export class Vehicle {
     fav: boolean;
     @Column({nullable: true})
     userId?: number;
-    @ManyToOne(() => User, user => user.vehicle, { onDelete: 'CASCADE' , onUpdate: 'CASCADE'})
+    @ManyToOne(() => User, user => user.vehicles, { onDelete: 'CASCADE' , onUpdate: 'CASCADE'})
     user: User;
 
 }

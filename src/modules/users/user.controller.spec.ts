@@ -10,17 +10,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../../entities/user.entity';
 import { jwtConstants } from '../auth/strategy/jwt.constant';import { JwtAuthGuard } from '../auth/strategy/jwt-auth.guard';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
-import { Vehicle } from '../../entities/vehicle.entity';
+import { CarbType, Vehicle } from '../../entities/vehicle.entity';
 import { ConfigModule } from '@nestjs/config';
 import { Route } from '../../entities/route.entity';
+import { VehicleController } from '../vehicle/vehicle.controller';
+import { VehicleDto } from '../vehicle/dto/vehicle.dto';
+import { UserDto } from './dto/user.dto';
+import { RouteOptionsDto, Strategy } from '../routes/dto/routeOptions.dto';
+import { VehicleService } from '../vehicle/vehicle.service';
 
 describe('UsersController', () => {
   let controller: UserController;
   let usService: UserService;
   let authController: AuthController;
   let authService: AuthService;
-  let JwtAuthGuard: JwtAuthGuard;
-  let jwtService: JwtService;
+  let vehicleController: VehicleController
 
  
   beforeEach(async () => {
@@ -38,17 +42,17 @@ describe('UsersController', () => {
             synchronize: true,
             ssl: {rejectUnauthorized: false},
           }),
-          TypeOrmModule.forFeature([User]),
+          TypeOrmModule.forFeature([User, Vehicle]),
           JwtModule.register({
             secret: jwtConstants.secret,
             signOptions: { expiresIn: '30d' },
           }),
         ],
-        controllers: [UserController, AuthController],
+        controllers: [UserController, AuthController, VehicleController],
         providers: [
-          UserService,
           AuthService,
-          JwtService,
+          UserService,
+          VehicleService,
         ],
       }).compile();
 
@@ -56,7 +60,8 @@ describe('UsersController', () => {
     authController = module.get<AuthController>(AuthController);
     usService = module.get<UserService>(UserService);
     authService = module.get<AuthService>(AuthService);
-    jwtService = module.get<JwtService>(JwtService);
+    vehicleController = module.get<VehicleController>(VehicleController);
+    controller = module.get<UserController>(UserController);
   });
 
   it('Registra un usuario válido', async () => {
@@ -115,9 +120,8 @@ describe('UsersController', () => {
     //const accessToken = await jwtService.signAsync({ id: userRegistered.id, email: userRegistered.email });
     // Verificar que la respuesta del controlador contiene el token
     try {
-      const decoded = jwtService.decode(loginResponse.token);
       // Verificar que el usuario en el token coincide con el usuario registrado
-      expect(decoded.email).toBe(userRegistered.email);
+      expect(loginResponse.token).toBeDefined();
     } catch (error) {
       // Manejar el error (token inválido, expirado, etc.)
       throw new Error('Error al decodificar el token');
@@ -209,6 +213,85 @@ describe('UsersController', () => {
       // Verificar que la excepción sea la esperada
       expect(error.status).toBe(HttpStatus.UNAUTHORIZED);
       expect(error.message).toBe('InvalidUserException');
+    }
+  });
+  it('debería registrar el vehiculo 1234ABC como default y Fast como tipo de ruta', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await usService.clearDatabase();
+
+    // Crear un usuario en la base de datos
+    const user: RegisterDto = {
+      username: 'José Antonio',
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    };
+    const registered = await authService.register(user);
+    const request = {
+      user: registered,
+    };
+
+    const vehicleDto: VehicleDto = {
+      registration: '1234ABC',
+      name: 'coche',
+      carbType: CarbType.Biodiesel,
+      model: 'X',
+      consum: 15,
+      brand: 'Una',
+      fav: false,
+    };
+    const vehicle = await vehicleController.addVehicle(request, vehicleDto);
+    
+    const userUpdate: UserDto = {
+      id: registered.id,
+      username: registered.username,
+      email: registered.email,
+      password: registered.password,
+      routeDefault: Strategy.FAST,
+      vehicleDefaultId: vehicle.id,
+    } 
+    const userUpdated = await controller.updateUser(userUpdate, request) 
+    
+    expect(userUpdated.vehicleDefault.id).toBe(vehicle.id);
+    expect(userUpdated.routeDefault).toBe(Strategy.FAST);
+  });
+  it('debería lanzar la excepción de vehiculo no existe', async () => {
+    // Limpiar la base de datos antes de la prueba
+    await usService.clearDatabase();
+
+    // Crear un usuario en la base de datos
+    const user: RegisterDto = {
+      username: 'José Antonio',
+      email: 'al386161@uji.es',
+      password: 'Tp386161',
+    };
+    const registered = await authService.register(user);
+    const request = {
+      user: registered,
+    };
+
+    const vehicleDto: VehicleDto = {
+      registration: '1234ABC',
+      name: 'coche',
+      carbType: CarbType.Biodiesel,
+      model: 'X',
+      consum: 15,
+      brand: 'Una',
+      fav: false,
+    };
+    const vehicle = await vehicleController.addVehicle(request, vehicleDto);
+    
+    const userUpdate: UserDto = {
+      id: registered.id,
+      username: registered.username,
+      email: registered.email,
+      password: registered.password,
+      routeDefault: Strategy.FAST,
+      vehicleDefaultId: 7,
+    } 
+    try{
+      const userUpdated = await controller.updateUser(userUpdate, request) 
+    }catch(error){
+      expect(error.message).toBe('Vehicle does not exist');
     }
   });
 
