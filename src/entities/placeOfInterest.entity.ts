@@ -19,7 +19,7 @@ export class PlaceOfInterest {
     region: string;
     @Column()
     macroregion: string;
-    @Column()
+    @Column({nullable: true})
     localadmin: string;
     @Column()
     country: string;

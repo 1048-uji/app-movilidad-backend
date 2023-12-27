@@ -357,7 +357,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     expect(updatePoi.fav).toBe(true);
   })
 
-  it('E02 (inválido): debería saltar que el punto de interes no existe', async () => {
+  it('E02 (inválido): debería saltar que el usuario no es propietario del punto de interes', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
 
@@ -372,13 +372,13 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     };
 
     const user2: RegisterDto = {
-      email: 'al386162@uji.es',
-      username: 'José Antonia',
-      password: 'tP386162',
+      email: 'usuario2@ejemplo.com',
+      username: 'Usuario 2',
+      password: 'contraseña',
     };
-    const registered2 = await authController.register(user2);
-    const request2 = {
-      user2: registered2,
+    const registeredUser2 = await authController.register(user2);
+    const requestUser2 = {
+      user: registeredUser2,
     };
 
     const start: PlaceOfinterestDto = 
@@ -391,9 +391,88 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     poi.fav = true;
 
     try {
-      await placesController.addFavoritePoi(poi, request2);
+      await placesController.addFavoritePoi(poi, requestUser2);
       fail('Se esperaba que lanzara la excepcion No eres el propietario del punto de interes');
     } catch(error) {
+      console.log('entro en el catch');
+      expect(error.message).toBe('No eres el propietario del punto de interes');
+    }
+  })
+
+  it('E01 (Válido): debería eliminar el punto de interes de favoritos', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+    const registered = await authController.register(user);
+    const request = {
+      user: registered,
+    };
+
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+   
+    const poi = await placesController.addPlaceOfInterestCoords(request, start);
+
+    poi.fav = true;
+
+    const updatePoi = await placesController.addFavoritePoi(poi, request);
+
+    updatePoi.fav = false;
+
+    const finalPoi = await placesController.deleteFavoritePoi(updatePoi, request);
+
+    expect(finalPoi.fav).toBe(false);
+  })
+
+  it('E02 (inválido): debería saltar que el usuario no es propietario del punto de interes', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+    const registered = await authController.register(user);
+    const request = {
+      user: registered,
+    };
+
+    const user2: RegisterDto = {
+      email: 'usuario2@ejemplo.com',
+      username: 'Usuario 2',
+      password: 'contraseña',
+    };
+    const registeredUser2 = await authController.register(user2);
+    const requestUser2 = {
+      user: registeredUser2,
+    };
+
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+   
+    const poi = await placesController.addPlaceOfInterestCoords(request, start);
+    poi.fav = true;
+
+    const updatePoi = await placesController.addFavoritePoi(poi, request);
+    updatePoi.fav = false;
+
+    try {
+      await placesController.deleteFavoritePoi(updatePoi, requestUser2);
+      fail('Se esperaba que lanzara la excepcion No eres el propietario del punto de interes');
+    } catch(error) {
+      console.log('entro en el catch');
       expect(error.message).toBe('No eres el propietario del punto de interes');
     }
   })
