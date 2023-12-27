@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../../entities/user.entity';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
-import { Vehicle } from '../../entities/vehicle.entity';
+import { CarbType, Vehicle } from '../../entities/vehicle.entity';
 import { Route } from '../../entities/route.entity';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/strategy/jwt.constant';
@@ -630,7 +630,7 @@ describe('RoutesController (Crear Ruta)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: 'gasolina',
+      carbType: CarbType.Gasolina_95_E5,
       model: 'X',
       consum: 15,
       brand: 'Una',
@@ -698,7 +698,7 @@ describe('RoutesController (Crear Ruta)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: 'electric',
+      carbType: CarbType.Electric,
       model: 'X',
       consum: 15,
       brand: 'Una',
@@ -764,7 +764,7 @@ describe('RoutesController (Crear Ruta)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: 'gasolina',
+      carbType: CarbType.Electric,
       model: 'X',
       consum: 15,
       brand: 'Una',
@@ -830,7 +830,7 @@ describe('RoutesController (Crear Ruta)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: 'Biodiesel',
+      carbType: CarbType.Biodiesel,
       model: 'X',
       consum: 8,
       brand: 'Una',
@@ -896,7 +896,7 @@ describe('RoutesController (Crear Ruta)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: 'electric',
+      carbType: CarbType.Electric,
       model: 'X',
       consum: 15,
       brand: 'Una',
