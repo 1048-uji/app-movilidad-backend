@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseGuards, Request, Body, Param, Delete } from '@nestjs/common/decorators';
+import { Controller, Get, Post, UseGuards, Request, Body, Param, Delete, Put } from '@nestjs/common/decorators';
 import { PlaceOfInterestService } from './place-of-interest.service';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
@@ -43,6 +43,7 @@ export class PlaceOfInterestController {
   placeOfInterstData: PlaceOfinterestDto): Promise<PlaceOfInterest> {
         return this.poiService.addPlaceOfInteresAddress(placeOfInterstData, req.user);
   }
+  
   @Get('/place-of-interest')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('strategy_jwt_1'))
@@ -59,4 +60,38 @@ export class PlaceOfInterestController {
   @Param('id', ParseIntPipe) id: number): Promise<String> {
       return this.poiService.deletePlaceOfInterest(id, req.user);
   }
+
+  @Put('/addFav')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async addFavoritePoi(
+        @Body(
+            new ValidationPipe({
+                transform: true,
+                transformOptions: { enableImplicitConversion: true },
+                forbidNonWhitelisted: true
+            })
+        )
+        poiData: PlaceOfinterestDto,
+        @Request() req: any
+    ): Promise<PlaceOfInterest> {
+        return this.poiService.updatePoi(poiData, req.user);
+    }
+
+    @Put('/deleteFav')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async deleteFavoritePoi(
+        @Body(
+            new ValidationPipe({
+                transform: true,
+                transformOptions: { enableImplicitConversion: true },
+                forbidNonWhitelisted: true
+            })
+        )
+        poiData: PlaceOfinterestDto,
+        @Request() req: any
+    ): Promise<PlaceOfInterest> {
+        return this.poiService.updatePoi(poiData, req.user);
+    }
 }

@@ -435,7 +435,8 @@ describe('RoutesController (Crear Ruta)', () => {
     const updatedRoute = await routesController.addFavouriteRoute(savedRoute, request)
 
     expect(updatedRoute.fav).toBe(true)
-  })
+  });
+  
   it('E02 (inválido): debería saltar que la ruta no existe', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();

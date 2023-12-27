@@ -327,4 +327,74 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     await userService.clearDatabase();
     await placesService.clearDatabase();
   });
+
+  it('E01 (Válido): debería añadir el punto de interes a favorito', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+    const registered = await authController.register(user);
+    const request = {
+      user: registered,
+    };
+
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+   
+    const poi = await placesController.addPlaceOfInterestCoords(request, start);
+
+    poi.fav = true;
+
+    const updatePoi = await placesController.addFavoritePoi(poi, request);
+
+    expect(updatePoi.fav).toBe(true);
+  })
+
+  it('E02 (inválido): debería saltar que el punto de interes no existe', async () => {
+    userService.clearDatabase();
+    placesService.clearDatabase();
+
+    const user: RegisterDto = {
+      email: 'al386161@uji.es',
+      username: 'José Antonio',
+      password: 'tP386161',
+    };
+    const registered = await authController.register(user);
+    const request = {
+      user: registered,
+    };
+
+    const user2: RegisterDto = {
+      email: 'al386162@uji.es',
+      username: 'José Antonia',
+      password: 'tP386162',
+    };
+    const registered2 = await authController.register(user2);
+    const request2 = {
+      user2: registered2,
+    };
+
+    const start: PlaceOfinterestDto = 
+      { name: 'Castellón',
+        lon: '-0.0576800', 
+        lat: '39.9929000', 
+        fav: false };
+   
+    const poi = await placesController.addPlaceOfInterestCoords(request, start);
+    poi.fav = true;
+
+    try {
+      await placesController.addFavoritePoi(poi, request2);
+      fail('Se esperaba que lanzara la excepcion No eres el propietario del punto de interes');
+    } catch(error) {
+      expect(error.message).toBe('No eres el propietario del punto de interes');
+    }
+  })
 });
