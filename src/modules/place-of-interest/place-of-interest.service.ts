@@ -68,6 +68,17 @@ export class PlaceOfInterestService {
     return 'Place of Interest eliminado';
 }
 
+async updatePoi(poiData: PlaceOfinterestDto, user: any): Promise<PlaceOfInterest> {
+  const poi = await this.poiRepository.findOneBy({ id: poiData.id });
+  if (!poi) {
+      throw new HttpException('El punto de interes no existe', HttpStatus.NOT_FOUND);
+  }
+  if (poi.userId != user.id) {
+      throw new HttpException('No eres el propietario del punto de interes', HttpStatus.UNAUTHORIZED);
+  }
+  return this.poiRepository.save(poiData);
+}
+
   async clearDatabase(){
     this.poiRepository.clear();
   }
