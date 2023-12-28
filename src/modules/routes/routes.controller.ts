@@ -120,7 +120,7 @@ export class RoutesController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard('strategy_jwt_1'))
     async priceOfRoute(@Request() req: any,
-    @Param('id', ParseIntPipe) vehicleId: number, 
+    @Param('vehicleId', ParseIntPipe) vehicleId: number, 
     @Body(
         new ValidationPipe({
             transform: true,
