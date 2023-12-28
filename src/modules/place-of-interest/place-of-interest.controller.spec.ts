@@ -58,7 +58,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     authService = module.get<AuthService>(AuthService);
   });
 
-  it('debería dar de alta un lugar de interés válido', async () => {
+  it('(Válido): debería dar de alta un lugar de interés válido', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
     await placesService.clearDatabase();
@@ -90,7 +90,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     expect(placesOfInterest).toHaveLength(1);
   });
 
-  it('debería lanzar una excepción si se intenta añadir un lugar de interés con coordenadas incorrectas', async () => {
+  it('(Inválido): debería lanzar una excepción si se intenta añadir un lugar de interés con coordenadas incorrectas', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
     await placesService.clearDatabase();
@@ -121,7 +121,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
       expect(error.status).toBe(HttpStatus.SERVICE_UNAVAILABLE);
     }
   });
-  it('Crea un nuevo punto de interés con un topónimo válido', async () => {
+  it('(Válido): Crea un nuevo punto de interés con un topónimo válido', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
     await placesService.clearDatabase();
@@ -151,7 +151,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     expect(placesOfInterest).toHaveLength(1);
   });
 
-  it('debería lanzar una excepción si se intenta añadir un lugar de interés con un topónimo incorrecto', async () => {
+  it('(Inválido): debería lanzar una excepción si se intenta añadir un lugar de interés con un topónimo incorrecto', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
     await placesService.clearDatabase();
@@ -183,7 +183,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     }
   });
 
-  it('debería devolver la lista de lugares de interés del usuario autentificado', async () => {
+  it('(Válido): debería devolver la lista de lugares de interés del usuario autentificado', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
     await placesService.clearDatabase();
@@ -223,7 +223,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     });
   
     //Escenario 2
-    it('debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
+    it('(Inválido): debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
 
       await userService.clearDatabase();
       await placesService.clearDatabase();
@@ -243,7 +243,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
         expect(error.message).toBe('DataBaseInaccessibleException');
       }
     });
-    it('debería borrar un lugar de interés guardado y guardar el cambio en el servidor', async () => {
+    it('(Válido): debería borrar un lugar de interés guardado y guardar el cambio en el servidor', async () => {
       // Limpiar la base de datos antes de la prueba
       await userService.clearDatabase();
       await placesService.clearDatabase();
@@ -294,7 +294,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
       expect(placesOfInterest).toHaveLength(1);
       expect(placesOfInterest[0]).toEqual(poi2);
     });
-    it('debería lanzar la excepción NullPointerException al intentar borrar un lugar de interés inexistente', async () => {
+    it('(inválido): debería lanzar la excepción NullPointerException al intentar borrar un lugar de interés inexistente', async () => {
       // Limpiar la base de datos antes de la prueba
       await userService.clearDatabase();
       await placesService.clearDatabase();
@@ -328,7 +328,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     await placesService.clearDatabase();
   });
 
-  it('E01 (Válido): debería añadir el punto de interes a favorito', async () => {
+  it('(Válido): debería añadir el punto de interes a favorito', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
 
@@ -357,7 +357,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     expect(updatePoi.fav).toBe(true);
   })
 
-  it('E02 (inválido): debería saltar que el usuario no es propietario del punto de interes', async () => {
+  it('(inválido): debería saltar que el usuario no es propietario del punto de interes', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
 
@@ -399,7 +399,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     }
   })
 
-  it('E01 (Válido): debería eliminar el punto de interes de favoritos', async () => {
+  it('(Válido): debería eliminar el punto de interes de favoritos', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
 
@@ -432,7 +432,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     expect(finalPoi.fav).toBe(false);
   })
 
-  it('E02 (inválido): debería saltar que el usuario no es propietario del punto de interes', async () => {
+  it('(inválido): debería saltar que el usuario no es propietario del punto de interes', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
 

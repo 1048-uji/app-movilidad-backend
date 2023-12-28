@@ -64,7 +64,7 @@ describe('UsersController', () => {
     controller = module.get<UserController>(UserController);
   });
 
-  it('Registra un usuario válido', async () => {
+  it('(Válido): Registra un usuario válido', async () => {
     const user: RegisterDto = {
       email: 'al386161@uji.es',
       username: 'José Antonio',
@@ -85,7 +85,7 @@ describe('UsersController', () => {
     expect(usuariosRegistrados).toHaveLength(1);
   });
 
-  it('debería lanzar Database not accesible si la base de datos no está disponible', async () => {
+  it('(Inválido): debería lanzar Database not accesible si la base de datos no está disponible', async () => {
   
     // Realizar la solicitud al endpoint de registro
     try {
@@ -101,7 +101,7 @@ describe('UsersController', () => {
     }
   });
 
-  it('debería iniciar sesión con un usuario correcto y cargar datos de la base de datos', async () => {
+  it('(Válido): debería iniciar sesión con un usuario correcto y cargar datos de la base de datos', async () => {
     // Limpiar la base de datos antes de la prueba
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -129,7 +129,7 @@ describe('UsersController', () => {
     
   });
 
-  it('debería lanzar InvalidPasswordException para un usuario con contraseña incorrecta', async () => {
+  it('(Inválido): debería lanzar InvalidPasswordException para un usuario con contraseña incorrecta', async () => {
     // Limpiar la base de datos antes de la prueba
     await usService.clearDatabase();
 
@@ -155,7 +155,7 @@ describe('UsersController', () => {
     }
     
   });
-  it('debería eliminar la cuenta de un usuario autenticado', async () => {
+  it('(Válido): debería eliminar la cuenta de un usuario autenticado', async () => {
     // Limpiar la base de datos antes de la prueba
     await usService.clearDatabase();
 
@@ -184,7 +184,7 @@ describe('UsersController', () => {
     expect(usuariosRegistrados).toHaveLength(0);
   });
 
-  it('debería lanzar una excepción si se intenta borrar la cuenta de otro usuario', async () => {
+  it('(Inválido): debería lanzar una excepción si se intenta borrar la cuenta de otro usuario', async () => {
     // Limpiar la base de datos antes de la prueba
     await usService.clearDatabase();
 
@@ -215,7 +215,7 @@ describe('UsersController', () => {
       expect(error.message).toBe('InvalidUserException');
     }
   });
-  it('debería registrar el vehiculo 1234ABC como default y Fast como tipo de ruta', async () => {
+  it('(Válido): debería actualizar el vehiculo 1234ABC como default y Fast como tipo de ruta', async () => {
     // Limpiar la base de datos antes de la prueba
     await usService.clearDatabase();
 
@@ -254,7 +254,7 @@ describe('UsersController', () => {
     expect(userUpdated.vehicleDefault.id).toBe(vehicle.id);
     expect(userUpdated.routeDefault).toBe(Strategy.FAST);
   });
-  it('debería lanzar la excepción de vehiculo no existe', async () => {
+  it('(Inválido): debería lanzar la excepción de vehiculo no existe', async () => {
     // Limpiar la base de datos antes de la prueba
     await usService.clearDatabase();
 

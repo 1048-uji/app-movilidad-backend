@@ -11,11 +11,12 @@ import { AuthController } from '../auth/auth.controller';
 import { AuthService } from '../auth/auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from '../auth/strategy/jwt.constant';
-import { Vehicle } from '../../entities/vehicle.entity';
+import { CarbType, Vehicle } from '../../entities/vehicle.entity';
 import { HttpStatus } from '@nestjs/common';
 import { PlaceOfInterest } from '../../entities/placeOfInterest.entity';
 import { ConfigModule } from '@nestjs/config';
 import { Route } from '../../entities/route.entity';
+import { UserController } from '../users/user.controller';
 
 describe('VehicleController (Registro de Vehículos)', () => {
   let vehicleController: VehicleController;
@@ -40,13 +41,13 @@ describe('VehicleController (Registro de Vehículos)', () => {
           synchronize: true,
           ssl: {rejectUnauthorized: false},
         }),
-        TypeOrmModule.forFeature([Vehicle, PlaceOfInterest, Vehicle, Route]),
+        TypeOrmModule.forFeature([User, PlaceOfInterest, Vehicle, Route]),
         JwtModule.register({
           secret: jwtConstants.secret,
           signOptions: { expiresIn: '30d' },
         }),
       ],
-      controllers: [VehicleController, AuthController],
+      controllers: [VehicleController, AuthController, UserController],
       providers: [VehicleService, UserService, AuthService],
     }).compile();
 
@@ -57,7 +58,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
     authService = module.get<AuthService>(AuthService);
   });
 
-  it('debería registrar un vehículo válido', async () => {
+  it('(Válido): debería registrar un vehículo válido', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
 
@@ -73,7 +74,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: 'gasolina',
+      carbType: CarbType.Biodiesel,
       model: 'X',
       consum: 15,
       brand: 'Una',
@@ -90,7 +91,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
     expect(vehicle.registration).toBe(vehicleDto.registration)
   });
 
-  it('debería lanzar una excepción si la base de datos no está disponible al intentar registrar un vehículo', async () => {
+  it('(Inválido): debería lanzar una excepción si la base de datos no está disponible al intentar registrar un vehículo', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
 
@@ -110,7 +111,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
       const vehicleDto: VehicleDto = {
         registration: '1234ABC',
         name: 'coche',
-        carbType: 'gasolina',
+        carbType: CarbType.Biodiesel,
         model: 'X',
         consum: 15,
         brand: 'Una',
@@ -121,11 +122,12 @@ describe('VehicleController (Registro de Vehículos)', () => {
       fail('Se esperaba que lanzara la excepción DataBaseInaccessibleException');
     } catch (error) {
       // Verificar que la excepción sea la esperada
+      console.log(error)
       expect(error.message).toBe('DataBaseInaccessibleException');
     }
   });
 
-  it('debería eliminar el vehiculo de un usuario autenticado', async () => {
+  it('(Válido): debería eliminar el vehiculo de un usuario autenticado', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
 
@@ -150,7 +152,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: 'gasolina',
+      carbType: CarbType.Biodiesel,
       model: 'X',
       consum: 15,
       brand: 'Una',
@@ -168,7 +170,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
     expect(vehicleRegistrados).toHaveLength(0);
   });
 
-  it('debería lanzar una excepción si se intenta borrar un vehiculo que no existe', async () => {
+  it('(Inválido): debería lanzar una excepción si se intenta borrar un vehiculo que no existe', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
 
@@ -193,7 +195,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: 'gasolina',
+      carbType: CarbType.Biodiesel,
       model: 'X',
       consum: 15,
       brand: 'Una',
@@ -215,7 +217,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
     }
   });
 
-  it('debería devolver la lista de vehiculos del usuario autentificado', async () => {
+  it('(Válido): debería devolver la lista de vehiculos del usuario autentificado', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
   
@@ -232,7 +234,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: 'gasolina',
+      carbType: CarbType.Biodiesel,
       model: 'X',
       consum: 15,
       brand: 'Una',
@@ -257,7 +259,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
     });
   
     //Escenario 2
-    it('debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
+    it('(Inválido): debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
       await userService.clearDatabase();
       // Crear un usuario autentificado
       const user: RegisterDto = {
@@ -277,7 +279,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
       }
     });
 
-  it('debería devolver la lista de vehiculos del usuario autentificado', async () => {
+  it('(Válido): debería devolver la lista de vehiculos del usuario autentificado', async () => {
     // Limpiar la base de datos antes de la prueba
     await userService.clearDatabase();
   
@@ -294,7 +296,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: 'gasolina',
+      carbType: CarbType.Biodiesel,
       model: 'X',
       consum: 15,
       brand: 'Una',
@@ -319,7 +321,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
     });
   
     //Escenario 2
-    it('debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
+    it('(Inválido): debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
       await userService.clearDatabase();
       // Crear un usuario autentificado
       const user: RegisterDto = {
@@ -338,7 +340,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
         expect(error.message).toBe('DataBaseInaccessibleException');
       }
     });
-    it('debería actualizar el tipo y consumo de un vehículo existente', async () => {
+    it('(Válido): debería actualizar el tipo y consumo de un vehículo existente', async () => {
       // Limpiar la base de datos antes de la prueba
       await userService.clearDatabase();
     
@@ -354,7 +356,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
       const vehicle: VehicleDto = 
         {
           name: 'vehículo1',
-          carbType: 'combustible',
+          carbType: CarbType.Biodiesel,
           registration: '1234HSC',
           model: 'X',
           consum: 5,
@@ -373,7 +375,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
         id: vehicleAdded.id,
         registration:'1234ABC',
         name: 'vehículo1',
-        carbType: 'electrico',
+        carbType: CarbType.Electric,
         model: 'X',
         consum: 20,
         brand: 'Una',
@@ -390,7 +392,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
       expect(updatedVehicle.consum).toEqual(updatedVehicleDto.consum);
       expect(updatedVehicle.registration).toEqual(updatedVehicleDto.registration);
     });
-    it('debería lanzar una excepción si se intenta actualizar un vehículo inexistente', async () => {
+    it('(Inválido): debería lanzar una excepción si se intenta actualizar un vehículo inexistente', async () => {
       // Limpiar la base de datos antes de la prueba
       await userService.clearDatabase();
     
@@ -411,7 +413,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
         const updatedVehicleDto: VehicleDto = {
           name: 'vehículo1',
           registration: '1234ABC',
-          carbType: 'electrico',
+          carbType: CarbType.Electric,
           model: 'X',
           consum: 20,
           brand: 'Una',
@@ -426,7 +428,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
         expect(error.message).toBe('Vehicle does not exist');
       }
     });
-    it('debería añadir a favoritos un vehículo existente', async () => {
+    it('(Válido): debería añadir a favoritos un vehículo existente', async () => {
       // Limpiar la base de datos antes de la prueba
       await userService.clearDatabase();
     
@@ -442,7 +444,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
       const vehicle: VehicleDto = 
         {
           name: 'vehículo1',
-          carbType: 'combustible',
+          carbType: CarbType.Biodiesel,
           registration: '1234HSC',
           model: 'X',
           consum: 5,
@@ -460,7 +462,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
       const updatedVehicleDto: VehicleDto = {
         id: vehicleAdded.id,
         name: 'vehículo1',
-        carbType: 'combustible',
+        carbType: CarbType.Biodiesel,
         registration: '1234HSC',
         model: 'X',
         consum: 5,
@@ -476,7 +478,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
       // Verificar que el vehículo se actualizó correctamente
       expect(updatedVehicle.fav).toEqual(updatedVehicleDto.fav);
     });
-    it('debería lanzar una excepción si se intenta actualizar un vehículo inexistente', async () => {
+    it('(Inválido): debería lanzar una excepción si se intenta actualizar un vehículo inexistente', async () => {
       // Limpiar la base de datos antes de la prueba
       await userService.clearDatabase();
     
@@ -497,7 +499,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
         const updatedVehicleDto: VehicleDto = {
           name: 'vehículo1',
           registration: '1234ABC',
-          carbType: 'electrico',
+          carbType: CarbType.Electric,
           model: 'X',
           consum: 20,
           brand: 'Una',
@@ -512,7 +514,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
         expect(error.message).toBe('Vehicle does not exist');
       }
     });
-    it('debería añadir a favoritos un vehículo existente', async () => {
+    it('(Válido): debería añadir a favoritos un vehículo existente', async () => {
       // Limpiar la base de datos antes de la prueba
       await userService.clearDatabase();
     
@@ -528,7 +530,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
       const vehicle: VehicleDto = 
         {
           name: 'vehículo1',
-          carbType: 'combustible',
+          carbType: CarbType.Biodiesel,
           registration: '1234HSC',
           model: 'X',
           consum: 5,
@@ -546,7 +548,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
       const updatedVehicleDto: VehicleDto = {
         id: vehicleAdded.id,
         name: 'vehículo1',
-        carbType: 'combustible',
+        carbType: CarbType.Biodiesel,
         registration: '1234HSC',
         model: 'X',
         consum: 5,
@@ -562,7 +564,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
       // Verificar que el vehículo se actualizó correctamente
       expect(updatedVehicle.fav).toEqual(updatedVehicleDto.fav);
     });
-    it('debería lanzar una excepción si se intenta actualizar un vehículo inexistente', async () => {
+    it('(Inválido): debería lanzar una excepción si se intenta actualizar un vehículo inexistente', async () => {
       // Limpiar la base de datos antes de la prueba
       await userService.clearDatabase();
     
@@ -583,7 +585,7 @@ describe('VehicleController (Registro de Vehículos)', () => {
         const updatedVehicleDto: VehicleDto = {
           name: 'vehículo1',
           registration: '1234ABC',
-          carbType: 'electrico',
+          carbType: CarbType.Electric,
           model: 'X',
           consum: 20,
           brand: 'Una',

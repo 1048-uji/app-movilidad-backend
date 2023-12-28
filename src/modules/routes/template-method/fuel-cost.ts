@@ -1,4 +1,4 @@
-import { CarbType, Vehicle } from "entities/vehicle.entity";
+import { CarbType, Vehicle } from "../../../entities/vehicle.entity";
 import { AbstractCost } from "./abstract-cost";
 import { HttpException, HttpStatus } from "@nestjs/common";
 import axios from "axios";
@@ -17,29 +17,26 @@ export class FuelCost extends AbstractCost {
                 if(poi.country != 'España'){
                     throw new HttpException('InvalidCountryException', HttpStatus.BAD_REQUEST);
                 }
-                console.log('Lista Provincias');
                 const responseRegion = await axios.get(this.baseUri+'Listados/Provincias/')
                 const regions: { ID: number; region: string }[] = responseRegion.data.map((region) => ({
                     ID: region.IDPovincia,
                     region: region.Provincia,
                   }));
-                const regionFind = regions.find((region) => region.region.toLowerCase() === poi.region.toLowerCase());
-
-                console.log('Lista Carburantes');
+                const regionFind = regions.find((region) => region.region.toLowerCase().includes(poi.region.toLowerCase()));
                 const responseFuel = await axios.get(this.baseUri+'Listados/ProductosPetroliferos/')
-                const fuel: { ID: number; nombre: string }[] = responseFuel.data.map((fuel) => ({
+                const fuels: { ID: number; nombre: string }[] = responseFuel.data.map((fuel) => ({
                     ID: fuel.IDProducto,
                     nombre: fuel.NombreProducto,
                   }));
-                const fuelFind = fuel.find((fuel) => fuel.nombre.toLowerCase() === type.toLowerCase());
                   
-                const responseStations = await axios.get(this.baseUri+'EstacionesTerrestres/FiltroProvincia/'+regionFind.ID+'/'+fuelFind.ID, {
+                const fuelFind = fuels.find((fuel) => fuel.nombre.toLowerCase() === type.toLowerCase());
+                const responseStations = await axios.get(this.baseUri+'EstacionesTerrestres/FiltroProvinciaProducto/'+regionFind.ID+'/'+fuelFind.ID, {
                     headers: {
                       'Accept': 'application/json, img/png; charset=utf-8',
                       'Content-Type': 'application/json; charset=utf-8',
                     }
                   });
-                  if (responseStations.data.ListaEESSPrecio && responseStations.data.ListaEESSPrecio.length > 0) {
+                  if (responseStations.data.ResultadoConsulta === 'OK' && responseStations.data.ListaEESSPrecio.length > 0) {
                     let nearest = null;
                     let shortestDistance = Infinity;
                     const startLat = parseFloat(coords[1].replace(',', '.'))
@@ -56,7 +53,9 @@ export class FuelCost extends AbstractCost {
                         nearest = station;
                       }
                     });
-                    return (distance / 100) * consum * parseFloat(nearest.PrecioProducto);
+                    return ((distance / 1000) / 100) * consum * parseFloat(nearest.PrecioProducto.replace(',', '.'));
+                }else{
+                  throw new HttpException('There is no such fuel type in the region of departure.', HttpStatus.NOT_FOUND);
                 }                
             } catch (error) {
                 throw new HttpException('APINotWorkingException', HttpStatus.BAD_GATEWAY);

@@ -77,12 +77,11 @@ describe('RoutesController (Crear Ruta)', () => {
     routesService.clearDatabase();
   });
 
-  it('E01 (Válido): debería devolver el trayecto entre dos lugares y guardar el estado en el servidor', async () => {
+  it('(Válido): debería devolver el trayecto entre dos lugares y guardar el estado en el servidor', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
 
-    // Datos del escenario E01 (Válido)
     const user: RegisterDto = {
       email: 'al386161@uji.es',
       username: 'José Antonio',
@@ -117,14 +116,13 @@ describe('RoutesController (Crear Ruta)', () => {
     expect(response.end).toBe(end.lon+','+end.lat);
   });
 
-  it('E02 (Inválido): debería lanzar la excepción InvalidVehicleException al intentar realizar un viaje con un vehículo inválido', async () => {
+  it('(Inválido): debería lanzar la excepción InvalidVehicleException al intentar realizar un viaje con un vehículo inválido', async () => {
     // ... Configuración inicial ...
 
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
 
-    // Datos del escenario E01 (Válido)
     const user: RegisterDto = {
       email: 'al386161@uji.es',
       username: 'José Antonio',
@@ -160,7 +158,7 @@ describe('RoutesController (Crear Ruta)', () => {
       expect(error.message).toBe('La direccion de origen debe tener coordenadas o una dirección');
     }
   });
-  it('E01 (Válido): debería guardar la ruta válida', async () => {
+  it('(Válido): debería guardar la ruta válida', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -198,7 +196,7 @@ describe('RoutesController (Crear Ruta)', () => {
     expect(savedRoute.end).toBe(route.end);
 
   })
-  it('E03 (Inválido): debería saltar una excepción', async () => {
+  it('(Inválido): debería saltar una excepción', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -235,7 +233,7 @@ describe('RoutesController (Crear Ruta)', () => {
       expect(error.message).toBe('Usuario no autentificado');
     }
   })
-  it('E01 (Válido): debería listar la ruta', async () => {
+  it('(Válido): debería listar la ruta', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -275,7 +273,7 @@ describe('RoutesController (Crear Ruta)', () => {
     expect(routes[0].id).toBe(savedRoute.id);
 
   })
-  it('E03 (inválido): debería lanzar la excepción user not logged', async () => {
+  it('(Inválido): debería lanzar la excepción user not logged', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -314,7 +312,7 @@ describe('RoutesController (Crear Ruta)', () => {
       expect(error.message).toBe('Usuario no autentificado');
     }
   })
-  it('E01 (válido): debería borrar la ruta', async () => {
+  it('(Válido): debería borrar la ruta', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -353,7 +351,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     expect(deleted).toBe('Ruta eliminada')
   })
-  it('E02 (Inválido): debería lanzar la excepción de ruta no existe', async () => {
+  it('(Inválido): debería lanzar la excepción de ruta no existe', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -395,7 +393,7 @@ describe('RoutesController (Crear Ruta)', () => {
       expect(error.message).toBe('La ruta no existe')
     }    
   })
-  it('E01 (Válido): debería añadir la ruta a favorito', async () => {
+  it('(Válido): debería añadir la ruta a favorito', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -437,7 +435,7 @@ describe('RoutesController (Crear Ruta)', () => {
     expect(updatedRoute.fav).toBe(true)
   });
   
-  it('E02 (inválido): debería saltar que la ruta no existe', async () => {
+  it('(Inválido): debería saltar que la ruta no existe', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -479,7 +477,7 @@ describe('RoutesController (Crear Ruta)', () => {
       expect(error.message).toBe('La ruta no existe')
     }
   })
-  it('E01 (Válido): debería quitar la ruta a favorito', async () => {
+  it('(Válido): debería quitar la ruta a favorito', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -522,7 +520,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     expect(updatedRoute.fav).toBe(false)
   })
-  it('E02 (inválido): debería saltar que la ruta no existe', async () => {
+  it('(Inválido): debería saltar que la ruta no existe', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -565,7 +563,7 @@ describe('RoutesController (Crear Ruta)', () => {
     }
   })
 
-  it('E01 (válido): debería calcular el coste medio de calorias quemadas para una ruta', async () => {
+  it('(Válido): debería calcular el coste medio de calorias quemadas para una ruta', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -614,7 +612,7 @@ describe('RoutesController (Crear Ruta)', () => {
     expect(calorias).toBeCloseTo(77.32);
   })
   
-  it('E02 (inválido): debería saltar que el tipo de vehiculo es incorrecto', async () => {
+  it('(Inválido): debería saltar que el tipo de vehiculo es incorrecto', async () => {
     const user: RegisterDto = {
       email: 'al386161@uji.es',
       username: 'José Antonio',
@@ -677,7 +675,7 @@ describe('RoutesController (Crear Ruta)', () => {
     }
   })
   
-  it('E01 (válido): debería calcular el coste asociado a una ruta para un vehículo eléctrico', async () => {
+  it('(Válido): debería calcular el coste asociado a una ruta para un vehículo eléctrico', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -743,7 +741,7 @@ describe('RoutesController (Crear Ruta)', () => {
     expect(precio).toBeGreaterThanOrEqual(0.1);
   })
   
-  it('E02 (inválido): debería saltar que el tipo de coche es incorrecto', async () => {
+  it('(Inválido): debería saltar que el tipo de coche es incorrecto', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -765,7 +763,7 @@ describe('RoutesController (Crear Ruta)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: CarbType.Electric,
+      carbType: CarbType.Biodiesel,
       model: 'X',
       consum: 15,
       brand: 'Una',
@@ -809,7 +807,7 @@ describe('RoutesController (Crear Ruta)', () => {
       expect(error.message).toBe('InvalidTypeVehicleException');
     }
   })
-  it('E01 (válido): debería calcular el coste asociado a una ruta para un vehículo de carburante', async () => {
+  it('(Válido): debería calcular el coste asociado a una ruta para un vehículo de carburante', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();
@@ -831,7 +829,7 @@ describe('RoutesController (Crear Ruta)', () => {
     const vehicleDto: VehicleDto = {
       registration: '1234ABC',
       name: 'coche',
-      carbType: CarbType.Biodiesel,
+      carbType: CarbType.Gasoleo_A,
       model: 'X',
       consum: 8,
       brand: 'Una',
@@ -875,7 +873,7 @@ describe('RoutesController (Crear Ruta)', () => {
     expect(precio).toBeGreaterThanOrEqual(0.1);
   })
   
-  it('E02 (inválido): debería saltar que el tipo de coche es incorrecto', async () => {
+  it('(Inválido): debería saltar que el tipo de coche es incorrecto', async () => {
     userService.clearDatabase();
     placesService.clearDatabase();
     routesService.clearDatabase();

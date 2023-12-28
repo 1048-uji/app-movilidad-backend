@@ -1,5 +1,5 @@
 import { Route } from "../../../entities/route.entity";
-import { Vehicle } from "../../../entities/vehicle.entity";
+import { CarbType, Vehicle } from "../../../entities/vehicle.entity";
 import { RoutesService } from "../routes.service";
 import { Repository } from 'typeorm';
 import { VehicleService } from "../../vehicle/vehicle.service";
@@ -30,7 +30,7 @@ export abstract class AbstractCost {
 
     async getConsum(vehicle: Vehicle): Promise<[string, number]> {
         if (vehicle == null) {
-            return Promise.resolve(['walk', 210]);
+            return Promise.resolve([CarbType.Calories, 210]);
         } else {
             return await this.vehicleService.getCarbTypeAndConsum(vehicle);
         }

@@ -1,4 +1,4 @@
-import { CarbType } from "entities/vehicle.entity";
+import { CarbType } from "../../../entities/vehicle.entity";
 import { AbstractCost } from "./abstract-cost";
 import { HttpException, HttpStatus } from "@nestjs/common";
 
