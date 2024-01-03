@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
+import { Strategy } from "modules/routes/dto/routeOptions.dto";
 
 
 @Entity()
@@ -23,8 +24,8 @@ export class Route {
     geometry: string;
     @Column({default: false})
     fav: boolean;
-    @Column({default: 'recommended'})
-    type: string;
+    @Column({default: Strategy.RECOMMENDED})
+    type: Strategy;
     @Column({nullable: true})
     userId?: number;
     @ManyToOne(() => User, user => user.routes, { onDelete: 'CASCADE' , onUpdate: 'CASCADE'})
