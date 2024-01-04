@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsEmail, IsNumber, IsOptional, IsString, IsStrongPassword, isNumber } from 'class-validator';
+import { Strategy } from './routeOptions.dto';
 
 export class RouteDto {
 
@@ -32,6 +33,6 @@ export class RouteDto {
     fav?: boolean;
     @ApiProperty()
     @IsString()
-    type: string;
+    type: Strategy;
     userId?: number;
 }

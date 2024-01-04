@@ -3,7 +3,7 @@ import { RouteStrategy } from './interface/route-strategy.interface';
 import { PlaceOfinterestDto } from 'modules/place-of-interest/dto/placeOfInterest.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { RouteDto } from '../dto/route.dto';
-import { RouteOptionsDto } from '../dto/routeOptions.dto';
+import { RouteOptionsDto, Strategy } from '../dto/routeOptions.dto';
 
 export class ShortRouteStrategy implements RouteStrategy {
   private baseUrl: string = 'https://api.openrouteservice.org/';
@@ -31,7 +31,7 @@ export class ShortRouteStrategy implements RouteStrategy {
           start: start.lon+','+start.lat,
           end: end.lon+','+end.lat,
           geometry: response.data.features[0].geometry,
-          type: 'shortest'
+          type: Strategy.SHORT
       }
         return route;
       } else {
