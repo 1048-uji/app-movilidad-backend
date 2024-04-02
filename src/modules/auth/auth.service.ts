@@ -14,7 +14,7 @@ export class AuthService {
         private jwtService: JwtService
     ) {}
 
-    async login(loginObject: LoginDto): Promise<{ token: string }> {
+    async login(loginObject: LoginDto): Promise<{ token: string , user: User}> {
         const user = await this.userRepository.findOne({where: { email: loginObject.email }});
         if (!user) {
             throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
@@ -24,7 +24,7 @@ export class AuthService {
             throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
         }
         const token = await this.jwtService.signAsync({ id: user.id, email: user.email });
-        return { token: token };
+        return { token: token , user: user};
     }
 
     async register(registerObject: RegisterDto): Promise<User> {

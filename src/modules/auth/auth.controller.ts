@@ -20,7 +20,7 @@ export class AuthController {
             })
         )
         loginObject: LoginDto
-    ): Promise<{ token: string }> {
+    ): Promise<{ token: string , user: User}> {
         return this.authService.login(loginObject);
     }
 
