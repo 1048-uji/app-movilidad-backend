@@ -23,7 +23,7 @@ export class PlaceOfInterestService {
           lon: poi.lon,
         });
 
-        if (poiExist) {
+        if (poiExist && poiExist.userId === user.id) {
           throw new HttpException('Place of Interest already exists', HttpStatus.CONFLICT);
         }
                 
@@ -38,7 +38,7 @@ export class PlaceOfInterestService {
           lon: poi.lon,
         });
 
-        if (poiExist) {
+        if (poiExist && poiExist.userId === user.id) {
           throw new HttpException('Place of Interest already exists', HttpStatus.CONFLICT);
         }
                 

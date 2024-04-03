@@ -42,7 +42,7 @@ export class RoutesService {
             end: routeData.end,
             userId: user.id,
           });
-        if (route){
+        if (route && route.userId === user.id){
             throw new HttpException('La ruta ya existe', HttpStatus.FOUND)
         }
         routeData.userId = user.id

@@ -16,7 +16,7 @@ export class VehicleService {
             userId: user.id,
             registration: vehicle.registration,
         });
-        if (vehicleExist) {
+        if (vehicleExist && vehicleExist.userId === user.id) {
             throw new HttpException('Vehicle already exists', HttpStatus.CONFLICT);
         }
         vehicle.userId = user.id;
