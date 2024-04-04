@@ -32,7 +32,7 @@ export class VehicleController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard('strategy_jwt_1'))
     async deleteVehicle(@Request() req: any,
-    @Param('id', ParseIntPipe) id: number): Promise<String> {
+    @Param('id', ParseIntPipe) id: number): Promise<{message: string}> {
         return this.vehicleService.deleteVehicle(id, req.user);
     }
 

@@ -23,7 +23,7 @@ export class VehicleService {
         return this.vehicleRepository.save(vehicle);
     }
 
-    async deleteVehicle(id: number, user: User): Promise<String>{
+    async deleteVehicle(id: number, user: User): Promise<{message: string}>{
         const vehicle = await this.vehicleRepository.findOneBy({id: id});
 
         if (!vehicle) {
@@ -35,7 +35,7 @@ export class VehicleService {
         }
 
         await this.vehicleRepository.remove(vehicle);
-        return 'Vehicle eliminado';
+        return {message: 'Vehicle eliminado'};
     }
     
     async getVehiclesOfUser(id: number): Promise<Vehicle[]> {

@@ -20,7 +20,7 @@ export class UserController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard('strategy_jwt_1'))
     async deleteAccount(@Request() req: any,
-    @Param('id', ParseIntPipe) id: number): Promise<String> {
+    @Param('id', ParseIntPipe) id: number): Promise<{message: string}> {
         const user = req.user;
         if (user.id !== id) {
             throw new HttpException('InvalidUserException', HttpStatus.UNAUTHORIZED);

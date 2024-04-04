@@ -53,7 +53,7 @@ export class PlaceOfInterestService {
   async getPlacesOfInterestOfUser(id: number): Promise<PlaceOfInterest[]> {
     return this.poiRepository.findBy({userId: id});
   }
-  async deletePlaceOfInterest(id: number, user: User): Promise<String>{
+  async deletePlaceOfInterest(id: number, user: User): Promise<{message: string}>{
     const placeOfInterest = await this.poiRepository.findOneBy({id: id});
 
     if (!placeOfInterest) {
@@ -65,7 +65,7 @@ export class PlaceOfInterestService {
     }
 
     await this.poiRepository.remove(placeOfInterest);
-    return 'Place of Interest eliminado';
+    return {message: 'Place of Interest eliminado'};
 }
 
 async updatePoi(poiData: PlaceOfinterestDto, user: any): Promise<PlaceOfInterest> {

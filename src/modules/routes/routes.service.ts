@@ -55,7 +55,7 @@ export class RoutesService {
         return await this.routesRepository.findBy({userId: user.id});
     }
 
-    async deleteRoute(id: number, user: User): Promise<String>{
+    async deleteRoute(id: number, user: User): Promise<{message: string}>{
         const route = await this.routesRepository.findOneBy({id: id});
 
         if (!route) {
@@ -67,7 +67,7 @@ export class RoutesService {
         }
 
         await this.routesRepository.remove(route);
-        return 'Ruta eliminada';
+        return {message: 'Ruta eliminada'};
     }
 
     async updateRoute(routeData: RouteDto, user: any): Promise<Route> {

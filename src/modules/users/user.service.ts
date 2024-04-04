@@ -20,7 +20,7 @@ export class UserService {
         .getMany();
     }
 
-    async deleteAccount(id: number): Promise<String>{
+    async deleteAccount(id: number): Promise<{message: string}>{
         const userExist = await this.userRepository.findOneBy({id: id});
   
         if (!userExist) {
@@ -28,7 +28,7 @@ export class UserService {
         }
 
         await this.userRepository.remove(userExist);
-        return 'Usuario eliminado';
+        return {message: 'Usuario eliminado'};
     }
 
     async updateUser(userData: UserDto, user: User): Promise<User> {

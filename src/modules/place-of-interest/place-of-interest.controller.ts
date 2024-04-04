@@ -57,7 +57,7 @@ export class PlaceOfInterestController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('strategy_jwt_1'))
   async deletePlaceOfInterest(@Request() req: any,
-  @Param('id', ParseIntPipe) id: number): Promise<String> {
+  @Param('id', ParseIntPipe) id: number): Promise<{message: string}> {
       return this.poiService.deletePlaceOfInterest(id, req.user);
   }
 
