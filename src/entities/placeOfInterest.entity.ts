@@ -28,6 +28,6 @@ export class PlaceOfInterest {
     @Column({nullable: true})
     userId?: number;
     @ManyToOne(() => User, user => user.placesOfInterest, { onDelete: 'CASCADE' , onUpdate: 'CASCADE'})
-    user: User;
+    user?: User;
 
 }

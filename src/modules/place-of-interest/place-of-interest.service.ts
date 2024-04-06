@@ -30,6 +30,11 @@ export class PlaceOfInterestService {
         poi.userId = user.id;
         return this.poiRepository.save(poi);
   }
+  async getPlaceOfInterestCoords(placeOfInterestdata: PlaceOfinterestDto): Promise<{lat: string, lng:string, address: string}> {
+    const poi = await this.openRoutesApi.getAddressByCoordinates(placeOfInterestdata);
+    
+    return {lat: poi.lat, lng: poi.lon, address: poi.address};
+}
   async addPlaceOfInteresAddress(placeOfInterstData: PlaceOfinterestDto, user: User): Promise<PlaceOfInterest> {
       
         const poi = await this.openRoutesApi.getCoordinatesByAddress(placeOfInterstData);

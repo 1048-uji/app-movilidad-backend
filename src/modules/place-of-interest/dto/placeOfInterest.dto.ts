@@ -9,6 +9,7 @@ export class PlaceOfinterestDto {
     id?: number;
     @ApiProperty()
     @IsString()
+    @IsOptional()
     name: string;
     @ApiPropertyOptional()
     @IsString()
