@@ -28,15 +28,19 @@ export class PlaceOfInterestController {
       return this.poiService.addPlaceOfInterestCoords(placeOfInterstData, req.user);
   }
 
-  @Get('/coords/{lat}/{lng}')
-  @ApiParam({ name: 'lat', type: String })
-  @ApiParam({ name: 'lng', type: String })
+  @Post('/Poi')
   @ApiBearerAuth()
   async getPlaceOfInterestCoords(
-    @Param('lat') lat: string,
-    @Param('lng') lng: string
+      @Body(
+          new ValidationPipe({
+              transform: true,
+              transformOptions: { enableImplicitConversion: true },
+              forbidNonWhitelisted: true
+          })
+      )
+      placeOfInterstData: PlaceOfinterestDto
   ): Promise<{lat: string, lng:string, address: string}> {
-      return this.poiService.getPlaceOfInterestCoords(lat, lng);
+      return this.poiService.getPlaceOfInterestCoords(placeOfInterstData);
   }
 
   @Post('/address')
