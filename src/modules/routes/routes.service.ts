@@ -23,14 +23,32 @@ export class RoutesService {
     private openRoutesApi = OpenRoutesService.getInstance();
     private abstractCost: AbstractCost
 
-    async createRoute(start: PlaceOfinterestDto, end: PlaceOfinterestDto, routeOptions: RouteOptionsDto): Promise<RouteDto> {
-        if ((start.lat === (null||undefined) && start.lon === (null||undefined)) && start.address === (null||undefined)){
-            throw new HttpException('La direccion de origen debe tener coordenadas o una dirección', HttpStatus.BAD_REQUEST);
+    async createRoute(routeOptions: RouteOptionsDto): Promise<RouteDto> {
+        let start: PlaceOfinterestDto = new PlaceOfinterestDto();
+        let end: PlaceOfinterestDto = new PlaceOfinterestDto();
+        start.lat = routeOptions.startLat;
+        start.lon  = routeOptions.startLon;
+        start.address = routeOptions.startAddress;
+        end.lat = routeOptions.endLat;
+        end.lon  = routeOptions.endLon;
+        end.address = routeOptions.endAddress;
+        if ((start.lat === (null||undefined) && start.lon === (null||undefined))){
+            if(start.address === (null||undefined)){
+                throw new HttpException('La direccion de origen debe tener coordenadas o una dirección', HttpStatus.BAD_REQUEST);
+            }else{
+                start = await this.openRoutesApi.getCoordinatesByAddress(start)
+            }
+            
         }
-        if ((end.lat === (null||undefined) && end.lon === (null||undefined)) && end.address === (null||undefined)){
-            throw new HttpException('La direccion de destino debe tener coordenadas o una dirección', HttpStatus.BAD_REQUEST);
+        if ((end.lat === (null||undefined) && end.lon === (null||undefined))){
+            if( end.address === (null||undefined)){
+                throw new HttpException('La direccion de destino debe tener coordenadas o una dirección', HttpStatus.BAD_REQUEST);
+            }else{
+                 end = await this.openRoutesApi.getCoordinatesByAddress(end)
+            }            
         }
         const route = await this.openRoutesApi.createRoute(start, end, routeOptions);
+        //console.log(route.geometry);
         return route;
     }
     async saveRoute(user: User, routeData: RouteDto): Promise<Route>{

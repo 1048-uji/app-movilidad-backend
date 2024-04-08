@@ -10,7 +10,7 @@ export class Route {
     id: number;
     @Column()
     name: string
-    @Column({type: 'text'})
+    @Column({type: 'text', nullable: true})
     path: string;
     @Column()
     distance: string;
@@ -20,7 +20,7 @@ export class Route {
     start: string;
     @Column()
     end: string;
-    @Column()
+    @Column({ array: true , nullable: true})
     geometry: string;
     @Column({default: false})
     fav: boolean;

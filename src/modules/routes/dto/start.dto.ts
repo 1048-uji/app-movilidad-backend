@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsEmail, IsNumber, IsOptional, IsString, IsStrongPassword, Validate } from 'class-validator';
 
-export class PlaceOfinterestDto {
+export class StartDto {
 
     @ApiPropertyOptional()
     @IsNumber()
@@ -10,7 +10,7 @@ export class PlaceOfinterestDto {
     @ApiProperty()
     @IsString()
     @IsOptional()
-    name?: string;
+    name: string;
     @ApiPropertyOptional()
     @IsString()
     @IsOptional()

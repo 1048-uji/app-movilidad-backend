@@ -10,7 +10,7 @@ export class ElectricCost extends AbstractCost {
                 const response = await axios.get(baseUrlLuz);
                 const price = response.data.price;
                 const realPrice = price / 1000;
-                const realDistance = distance / 1000 / 100;
+                const realDistance = distance / 100;
                 return realDistance * consum * realPrice;
             } catch (error) {
                 throw new HttpException('APINotWorkingException', HttpStatus.BAD_GATEWAY);

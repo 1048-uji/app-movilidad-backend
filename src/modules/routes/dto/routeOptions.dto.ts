@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEnum, IsOptional, IsString, Validate } from 'class-validator';
+import { CarbType } from 'entities/vehicle.entity';
 
 export enum Strategy {
   FAST = 'fast',
@@ -20,11 +21,42 @@ export enum VehicleType {
 }
 
 export class RouteOptionsDto {
-  @ApiProperty({ enum: Strategy })
-  @IsEnum(Strategy)
-  strategy?: Strategy;
 
-  @ApiProperty({ enum: VehicleType })
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  startLon?: string;
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  startLat?: string;
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  @Validate(addressValidator)
+  startAddress?: string;
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  endLon?: string;
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  endLat?: string;
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  @Validate(addressValidator)
+  endAddress?: string;
+  @ApiPropertyOptional()
+  @IsEnum(Strategy)
+  strategy: Strategy;
+  @ApiProperty()
   @IsEnum(VehicleType)
   vehicleType: VehicleType;
+}
+
+function addressValidator(address: string) {
+  // Eliminar los apostrofes del campo address
+  return address.replace(/'/g, '');
 }

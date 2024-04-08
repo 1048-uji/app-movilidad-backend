@@ -3,16 +3,18 @@ import { RoutesService } from './routes.service';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RouteDto } from './dto/route.dto';
-import { RouteOptionsDto } from './dto/routeOptions.dto';
+import { RouteOptionsDto, VehicleType } from './dto/routeOptions.dto';
 import { PlaceOfinterestDto } from '../place-of-interest/dto/placeOfInterest.dto';
 import { Route } from '../../entities/route.entity';
+import { StartDto } from './dto/start.dto';
+import { EndDto } from './dto/end.dto';
 
 @Controller('routes')
 @ApiTags('Routes')
 export class RoutesController {
     constructor(private routesService: RoutesService) {}
 
-    @Get('/route')
+    @Post('/route')
     @ApiBearerAuth()
     @UseGuards(AuthGuard('strategy_jwt_1'))
     async createRoute(
@@ -24,30 +26,17 @@ export class RoutesController {
                 forbidNonWhitelisted: true
             })
         )
-        startData: PlaceOfinterestDto,
-        @Body(
-            new ValidationPipe({
-                transform: true,
-                transformOptions: { enableImplicitConversion: true },
-                forbidNonWhitelisted: true
-            })
-        )
-        endData: PlaceOfinterestDto,
-        @Body(
-            new ValidationPipe({ 
-                transform: true, 
-                transformOptions: { enableImplicitConversion: true }, 
-                forbidNonWhitelisted: true 
-            })
-            )
         routeOptions: RouteOptionsDto,
     ): Promise<RouteDto> {
         if (routeOptions.strategy == null){
             routeOptions.strategy = req.user.routeDefault
         }
-        return this.routesService.createRoute(startData, endData, routeOptions);
+        if (routeOptions.vehicleType == null){
+            routeOptions.vehicleType = VehicleType.DRIVING_CAR; 
+        }
+        return this.routesService.createRoute(routeOptions);
     }
-    @Post('/route')
+    @Post('/save')
     @ApiBearerAuth()
     @UseGuards(AuthGuard('strategy_jwt_1'))
     async saveRoute(
@@ -115,7 +104,7 @@ export class RoutesController {
         return this.routesService.updateRoute(routeData, req.user);
     }
 
-    @Get('Price/:vehicleId')
+    @Post('Price/:vehicleId')
     @ApiParam({ name: 'vehicleId', type: Number })
     @ApiBearerAuth()
     @UseGuards(AuthGuard('strategy_jwt_1'))

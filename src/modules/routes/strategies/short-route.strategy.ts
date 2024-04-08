@@ -26,8 +26,8 @@ export class ShortRouteStrategy implements RouteStrategy {
             distance: step.distance,
             instruction: step.instruction,
           })),
-          distance: response.data.features[0].properties.summary.distance,
-          duration: response.data.features[0].properties.summary.duration,
+          distance: (parseFloat(response.data.features[0].properties.summary.distance)/1000)+'',
+          duration: this.formatDuration(parseFloat(response.data.features[0].properties.summary.duration)),
           start: start.lon+','+start.lat,
           end: end.lon+','+end.lat,
           geometry: response.data.features[0].geometry,
@@ -38,4 +38,13 @@ export class ShortRouteStrategy implements RouteStrategy {
         throw new HttpException('No se pudo crear la ruta específica', HttpStatus.NOT_FOUND);
       }
   }
+  formatDuration(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    
+    const hoursString = hours > 0 ? hours + 'h' : '';
+    const minutesString = minutes > 0 ? minutes + 'min' : '';
+    
+    return hoursString + ' ' + minutesString;
+}
 }

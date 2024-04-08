@@ -22,12 +22,12 @@ export class FastRouteStrategy implements RouteStrategy {
     });
     if (response.status === 200 && response.data && response.data.features && response.data.features.length > 0) {
         const route: RouteDto = {
-          path: response.data.features[0].properties.segments[0].steps.map((step) => ({
+          /*path: response.data.features[0].properties.segments[0].steps.map((step) => ({
             distance: step.distance,
             instruction: step.instruction,
-          })),
-          distance: response.data.features[0].properties.summary.distance,
-          duration: response.data.features[0].properties.summary.duration,
+          })),*/
+          distance: (parseFloat(response.data.features[0].properties.summary.distance)/1000)+'',
+          duration: this.formatDuration(parseFloat(response.data.features[0].properties.summary.duration)),
           start: start.lon+','+start.lat,
           end: end.lon+','+end.lat,
           geometry: response.data.features[0].geometry.coordinates,
@@ -38,4 +38,13 @@ export class FastRouteStrategy implements RouteStrategy {
         throw new HttpException('No se pudo crear la ruta específica', HttpStatus.NOT_FOUND);
       }
   }
+  formatDuration(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    
+    const hoursString = hours > 0 ? hours + 'h' : '';
+    const minutesString = minutes > 0 ? minutes + 'min' : '';
+    
+    return hoursString + ' ' + minutesString;
+}
 }

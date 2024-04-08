@@ -1,18 +1,18 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsEnum, IsNumber, IsOptional, IsString, IsStrongPassword, isNumber } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsAlphanumeric, IsArray, IsBoolean, IsEmail, IsEnum, IsNumber, IsOptional, IsString, IsStrongPassword, isNumber } from 'class-validator';
 import { Strategy } from './routeOptions.dto';
 
 export class RouteDto {
 
-    @ApiProperty()
+    @ApiPropertyOptional()
+    @IsOptional()
     @IsNumber()
     id?: number;
     @ApiProperty()
     @IsString()
     name?: string;
-    @ApiProperty()
-    @IsString()
-    path: string;
+    @ApiPropertyOptional()
+    path?: string;
     @ApiProperty()
     @IsString()
     distance: string;
@@ -26,9 +26,9 @@ export class RouteDto {
     @IsString()
     end: string;
     @ApiProperty()
-    @IsString()
     geometry: string;
     @ApiProperty()
+    @IsOptional()
     @IsBoolean()
     fav?: boolean;
     @ApiProperty()
