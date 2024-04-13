@@ -4,10 +4,7 @@ import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RouteDto } from './dto/route.dto';
 import { RouteOptionsDto, VehicleType } from './dto/routeOptions.dto';
-import { PlaceOfinterestDto } from '../place-of-interest/dto/placeOfInterest.dto';
 import { Route } from '../../entities/route.entity';
-import { StartDto } from './dto/start.dto';
-import { EndDto } from './dto/end.dto';
 
 @Controller('routes')
 @ApiTags('Routes')

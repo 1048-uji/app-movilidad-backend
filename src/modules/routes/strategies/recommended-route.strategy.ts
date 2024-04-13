@@ -42,8 +42,8 @@ export class RecommendedRouteStrategy implements RouteStrategy {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     
-    const hoursString = hours > 0 ? hours + 'h' : '';
-    const minutesString = minutes > 0 ? minutes + 'min' : '';
+    const hoursString = hours > 0 ? hours + ' h' : '';
+    const minutesString = minutes > 0 ? minutes + ' min' : '';
     
     return hoursString + ' ' + minutesString;
 }
