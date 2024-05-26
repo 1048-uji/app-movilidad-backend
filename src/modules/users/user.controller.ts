@@ -15,6 +15,13 @@ export class UserController {
         return this.userService.getUsers();
     }
 
+    @Get('')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('strategy_jwt_1'))
+    async getUser(@Request() req: any): Promise<User>{
+        return this.userService.getUser(req.user);
+    }
+
     @Delete(':id')
     @ApiParam({ name: 'id', type: Number })
     @ApiBearerAuth()

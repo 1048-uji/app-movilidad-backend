@@ -20,6 +20,16 @@ export class UserService {
         .getMany();
     }
 
+    async getUser(user: User): Promise<User>{
+        const userExist = await this.userRepository.findOneBy({id: user.id});
+  
+        if (!userExist) {
+            throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+        }
+
+        return userExist;
+    }
+
     async deleteAccount(id: number): Promise<{message: string}>{
         const userExist = await this.userRepository.findOneBy({id: id});
   
