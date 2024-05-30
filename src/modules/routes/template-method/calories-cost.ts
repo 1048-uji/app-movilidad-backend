@@ -9,7 +9,7 @@ export class CaloriesCost extends AbstractCost {
             const velocidadMedia = 5; //km/h
             const tiempo = realDistance / velocidadMedia;
             const coste = tiempo * consum;
-            return coste;
+            return parseFloat(coste.toFixed(2));
         } else {
             throw new HttpException('InvalidTypeVehicleException', HttpStatus.UNAUTHORIZED);
         }

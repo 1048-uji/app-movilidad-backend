@@ -91,29 +91,22 @@ describe('RoutesController (Crear Ruta)', () => {
     const request = {
       user: registered,
     };
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
 
     // Realizar la solicitud para crear una ruta válida
-    const response = await routesController.createRoute( request, start, end, routeOptions);
+    const response = await routesController.createRoute( request, routeOptions);
 
     // Verificar que la respuesta tenga la información de la ruta esperada
-    expect(response.start).toBe(start.lon+','+start.lat);
-    expect(response.end).toBe(end.lon+','+end.lat);
+    expect(response.start).toBe(routeOptions.startLon+','+routeOptions.startLat);
+    expect(response.end).toBe(routeOptions.endLon+','+routeOptions.endLat);
   });
 
   it('(Inválido): debería lanzar la excepción InvalidVehicleException al intentar realizar un viaje con un vehículo inválido', async () => {
@@ -132,25 +125,17 @@ describe('RoutesController (Crear Ruta)', () => {
     const request = {
       user: registered,
     };
-    const start: PlaceOfinterestDto = 
-      { name: '',
-       };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    // ... Configuración del escenario ...
 
     // Realizar la solicitud para crear una ruta inválida
     try {
-      const response = await routesController.createRoute( request, start, end, routeOptions);
+      const response = await routesController.createRoute( request, routeOptions);
       // Si no lanza una excepción, la prueba falla
       fail('Se esperaba que lanzara la excepción InvalidVehicleException');
     } catch (error) {
@@ -172,23 +157,15 @@ describe('RoutesController (Crear Ruta)', () => {
     const request = {
       user: registered,
     };
-
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     const savedRoute = await routesController.saveRoute(request, route);
 
@@ -209,24 +186,16 @@ describe('RoutesController (Crear Ruta)', () => {
     const registered = authController.register(user);
     const request = {
     };
-
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
     try{
-      const route = await routesController.createRoute(request, start, end, routeOptions);
+      const route = await routesController.createRoute(request, routeOptions);
       route.name = 'Castellón-Valencia';
       const savedRoute = await routesController.saveRoute(request, route);
     }catch(error){
@@ -247,23 +216,15 @@ describe('RoutesController (Crear Ruta)', () => {
     const request = {
       user: registered,
     };
-
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     const savedRoute = await routesController.saveRoute(request, route);
     expect(savedRoute.userId).toBe(registered.id)
@@ -287,23 +248,16 @@ describe('RoutesController (Crear Ruta)', () => {
     const request = {
     };
 
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
     try{
-      const route = await routesController.createRoute(request, start, end, routeOptions);
+      const route = await routesController.createRoute(request, routeOptions);
       route.name = 'Castellón-Valencia';
       const savedRoute = await routesController.saveRoute(request, route);
       expect(savedRoute.userId).toBe(registered.id)
@@ -326,24 +280,16 @@ describe('RoutesController (Crear Ruta)', () => {
     const request = {
       user: registered,
     };
-
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     const savedRoute = await routesController.saveRoute(request, route);
 
@@ -366,23 +312,16 @@ describe('RoutesController (Crear Ruta)', () => {
       user: registered,
     };
 
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     const savedRoute = await routesController.saveRoute(request, route);
 
@@ -408,23 +347,16 @@ describe('RoutesController (Crear Ruta)', () => {
       user: registered,
     };
 
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     let savedRoute = await routesController.saveRoute(request, route);
     
@@ -449,24 +381,16 @@ describe('RoutesController (Crear Ruta)', () => {
     const request = {
       user: registered,
     };
-
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     route.fav = true;
 
@@ -492,24 +416,16 @@ describe('RoutesController (Crear Ruta)', () => {
       user: registered,
     };
 
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
-
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     route.fav = true;
     let savedRoute = await routesController.saveRoute(request, route);
@@ -534,24 +450,16 @@ describe('RoutesController (Crear Ruta)', () => {
     const request = {
       user: registered,
     };
-
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     route.fav = false;
 
@@ -582,24 +490,17 @@ describe('RoutesController (Crear Ruta)', () => {
     };
 
     //Creamos una ruta y la guardamos al usuario
-    const start: PlaceOfinterestDto = 
-      { name: 'Universidad Jaime I',
-        lon: '-0.068889', 
-        lat: '39.994444', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Estación de tren de Castellón',
-      lon: '-0.05240', 
-      lat: '39.98829', 
-      fav: false 
-    };
     
     const routeOptions: RouteOptionsDto = {
-      vehicleType: VehicleType.FOOT_WALK,
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
+      vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request,  routeOptions);
     route.name = 'UJI-Estación';
     await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
@@ -641,25 +542,17 @@ describe('RoutesController (Crear Ruta)', () => {
     const response = await vehicleController.getVehicleOfUser(request);
 
     const vehicle = response[0];
-
-    const start: PlaceOfinterestDto = 
-      { name: 'Universidad Jaime I',
-        lon: '-0.068889', 
-        lat: '39.994444', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Estación de tren de Castellón',
-      lon: '-0.05240', 
-      lat: '39.98829', 
-      fav: false 
-    };
     
     const routeOptions: RouteOptionsDto = {
-      vehicleType: VehicleType.FOOT_WALK,
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
+      vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'UJI-Estación';
     await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
@@ -711,23 +604,17 @@ describe('RoutesController (Crear Ruta)', () => {
     const vehicle = response[0];
 
     //Creamos una ruta y la guardamos al usuario
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
+    
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
@@ -777,23 +664,17 @@ describe('RoutesController (Crear Ruta)', () => {
     const vehicle = response[0];
 
     //Creamos una ruta y la guardamos al usuario
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
+    
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
@@ -842,24 +723,16 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const vehicle = response[0];
 
-    //Creamos una ruta y la guardamos al usuario
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
@@ -909,23 +782,17 @@ describe('RoutesController (Crear Ruta)', () => {
     const vehicle = response[0];
 
     //Creamos una ruta y la guardamos al usuario
-    const start: PlaceOfinterestDto = 
-      { name: 'Castellón',
-        lon: '-0.0576800', 
-        lat: '39.9929000', 
-        fav: false };
-    const end: PlaceOfinterestDto =
-    { name: 'Valencia',
-      lon: '-0.3773900', 
-      lat: '39.4697500', 
-      fav: false 
-    };
+    
     const routeOptions: RouteOptionsDto = {
+      startLon: '-0.0576800',
+      startLat: '39.9929000',
+      endLon: '-0.3773900',
+      endLat: '39.4697500',
       vehicleType: VehicleType.DRIVING_CAR,
       strategy: Strategy.RECOMMENDED
     };
 
-    const route = await routesController.createRoute(request, start, end, routeOptions);
+    const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
     await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);

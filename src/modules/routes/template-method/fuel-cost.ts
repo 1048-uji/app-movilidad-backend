@@ -53,7 +53,8 @@ export class FuelCost extends AbstractCost {
                         nearest = station;
                       }
                     });
-                    return (distance / 100) * consum * parseFloat(nearest.PrecioProducto.replace(',', '.'));
+                    const price = ((distance / 100) * consum * parseFloat(nearest.PrecioProducto.replace(',', '.'))).toFixed(2)
+                    return parseFloat(price);
                 }else{
                   throw new HttpException('There is no such fuel type in the region of departure.', HttpStatus.NOT_FOUND);
                 }                

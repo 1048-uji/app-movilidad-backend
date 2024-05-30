@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
-import { Strategy } from "modules/routes/dto/routeOptions.dto";
+import { Strategy } from "../modules/routes/dto/routeOptions.dto";
 
 
 @Entity()

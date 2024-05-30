@@ -11,7 +11,8 @@ export class ElectricCost extends AbstractCost {
                 const price = response.data.price;
                 const realPrice = price / 1000;
                 const realDistance = distance / 100;
-                return realDistance * consum * realPrice;
+                const routePrice = (realDistance * consum * realPrice).toFixed(2)
+                return parseFloat(routePrice);
             } catch (error) {
                 throw new HttpException('APINotWorkingException', HttpStatus.BAD_GATEWAY);
             }
