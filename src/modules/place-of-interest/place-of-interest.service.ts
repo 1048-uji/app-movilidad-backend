@@ -85,6 +85,6 @@ async updatePoi(poiData: PlaceOfinterestDto, user: any): Promise<PlaceOfInterest
 }
 
   async clearDatabase(){
-    this.poiRepository.clear();
+    this.poiRepository.delete({});
   }
 }

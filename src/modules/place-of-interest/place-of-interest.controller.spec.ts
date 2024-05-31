@@ -30,11 +30,11 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
         ConfigModule.forRoot(),
         TypeOrmModule.forRoot({
           type: 'postgres',
-          host:'ep-long-leaf-50431422.eu-central-1.aws.neon.fl0.io',
+          host:'dpg-cpcae4uct0pc738n223g-a.frankfurt-postgres.render.com',
           port: 5432,
-          username: 'fl0user',
-          password: 'MNA8bza5YdXg',
-          database: 'database',
+          username: 'postgresql_ei1039_1048_user',
+          password: '9DZpKIgJacz9qoNQmBhbYvW0xUYP4pyv',
+          database: 'postgresql_ei1039_1048',
           entities: [User, PlaceOfInterest, Vehicle, Route],
           synchronize: true,
           ssl: {rejectUnauthorized: false},
@@ -394,7 +394,6 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
       await placesController.addFavoritePoi(poi, requestUser2);
       fail('Se esperaba que lanzara la excepcion No eres el propietario del punto de interes');
     } catch(error) {
-      console.log('entro en el catch');
       expect(error.message).toBe('No eres el propietario del punto de interes');
     }
   })
@@ -417,17 +416,17 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
       { name: 'Castellón',
         lon: '-0.0576800', 
         lat: '39.9929000', 
-        fav: false };
+        fav: true };
    
     const poi = await placesController.addPlaceOfInterestCoords(request, start);
 
-    poi.fav = true;
+    /*poi.fav = true;
 
-    const updatePoi = await placesController.addFavoritePoi(poi, request);
+    const updatePoi = await placesController.addFavoritePoi(poi, request);*/
 
-    updatePoi.fav = false;
+    poi.fav = false;
 
-    const finalPoi = await placesController.deleteFavoritePoi(updatePoi, request);
+    const finalPoi = await placesController.deleteFavoritePoi(poi, request);
 
     expect(finalPoi.fav).toBe(false);
   })

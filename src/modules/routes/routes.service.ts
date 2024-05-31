@@ -125,6 +125,6 @@ export class RoutesService {
     }
 
   async clearDatabase(){
-    this.routesRepository.clear();
+    this.routesRepository.delete({});
   }
 }

@@ -20,7 +20,7 @@ export class Route {
     start: string;
     @Column()
     end: string;
-    @Column({ array: true , nullable: true})
+    @Column('simple-array', { nullable: true})
     geometry: string;
     @Column({default: false})
     fav: boolean;

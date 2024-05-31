@@ -61,7 +61,7 @@ export class VehicleService {
     }
 
     async clearDatabase(){
-        this.vehicleRepository.clear();
+        this.vehicleRepository.delete({});
       }
 
 }
