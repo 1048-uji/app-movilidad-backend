@@ -62,6 +62,7 @@ describe('UsersController', () => {
     authService = module.get<AuthService>(AuthService);
     vehicleController = module.get<VehicleController>(VehicleController);
     controller = module.get<UserController>(UserController);
+    await usService.clearDatabase();
   });
 
   it('(Válido): Registra un usuario válido', async () => {
@@ -72,7 +73,7 @@ describe('UsersController', () => {
     };
 
     // Limpiar la base de datos antes de la prueba
-    await usService.clearDatabase();
+    //await usService.clearDatabase();
 
     // Realizar la solicitud al endpoint de registro
     const response = await authController.register(user);
@@ -108,7 +109,7 @@ describe('UsersController', () => {
       username: 'José Antonio Login',
       password: 'Tp386161',
     };
-    await usService.clearDatabase();
+    //await usService.clearDatabase();
 
     const userRegistered = await authController.register(user);
     
@@ -131,7 +132,7 @@ describe('UsersController', () => {
 
   it('(Inválido): debería lanzar InvalidPasswordException para un usuario con contraseña incorrecta', async () => {
     // Limpiar la base de datos antes de la prueba
-    await usService.clearDatabase();
+    //await usService.clearDatabase();
 
     // Crear un usuario en la base de datos
     const user: RegisterDto = {
@@ -157,7 +158,7 @@ describe('UsersController', () => {
   });
   it('(Válido): debería eliminar la cuenta de un usuario autenticado', async () => {
     // Limpiar la base de datos antes de la prueba
-    await usService.clearDatabase();
+    //await usService.clearDatabase();
 
     // Crear un usuario en la base de datos
     const user: RegisterDto = {
@@ -186,7 +187,7 @@ describe('UsersController', () => {
 
   it('(Inválido): debería lanzar una excepción si se intenta borrar la cuenta de otro usuario', async () => {
     // Limpiar la base de datos antes de la prueba
-    await usService.clearDatabase();
+    //await usService.clearDatabase();
 
     // Crear un usuario en la base de datos
     const user: RegisterDto = {
@@ -217,7 +218,7 @@ describe('UsersController', () => {
   });
   it('(Válido): debería actualizar el vehiculo 1234ABC como default y Fast como tipo de ruta', async () => {
     // Limpiar la base de datos antes de la prueba
-    await usService.clearDatabase();
+    //await usService.clearDatabase();
 
     // Crear un usuario en la base de datos
     const user: RegisterDto = {
@@ -256,7 +257,7 @@ describe('UsersController', () => {
   });
   it('(Inválido): debería lanzar la excepción de vehiculo no existe', async () => {
     // Limpiar la base de datos antes de la prueba
-    await usService.clearDatabase();
+    //await usService.clearDatabase();
 
     // Crear un usuario en la base de datos
     const user: RegisterDto = {

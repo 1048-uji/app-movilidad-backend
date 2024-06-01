@@ -72,17 +72,17 @@ describe('RoutesController (Crear Ruta)', () => {
     authService = module.get<AuthService>(AuthService);
     vehicleController = module.get<VehicleController>(VehicleController);
     vehicleService = module.get<VehicleService>(VehicleService);
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    await vehicleService.clearDatabase();
+    await routesService.clearDatabase();
   });
 
   it('(Válido): debería devolver el trayecto entre dos lugares y guardar el estado en el servidor', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -114,10 +114,10 @@ describe('RoutesController (Crear Ruta)', () => {
   it('(Inválido): debería lanzar la excepción InvalidVehicleException al intentar realizar un viaje con un vehículo inválido', async () => {
     // ... Configuración inicial ...
 
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -147,10 +147,10 @@ describe('RoutesController (Crear Ruta)', () => {
     }
   });
   it('(Válido): debería guardar la ruta válida', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -178,10 +178,10 @@ describe('RoutesController (Crear Ruta)', () => {
 
   })
   it('(Inválido): debería saltar una excepción', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -208,10 +208,10 @@ describe('RoutesController (Crear Ruta)', () => {
     }
   })
   it('(Válido): debería listar la ruta', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -241,10 +241,10 @@ describe('RoutesController (Crear Ruta)', () => {
 
   })
   it('(Inválido): debería lanzar la excepción user not logged', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -274,10 +274,10 @@ describe('RoutesController (Crear Ruta)', () => {
     }
   })
   it('(Válido): debería borrar la ruta', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -306,10 +306,10 @@ describe('RoutesController (Crear Ruta)', () => {
     expect(deleted.message).toBe('Ruta eliminada')
   })
   it('(Inválido): debería lanzar la excepción de ruta no existe', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
     
 
     const user: RegisterDto = {
@@ -343,10 +343,10 @@ describe('RoutesController (Crear Ruta)', () => {
     }    
   })
   it('(Válido): debería añadir la ruta a favorito', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -379,10 +379,10 @@ describe('RoutesController (Crear Ruta)', () => {
   });
   
   it('(Inválido): debería saltar que la ruta no existe', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -414,10 +414,10 @@ describe('RoutesController (Crear Ruta)', () => {
     }
   })
   it('(Válido): debería quitar la ruta a favorito', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -450,10 +450,10 @@ describe('RoutesController (Crear Ruta)', () => {
     expect(updatedRoute.fav).toBe(false)
   })
   it('(Inválido): debería saltar que la ruta no existe', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -486,10 +486,10 @@ describe('RoutesController (Crear Ruta)', () => {
   })
 
   it('(Válido): debería calcular el coste medio de calorias quemadas para una ruta', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
     
     //Creamos al usuario y lo registramos
     const user: RegisterDto = {
@@ -517,22 +517,22 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request,  routeOptions);
     route.name = 'UJI-Estación';
-    await routesController.saveRoute(request, route);
+    const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
 
     //Creamos la clase que se encarga de hacer el cálculo del coste calorico
     const costeCalorico = new CaloriesCost();
-    const calorias = await costeCalorico.calcularCoste(null, routes[0]);
+    const calorias = await costeCalorico.calcularCoste(null, routeSaved);
 
     //Comprobar resultado
     expect(calorias).toBeGreaterThan(0);
   })
   
   it('(Inválido): debería saltar que el tipo de vehiculo es incorrecto', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -574,13 +574,13 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'UJI-Estación';
-    await routesController.saveRoute(request, route);
+    const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
 
     //Creamos la clase que se encarga de hacer el cálculo del coste calorico
     const costeCalorico = new CaloriesCost();
     try {
-      const calorias = await costeCalorico.calcularCoste(vehicle, routes[0]);
+      const calorias = await costeCalorico.calcularCoste(vehicle, routeSaved);
       fail('Se esperaba que lanzara la excepción InvalidTypeVehicleException');
     } catch (error) {
       expect(error.message).toBe('InvalidTypeVehicleException');
@@ -589,10 +589,10 @@ describe('RoutesController (Crear Ruta)', () => {
   })
   
   it('(Válido): debería calcular el coste asociado a una ruta para un vehículo eléctrico', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
     
     //Creamos al usuario y lo registramos
     const user: RegisterDto = {
@@ -637,12 +637,12 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
-    await routesController.saveRoute(request, route);
+    const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
     
     //Creamos la clase que se encarga de hacer el cálculo del coste electrico
     const costeElectrico = new ElectricCost();
-    const precio = await costeElectrico.calcularCoste(vehicle, routes[0]);
+    const precio = await costeElectrico.calcularCoste(vehicle, routeSaved);
 
     //Comprobar resultado
     expect(precio).toBeLessThan(10);
@@ -650,10 +650,10 @@ describe('RoutesController (Crear Ruta)', () => {
   })
   
   it('(Inválido): debería saltar que el tipo de coche es incorrecto', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
     
     //Creamos al usuario y lo registramos
     const user: RegisterDto = {
@@ -698,23 +698,23 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
-    await routesController.saveRoute(request, route);
+    const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
     
     //Creamos la clase que se encarga de hacer el cálculo del coste electrico
     const costeElectrico = new ElectricCost();
     try {
-      const precio = await costeElectrico.calcularCoste(vehicle, routes[0]);
+      const precio = await costeElectrico.calcularCoste(vehicle, routeSaved);
       fail('Se esperaba que lanzara la excepción InvalidVehicleException');
     } catch (error) {
       expect(error.message).toBe('InvalidTypeVehicleException');
     }
   })
   it('(Válido): debería calcular el coste asociado a una ruta para un vehículo de carburante', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
     
     //Creamos al usuario y lo registramos
     const user: RegisterDto = {
@@ -757,12 +757,12 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
-    await routesController.saveRoute(request, route);
+    const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
     
     //Creamos la clase que se encarga de hacer el cálculo del coste electrico
     const costeCombustible = new FuelCost();
-    const precio = await costeCombustible.calcularCoste(vehicle, routes[0]);
+    const precio = await costeCombustible.calcularCoste(vehicle, routeSaved);
 
     //Comprobar resultado
     expect(precio).toBeLessThan(15); //No se cuanto poner de minimo ni de maximo 
@@ -770,10 +770,10 @@ describe('RoutesController (Crear Ruta)', () => {
   })
   
   it('(Inválido): debería saltar que el tipo de coche es incorrecto', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
-    vehicleService.clearDatabase();
-    routesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
+    //await vehicleService.clearDatabase();
+    //await routesService.clearDatabase();
     
     //Creamos al usuario y lo registramos
     const user: RegisterDto = {
@@ -818,13 +818,13 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
-    await routesController.saveRoute(request, route);
+    const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
     
     //Creamos la clase que se encarga de hacer el cálculo del coste electrico
     const costeCombustible = new FuelCost();
     try {
-      const precio = await costeCombustible.calcularCoste(vehicle, routes[0]);
+      const precio = await costeCombustible.calcularCoste(vehicle, routeSaved);
       fail('Se esperaba que lanzara la excepción InvalidVehicleException');
     } catch (error) {
       expect(error.message).toBe('InvalidTypeVehicleException');
@@ -835,7 +835,7 @@ describe('RoutesController (Crear Ruta)', () => {
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await userService.clearDatabase();
-    await placesService.clearDatabase();
+    //await placesService.clearDatabase();
     await vehicleService.clearDatabase();
     await routesService.clearDatabase();
   });

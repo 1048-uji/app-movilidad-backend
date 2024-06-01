@@ -56,12 +56,14 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     userService = module.get<UserService>(UserService);
     authController = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);
+    await userService.clearDatabase();
+    await placesService.clearDatabase();
   });
 
   it('(Válido): debería dar de alta un lugar de interés válido', async () => {
     // Limpiar la base de datos antes de la prueba
-    await userService.clearDatabase();
-    await placesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
 
     // Coordenadas para el nuevo lugar de interés
     const poi: PlaceOfinterestDto = {
@@ -92,8 +94,8 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
 
   it('(Inválido): debería lanzar una excepción si se intenta añadir un lugar de interés con coordenadas incorrectas', async () => {
     // Limpiar la base de datos antes de la prueba
-    await userService.clearDatabase();
-    await placesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
     const poi: PlaceOfinterestDto = {
       name: 'UJI',
       lat: '',
@@ -123,8 +125,8 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
   });
   it('(Válido): Crea un nuevo punto de interés con un topónimo válido', async () => {
     // Limpiar la base de datos antes de la prueba
-    await userService.clearDatabase();
-    await placesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
 
     // Toponimo para el nuevo lugar de interes
     const place: PlaceOfinterestDto = {
@@ -153,8 +155,8 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
 
   it('(Inválido): debería lanzar una excepción si se intenta añadir un lugar de interés con un topónimo incorrecto', async () => {
     // Limpiar la base de datos antes de la prueba
-    await userService.clearDatabase();
-    await placesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
 
     // Toponimo para el nuevo lugar de interes
     const place: PlaceOfinterestDto = {
@@ -185,8 +187,8 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
 
   it('(Válido): debería devolver la lista de lugares de interés del usuario autentificado', async () => {
     // Limpiar la base de datos antes de la prueba
-    await userService.clearDatabase();
-    await placesService.clearDatabase();
+    //await userService.clearDatabase();
+    //await placesService.clearDatabase();
   
     // Crear un usuario autentificado
     const user: RegisterDto = {
@@ -225,8 +227,8 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     //Escenario 2
     it('(Inválido): debería lanzar DataBaseInaccessibleException si la base de datos no está disponible', async () => {
 
-      await userService.clearDatabase();
-      await placesService.clearDatabase();
+      //await userService.clearDatabase();
+      //await placesService.clearDatabase();
       // Crear un usuario autentificado
       const user: RegisterDto = {
         email: 'al386161@uji.es',
@@ -245,8 +247,8 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     });
     it('(Válido): debería borrar un lugar de interés guardado y guardar el cambio en el servidor', async () => {
       // Limpiar la base de datos antes de la prueba
-      await userService.clearDatabase();
-      await placesService.clearDatabase();
+      //await userService.clearDatabase();
+      //await placesService.clearDatabase();
     
       // Crear un usuario autentificado
       const user: RegisterDto = {
@@ -296,8 +298,8 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     });
     it('(inválido): debería lanzar la excepción NullPointerException al intentar borrar un lugar de interés inexistente', async () => {
       // Limpiar la base de datos antes de la prueba
-      await userService.clearDatabase();
-      await placesService.clearDatabase();
+      //await userService.clearDatabase();
+      //await placesService.clearDatabase();
     
       // Crear un usuario autentificado
       const user: RegisterDto = {
@@ -329,8 +331,8 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
   });
 
   it('(Válido): debería añadir el punto de interes a favorito', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
+    //userService.clearDatabase();
+    //placesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -358,8 +360,8 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
   })
 
   it('(inválido): debería saltar que el usuario no es propietario del punto de interes', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
+    //userService.clearDatabase();
+    //placesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -399,8 +401,8 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
   })
 
   it('(Válido): debería eliminar el punto de interes de favoritos', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
+    //userService.clearDatabase();
+    //placesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',
@@ -432,8 +434,8 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
   })
 
   it('(inválido): debería saltar que el usuario no es propietario del punto de interes', async () => {
-    userService.clearDatabase();
-    placesService.clearDatabase();
+    //userService.clearDatabase();
+    //placesService.clearDatabase();
 
     const user: RegisterDto = {
       email: 'al386161@uji.es',

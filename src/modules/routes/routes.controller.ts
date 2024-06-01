@@ -46,7 +46,7 @@ export class RoutesController {
             })
             )
         routeData: RouteDto,
-    ): Promise<RouteDto> {
+    ): Promise<Route> {
         return this.routesService.saveRoute(req.user, routeData);
     }
     @Get('/myroutes')
