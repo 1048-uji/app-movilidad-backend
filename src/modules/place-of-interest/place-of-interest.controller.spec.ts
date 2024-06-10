@@ -15,11 +15,15 @@ import { jwtConstants } from '../auth/strategy/jwt.constant';
 import { Vehicle } from '../../entities/vehicle.entity';
 import { ConfigModule } from '@nestjs/config';
 import { Route } from '../../entities/route.entity';
+import { VehicleService } from '../vehicle/vehicle.service';
+import { RoutesService } from '../routes/routes.service';
 
 describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => {
   let placesController: PlaceOfInterestController;
   let placesService: PlaceOfInterestService;
   let userService: UserService;
+  let vehicleService: VehicleService;
+  let routesService: RoutesService;
   let authController: AuthController;
   let authService: AuthService;
   let jwtService: JwtService;
@@ -39,7 +43,7 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
           synchronize: true,
           ssl: {rejectUnauthorized: false},
         }),
-        TypeOrmModule.forFeature([User, PlaceOfInterest, Vehicle]),
+        TypeOrmModule.forFeature([User, PlaceOfInterest, Vehicle, Route]),
         JwtModule.register({
           secret: jwtConstants.secret,
           signOptions: { expiresIn: '30d' },
@@ -48,7 +52,9 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
       controllers: [PlaceOfInterestController, AuthController],
       providers: [PlaceOfInterestService,
                   UserService,
-                  AuthService,],
+                  AuthService,
+                  VehicleService,
+                  RoutesService],
     }).compile();
 
     placesController = module.get<PlaceOfInterestController>(PlaceOfInterestController);
@@ -56,8 +62,12 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
     userService = module.get<UserService>(UserService);
     authController = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);
+    vehicleService = module.get<VehicleService>(VehicleService);
+    routesService = module.get<RoutesService>(RoutesService);
     await userService.clearDatabase();
     await placesService.clearDatabase();
+    await vehicleService.clearDatabase();
+    await routesService.clearDatabase();
   });
 
   it('(Válido): debería dar de alta un lugar de interés válido', async () => {
@@ -323,13 +333,6 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
         expect(error.message).toBe('PlaceOfInterestNotExist');
       }
     });
-
-  // Limpiar la base de datos después de cada prueba si es necesario
-  afterEach(async () => {
-    await userService.clearDatabase();
-    await placesService.clearDatabase();
-  });
-
   it('(Válido): debería añadir el punto de interes a favorito', async () => {
     //userService.clearDatabase();
     //placesService.clearDatabase();
@@ -477,4 +480,11 @@ describe('PlacesOfInterestController (Alta Lugar de Interés - Válido)', () => 
       expect(error.message).toBe('No eres el propietario del punto de interes');
     }
   })
+  // Limpiar la base de datos después de cada prueba si es necesario
+  afterEach(async () => {
+    await userService.clearDatabase();
+    await placesService.clearDatabase();
+    await vehicleService.clearDatabase();
+    await routesService.clearDatabase();
+  });
 });

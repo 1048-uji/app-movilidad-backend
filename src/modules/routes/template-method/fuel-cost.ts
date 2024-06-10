@@ -59,7 +59,7 @@ export class FuelCost extends AbstractCost {
                   throw new HttpException('There is no such fuel type in the region of departure.', HttpStatus.NOT_FOUND);
                 }                
             } catch (error) {
-                throw new HttpException('APINotWorkingException', HttpStatus.BAD_GATEWAY);
+                throw new HttpException('APINotWorkingException'+ error.message, HttpStatus.BAD_GATEWAY);
             }
         }
     }

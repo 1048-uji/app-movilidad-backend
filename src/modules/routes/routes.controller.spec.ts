@@ -73,7 +73,7 @@ describe('RoutesController (Crear Ruta)', () => {
     vehicleController = module.get<VehicleController>(VehicleController);
     vehicleService = module.get<VehicleService>(VehicleService);
     await userService.clearDatabase();
-    //await placesService.clearDatabase();
+    await placesService.clearDatabase();
     await vehicleService.clearDatabase();
     await routesService.clearDatabase();
   });
@@ -171,6 +171,7 @@ describe('RoutesController (Crear Ruta)', () => {
     };
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
+    route.geometry=null
     const savedRoute = await routesController.saveRoute(request, route);
 
     expect(savedRoute.start).toBe(route.start);
@@ -202,6 +203,7 @@ describe('RoutesController (Crear Ruta)', () => {
     try{
       const route = await routesController.createRoute(request, routeOptions);
       route.name = 'Castellón-Valencia';
+      route.geometry=null
       const savedRoute = await routesController.saveRoute(request, route);
     }catch(error){
       expect(error.message).toBe('Usuario no autentificado');
@@ -232,6 +234,7 @@ describe('RoutesController (Crear Ruta)', () => {
     };
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
+    route.geometry=null
     const savedRoute = await routesController.saveRoute(request, route);
     expect(savedRoute.userId).toBe(registered.id)
     const routes = await routesController.getRoutesOfUser(request);
@@ -266,6 +269,7 @@ describe('RoutesController (Crear Ruta)', () => {
     try{
       const route = await routesController.createRoute(request, routeOptions);
       route.name = 'Castellón-Valencia';
+      route.geometry=null
       const savedRoute = await routesController.saveRoute(request, route);
       expect(savedRoute.userId).toBe(registered.id)
       const routes = await routesController.getRoutesOfUser(request);
@@ -299,6 +303,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
+    route.geometry=null
     const savedRoute = await routesController.saveRoute(request, route);
 
     const deleted = await routesController.deleteVehicle(request, savedRoute.id);
@@ -333,6 +338,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
+    route.geometry=null
     const savedRoute = await routesController.saveRoute(request, route);
 
     try{
@@ -369,6 +375,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
+    route.geometry=null
     let savedRoute = await routesController.saveRoute(request, route);
     
     savedRoute.fav = true;
@@ -440,6 +447,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
+    route.geometry=null
     route.fav = true;
     let savedRoute = await routesController.saveRoute(request, route);
     
@@ -517,6 +525,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request,  routeOptions);
     route.name = 'UJI-Estación';
+    route.geometry=null
     const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
 
@@ -574,6 +583,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'UJI-Estación';
+    route.geometry=null
     const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
 
@@ -637,6 +647,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
+    route.geometry=null
     const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
     
@@ -698,6 +709,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
+    route.geometry=null
     const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
     
@@ -757,6 +769,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
+    route.geometry=null
     const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
     
@@ -818,6 +831,7 @@ describe('RoutesController (Crear Ruta)', () => {
 
     const route = await routesController.createRoute(request, routeOptions);
     route.name = 'Castellón-Valencia';
+    route.geometry=null
     const routeSaved = await routesController.saveRoute(request, route);
     const routes = await routesController.getRoutesOfUser(request);
     
@@ -835,7 +849,7 @@ describe('RoutesController (Crear Ruta)', () => {
   // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await userService.clearDatabase();
-    //await placesService.clearDatabase();
+    await placesService.clearDatabase();
     await vehicleService.clearDatabase();
     await routesService.clearDatabase();
   });

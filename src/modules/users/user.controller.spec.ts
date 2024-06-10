@@ -18,10 +18,15 @@ import { VehicleDto } from '../vehicle/dto/vehicle.dto';
 import { UserDto } from './dto/user.dto';
 import { RouteOptionsDto, Strategy } from '../routes/dto/routeOptions.dto';
 import { VehicleService } from '../vehicle/vehicle.service';
+import { PlaceOfInterestService } from '../place-of-interest/place-of-interest.service';
+import { RoutesService } from '../routes/routes.service';
 
 describe('UsersController', () => {
   let controller: UserController;
   let usService: UserService;
+  let vehicleService: VehicleService;
+  let placesService: PlaceOfInterestService;
+  let routesService: RoutesService;
   let authController: AuthController;
   let authService: AuthService;
   let vehicleController: VehicleController
@@ -42,7 +47,7 @@ describe('UsersController', () => {
             synchronize: true,
             ssl: {rejectUnauthorized: false},
           }),
-          TypeOrmModule.forFeature([User, Vehicle]),
+          TypeOrmModule.forFeature([User, Vehicle, PlaceOfInterest, Route]),
           JwtModule.register({
             secret: jwtConstants.secret,
             signOptions: { expiresIn: '30d' },
@@ -53,6 +58,8 @@ describe('UsersController', () => {
           AuthService,
           UserService,
           VehicleService,
+          PlaceOfInterestService,
+          RoutesService,
         ],
       }).compile();
 
@@ -62,7 +69,13 @@ describe('UsersController', () => {
     authService = module.get<AuthService>(AuthService);
     vehicleController = module.get<VehicleController>(VehicleController);
     controller = module.get<UserController>(UserController);
+    vehicleService = module.get<VehicleService>(VehicleService);
+    placesService = module.get<PlaceOfInterestService>(PlaceOfInterestService);
+    routesService = module.get<RoutesService>(RoutesService);
     await usService.clearDatabase();
+    await placesService.clearDatabase();
+    await vehicleService.clearDatabase();
+    await routesService.clearDatabase();
   });
 
   it('(Válido): Registra un usuario válido', async () => {
@@ -300,5 +313,8 @@ describe('UsersController', () => {
 // Limpiar la base de datos después de cada prueba si es necesario
   afterEach(async () => {
     await usService.clearDatabase();
+    await placesService.clearDatabase();
+    await vehicleService.clearDatabase();
+    await routesService.clearDatabase();
   });
 });

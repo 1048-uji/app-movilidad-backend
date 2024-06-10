@@ -48,7 +48,6 @@ export class RoutesService {
             }            
         }
         const route = await this.openRoutesApi.createRoute(start, end, routeOptions);
-        //console.log(route.geometry);
         return route;
     }
     async saveRoute(user: User, routeData: RouteDto): Promise<Route>{
