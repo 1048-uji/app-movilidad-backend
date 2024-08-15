@@ -16,15 +16,16 @@ export class AuthService {
     ) {}
 
     async login(loginObject: LoginDto): Promise<{ token: string}> {
-        const user = await this.userRepository.findOne({where: { email: loginObject.email }});
+        const user = await this.userRepository.findOne({where: { username: loginObject.username }});
         if (!user) {
+            console.log('throw not found exception')
             throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
         }
         const isMatch = await bcrypt.compare(loginObject.password, user.password);
         if (!isMatch) {
             throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
         }
-        const token = await this.jwtService.signAsync({ id: user.id, email: user.email , username: user.username});
+        const token = await this.jwtService.signAsync({ id: user.id, username: user.username});
         return { token: token};
     }
 
@@ -39,7 +40,7 @@ export class AuthService {
     }
 
     async register(registerObject: RegisterDto): Promise<User> {
-        const email = await this.userRepository.findOneBy({ email: registerObject.email } );
+        const email = await this.userRepository.findOneBy({ username: registerObject.username } );
         if (email) {
             throw new HttpException('User already exists', HttpStatus.CONFLICT);
         }

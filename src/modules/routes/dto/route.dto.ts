@@ -26,7 +26,7 @@ export class RouteDto {
     @IsString()
     end: string;
     @ApiProperty()
-    geometry: string;
+    coordinates: number[][];
     @ApiProperty()
     @IsOptional()
     @IsBoolean()

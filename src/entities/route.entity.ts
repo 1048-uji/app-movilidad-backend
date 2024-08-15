@@ -20,10 +20,8 @@ export class Route {
     start: string;
     @Column()
     end: string;
-    @Column({ 
-        array: true,
-        nullable: true})
-    geometry: string;
+    @Column({ type: 'jsonb' })
+    coordinates: number[][];
     @Column({default: false})
     fav: boolean;
     @Column({default: Strategy.RECOMMENDED})

@@ -30,7 +30,7 @@ export class RecommendedRouteStrategy implements RouteStrategy {
           duration: this.formatDuration(parseFloat(response.data.features[0].properties.summary.duration)),
           start: start.lon+','+start.lat,
           end: end.lon+','+end.lat,
-          geometry: response.data.features[0].geometry,
+          coordinates: response.data.features[0].geometry,
           type: Strategy.RECOMMENDED
       }
         return route;

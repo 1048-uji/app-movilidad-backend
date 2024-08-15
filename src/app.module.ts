@@ -10,18 +10,17 @@ import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { Vehicle } from 'entities/vehicle.entity';
 import { RoutesModule } from './modules/routes/routes.module';
 import { Route } from 'entities/route.entity';
-import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from 'modules/auth/strategy/jwt.constant';
+import 'dotenv/config';
 
 @Module({
   imports: [ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host:'dpg-co3fifi1hbls73f12co0-a.frankfurt-postgres.render.com',
-      port: 5432,
-      username: 'appmobilidaddb_2gis_user',
-      password: 'TPWasYpqk30nWytcdjaSYELUmviCMxoA',
-      database: 'appmobilidaddb_2gis',
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
       entities: [User, PlaceOfInterest, Vehicle, Route],
       synchronize: true,
       ssl: {rejectUnauthorized: false},
